@@ -31,12 +31,12 @@ The application is now runnable using `java -jar build/quarkus-app/quarkus-run.j
 
 ## Creating a native executable
 
-You can create a native executable using: 
+You can create a native executable using:
 ```shell script
 ./gradlew build -Dquarkus.package.type=native
 ```
 
-Or, if you don't have GraalVM installed, you can run the native executable build in a container using: 
+Or, if you don't have GraalVM installed, you can run the native executable build in a container using:
 ```shell script
 ./gradlew build -Dquarkus.package.type=native -Dquarkus.native.container-build=true
 ```
@@ -45,14 +45,21 @@ You can then execute your native executable with: `./build/pgs-planner-1.0.0-SNA
 
 If you want to learn more about building native executables, please consult https://quarkus.io/guides/gradle-tooling.
 
-## Related Guides
+## UI informations
 
-- RESTEasy JAX-RS ([guide](https://quarkus.io/guides/rest-json)): REST endpoint framework implementing JAX-RS and more
+We use the Vite bundler to create a react frontend in the src/main/webapp folder.
 
-## Provided Code
+Install the dependencies:
+```shell script
+npm install
+```
 
-### RESTEasy JAX-RS
+To run in dev mode:
+```shell script
+npm run dev
+```
 
-Easily start your RESTful Web Services
-
-[Related guide section...](https://quarkus.io/guides/getting-started#the-jax-rs-resources)
+To build the frontend:
+```shell script
+npm build
+```
