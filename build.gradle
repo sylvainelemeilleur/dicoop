@@ -1,6 +1,7 @@
 plugins {
     id 'java'
     id 'io.quarkus'
+    id 'org.siouan.frontend-jdk11'
 }
 
 repositories {
@@ -35,4 +36,9 @@ compileJava {
 
 compileTestJava {
     options.encoding = 'UTF-8'
+}
+
+frontend {
+    nodeVersion = '14.16.1'
+    assembleScript = '--prefix ./src/main/webapp run build'
 }
