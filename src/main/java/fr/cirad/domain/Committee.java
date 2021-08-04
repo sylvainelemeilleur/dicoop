@@ -7,8 +7,6 @@ public class Committee {
 
     public Person evaluatedPerson;
 
-    public List<Skill> evaluatedSkills;
-
     public Instant createdDate = Instant.now();
 
     public List<CommitteeAssignment> assignments;
@@ -17,9 +15,8 @@ public class Committee {
         // No-arg constructor required for Hibernate and OptaPlanner
     }
 
-    public Committee(Person evaluatedPerson, List<Skill> evaluatedSkills) {
+    public Committee(Person evaluatedPerson) {
         this.evaluatedPerson = evaluatedPerson;
-        this.evaluatedSkills = evaluatedSkills;
     }
 
 }

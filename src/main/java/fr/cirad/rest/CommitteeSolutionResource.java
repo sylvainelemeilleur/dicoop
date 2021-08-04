@@ -4,6 +4,7 @@ import javax.inject.Inject;
 import javax.transaction.Transactional;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.GET;
+import javax.ws.rs.POST;
 import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
@@ -14,6 +15,7 @@ import org.optaplanner.core.api.solver.SolverManager;
 import org.optaplanner.core.api.solver.SolverStatus;
 
 import fr.cirad.bootstrap.DemoDataService;
+import fr.cirad.domain.Committee;
 import fr.cirad.domain.CommitteeSolution;
 
 @Path("api/committeeSolution")
@@ -32,9 +34,8 @@ public class CommitteeSolutionResource {
     @Inject
     DemoDataService service;
 
-    // To try, open http://localhost:8080/committeeSolution
     @GET
-    public CommitteeSolution getTimeTable() {
+    public CommitteeSolution getSolution() {
         // Get the solver status before loading the solution
         // to avoid the race condition that the solver terminates between them
         SolverStatus solverStatus = getSolverStatus();
@@ -44,8 +45,20 @@ public class CommitteeSolutionResource {
         return solution;
     }
 
+    @POST
+    @Path("solve")
+    public void solve() {
+        solverManager.solveAndListen(SINGLETON_TIME_TABLE_ID, this::findById, this::save);
+    }
+
     public SolverStatus getSolverStatus() {
         return solverManager.getSolverStatus(SINGLETON_TIME_TABLE_ID);
+    }
+
+    @POST
+    @Path("stopSolving")
+    public void stopSolving() {
+        solverManager.terminateEarly(SINGLETON_TIME_TABLE_ID);
     }
 
     @Transactional
@@ -56,6 +69,16 @@ public class CommitteeSolutionResource {
         // Occurs in a single transaction, so each initialized lesson references the
         // same timeslot/room instance
         // that is contained by the timeTable's timeslotList/roomList.
-        return new CommitteeSolution(service.committees, service.persons, service.skills, service.timeSlots);
+        return new CommitteeSolution(service.committees, service.persons, service.skills,
+                service.timeSlots);
+    }
+
+    @Transactional
+    protected void save(CommitteeSolution committeeSolution) {
+        for (Committee committee : committeeSolution.committees) {
+            // TODO if we have to save the solution
+            // this is awfully naive: optimistic locking causes issues if called by the
+            // SolverManager
+        }
     }
 }

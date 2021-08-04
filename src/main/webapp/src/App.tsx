@@ -26,6 +26,7 @@ function App() {
             <th role="columnheader" scope="col">Skills</th>
             <th role="columnheader" scope="col">Languages</th>
             <th role="columnheader" scope="col">Availability</th>
+            <th role="columnheader" scope="col">Skills to certificate</th>
           </tr>
         </thead>
         {persons.map((person: any) => (
@@ -37,6 +38,7 @@ function App() {
               <td role="cell" data-label="Skills">{person.skills.map((skill: any) => badge(skill.name))}</td>
               <td role="cell" data-label="Languages">{person.languages.map((language: any) => badge(language.name))}</td>
               <td role="cell" data-label="Availability">{person.availability.map((availability: any) => badge(availability.name))}</td>
+              <td role="cell" data-label="Skills to certificate">{person.skillsToCertificate.map((skill: any) => badge(skill.name))}</td>
             </tr>
           </tbody>
         ))}

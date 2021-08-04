@@ -8,8 +8,7 @@ public class CommitteeSchedulingConstraintProvider implements ConstraintProvider
 
     @Override
     public Constraint[] defineConstraints(ConstraintFactory constraintFactory) {
-        // TODO Auto-generated method stub
-        return null;
+        return new Constraint[] {};
     }
 
 }
