@@ -11,7 +11,7 @@ public class Committee implements Comparable<Committee> {
 
     public Instant createdDate = Instant.now();
 
-    private static Long currentId = 0L;
+    private static Long currentId = 0L; // Fake ID generator for the demo
 
     public static final Comparator<Committee> COMPARATOR =
             Comparator.comparing((Committee c) -> c.evaluatedPerson);
