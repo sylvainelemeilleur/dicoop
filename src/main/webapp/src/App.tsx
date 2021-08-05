@@ -4,6 +4,7 @@ import '@patternfly/patternfly/patternfly.css';
 
 function App() {
   const [persons, setPersons] = useState([]);
+  const [committeeSolution, setCommitteeSolution] = useState({committeeAssignments:[]});
 
   useEffect(() => {
     fetch('/api/persons')
@@ -12,10 +13,38 @@ function App() {
       .catch(console.log);
   }, [])
 
+  useEffect(() => {
+    fetch('/api/committeeSolution')
+      .then(res => res.json())
+      .then((res) => { setCommitteeSolution(res) })
+      .catch(console.log);
+  }, [])
+
   const badge = (item: any) => <span key={item} className="pf-c-badge pf-m-read">{item}</span>
 
   return (
     <div className="App">
+      <table className="pf-c-table pf-m-grid-md" role="grid" aria-label="Solution" id="table-basic">
+        <caption>Solution</caption>
+        <thead>
+          <tr role="row">
+            <th role="columnheader" scope="col">Committee ID</th>
+            <th role="columnheader" scope="col">Evaluated Person</th>
+            <th role="columnheader" scope="col">Assigned Person</th>
+            <th role="columnheader" scope="col">Assigned Person Type</th>
+          </tr>
+        </thead>
+        {committeeSolution.committeeAssignments.map((assignment: any) => (
+          <tbody role="rowgroup" key={assignment.committee.id}>
+            <tr role="row">
+              <td role="cell" data-label="Committee ID">{assignment.committee.id}</td>
+              <td role="cell" data-label="Evaluated Person">{assignment.committee.evaluatedPerson.name}</td>
+              <td role="cell" data-label="Assigned Person">{assignment.assignedPerson.name}</td>
+              <td role="cell" data-label="Assigned Person Type">{assignment.assignedPerson.personType.name}</td>
+            </tr>
+          </tbody>
+        ))}
+      </table>
       <table className="pf-c-table pf-m-grid-md" role="grid" aria-label="Participants" id="table-basic">
         <caption>Participants</caption>
         <thead>

@@ -31,4 +31,9 @@ public class PersonType implements Comparable<PersonType> {
         return COMPARATOR.hashCode();
     }
 
+    @Override
+    public String toString() {
+        return "PersonType: " + name;
+    }
+
 }

@@ -61,4 +61,9 @@ public class Person implements Comparable<Person> {
         return COMPARATOR.hashCode();
     }
 
+    @Override
+    public String toString() {
+        return "Person: " + name;
+    }
+
 }

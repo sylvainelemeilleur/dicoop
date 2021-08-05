@@ -9,11 +9,10 @@ import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
 import org.optaplanner.core.api.score.ScoreManager;
-import org.optaplanner.core.api.score.buildin.hardsoftlong.HardSoftLongScore;
+import org.optaplanner.core.api.score.buildin.hardsoft.HardSoftScore;
 import org.optaplanner.core.api.solver.SolverManager;
 import org.optaplanner.core.api.solver.SolverStatus;
 import fr.cirad.bootstrap.DemoDataService;
-import fr.cirad.domain.Committee;
 import fr.cirad.domain.CommitteeSolution;
 
 @Path("api/committeeSolution")
@@ -22,18 +21,23 @@ import fr.cirad.domain.CommitteeSolution;
 public class CommitteeSolutionResource {
 
     public static final Long SINGLETON_TIME_TABLE_ID = 1L;
+    public CommitteeSolution currentSolution;
 
     @Inject
     SolverManager<CommitteeSolution, Long> solverManager;
 
     @Inject
-    ScoreManager<CommitteeSolution, HardSoftLongScore> scoreManager;
+    ScoreManager<CommitteeSolution, HardSoftScore> scoreManager;
 
     @Inject
     DemoDataService service;
 
     @GET
     public CommitteeSolution getSolution() {
+        if (currentSolution == null) {
+            currentSolution = new CommitteeSolution(service.committees, service.persons,
+                    service.skills, service.timeSlots, service.assignments);
+        }
         // Get the solver status before loading the solution
         // to avoid the race condition that the solver terminates between them
         SolverStatus solverStatus = getSolverStatus();
@@ -64,16 +68,11 @@ public class CommitteeSolutionResource {
         if (!SINGLETON_TIME_TABLE_ID.equals(id)) {
             throw new IllegalStateException("There is no timeTable with id (" + id + ").");
         }
-        return new CommitteeSolution(service.committees, service.persons, service.skills,
-                service.timeSlots, service.assignments);
+        return currentSolution;
     }
 
     @Transactional
     protected void save(CommitteeSolution committeeSolution) {
-        for (Committee committee : committeeSolution.committees) {
-            // TODO if we have to save the solution
-            // this is awfully naive: optimistic locking causes issues if called by the
-            // SolverManager
-        }
+        currentSolution = committeeSolution;
     }
 }
