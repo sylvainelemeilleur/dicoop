@@ -1,13 +1,9 @@
 package fr.cirad.domain;
 
+import java.util.Comparator;
 import java.util.List;
 
-
-import org.optaplanner.core.api.domain.entity.PlanningEntity;
-import org.optaplanner.core.api.domain.variable.InverseRelationShadowVariable;
-
-@PlanningEntity
-public class Person {
+public class Person implements Comparable<Person> {
 
     public String name;
 
@@ -23,8 +19,7 @@ public class Person {
 
     public List<Skill> skillsToCertificate;
 
-    @InverseRelationShadowVariable(sourceVariableName = "person")
-    private List<CommitteeAssignment> committeeAssignments;
+    private static final Comparator<Person> COMPARATOR = Comparator.comparing(p -> p.name);
 
     public Person() {
         // No-arg constructor required for Hibernate and OptaPlanner
@@ -45,6 +40,25 @@ public class Person {
         this.languages = languages;
         this.availability = availability;
         this.skillsToCertificate = skillsToCertificate;
+    }
+
+    public boolean hasAtListOneSkill(List<Skill> skills) {
+        return this.skills.stream().anyMatch(skills::contains);
+    }
+
+    @Override
+    public int compareTo(Person o) {
+        return COMPARATOR.compare(this, o);
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        return COMPARATOR.equals(o);
+    }
+
+    @Override
+    public int hashCode() {
+        return COMPARATOR.hashCode();
     }
 
 }

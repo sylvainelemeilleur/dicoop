@@ -1,8 +1,12 @@
 package fr.cirad.domain;
 
-public class Location {
+import java.util.Comparator;
+
+public class Location implements Comparable<Location> {
 
     public String name;
+
+    private static final Comparator<Location> COMPARATOR = Comparator.comparing(l -> l.name);
 
     public Location() {
         // No-arg constructor required for Hibernate and OptaPlanner
@@ -10,6 +14,21 @@ public class Location {
 
     public Location(String name) {
         this.name = name;
+    }
+
+    @Override
+    public int compareTo(Location o) {
+        return COMPARATOR.compare(this, o);
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        return COMPARATOR.equals(o);
+    }
+
+    @Override
+    public int hashCode() {
+        return COMPARATOR.hashCode();
     }
 
 }

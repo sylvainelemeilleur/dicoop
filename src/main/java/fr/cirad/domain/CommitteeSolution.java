@@ -1,37 +1,41 @@
 package fr.cirad.domain;
 
 import java.util.List;
-
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import org.optaplanner.core.api.domain.solution.PlanningEntityCollectionProperty;
 import org.optaplanner.core.api.domain.solution.PlanningScore;
 import org.optaplanner.core.api.domain.solution.PlanningSolution;
 import org.optaplanner.core.api.domain.solution.ProblemFactCollectionProperty;
 import org.optaplanner.core.api.domain.valuerange.ValueRangeProvider;
-import org.optaplanner.core.api.score.buildin.hardsoftlong.HardSoftLongScore;
+import org.optaplanner.core.api.score.buildin.hardsoft.HardSoftScore;
 import org.optaplanner.core.api.solver.SolverStatus;
 
 @PlanningSolution
 public class CommitteeSolution {
 
     @ProblemFactCollectionProperty
+    @JsonIgnore
     public List<Committee> committees;
 
     @ProblemFactCollectionProperty
+    @JsonIgnore
     @ValueRangeProvider(id = "personRange")
     public List<Person> persons;
 
     @ProblemFactCollectionProperty
+    @JsonIgnore
     public List<Skill> skills;
 
     @ProblemFactCollectionProperty
+    @JsonIgnore
     @ValueRangeProvider(id = "timeSlotRange")
     public List<TimeSlot> timeSlots;
 
     @PlanningEntityCollectionProperty
-    private List<CommitteeAssignment> committeeAssignments;
+    public List<CommitteeAssignment> committeeAssignments;
 
     @PlanningScore
-    public HardSoftLongScore score = null;
+    public HardSoftScore score = null;
 
     // Ignored by OptaPlanner, used by the UI to display solve or stop solving button
     public SolverStatus solverStatus;
@@ -40,10 +44,12 @@ public class CommitteeSolution {
         // No-arg constructor required for OptaPlanner
     }
 
-    public CommitteeSolution(List<Committee> committees, List<Person> persons, List<Skill> skills, List<TimeSlot> timeSlots) {
+    public CommitteeSolution(List<Committee> committees, List<Person> persons, List<Skill> skills,
+            List<TimeSlot> timeSlots, List<CommitteeAssignment> committeeAssignments) {
         this.committees = committees;
         this.persons = persons;
         this.skills = skills;
         this.timeSlots = timeSlots;
+        this.committeeAssignments = committeeAssignments;
     }
 }

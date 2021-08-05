@@ -8,12 +8,10 @@ import javax.ws.rs.POST;
 import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
-
 import org.optaplanner.core.api.score.ScoreManager;
 import org.optaplanner.core.api.score.buildin.hardsoftlong.HardSoftLongScore;
 import org.optaplanner.core.api.solver.SolverManager;
 import org.optaplanner.core.api.solver.SolverStatus;
-
 import fr.cirad.bootstrap.DemoDataService;
 import fr.cirad.domain.Committee;
 import fr.cirad.domain.CommitteeSolution;
@@ -66,11 +64,8 @@ public class CommitteeSolutionResource {
         if (!SINGLETON_TIME_TABLE_ID.equals(id)) {
             throw new IllegalStateException("There is no timeTable with id (" + id + ").");
         }
-        // Occurs in a single transaction, so each initialized lesson references the
-        // same timeslot/room instance
-        // that is contained by the timeTable's timeslotList/roomList.
         return new CommitteeSolution(service.committees, service.persons, service.skills,
-                service.timeSlots);
+                service.timeSlots, service.assignments);
     }
 
     @Transactional
