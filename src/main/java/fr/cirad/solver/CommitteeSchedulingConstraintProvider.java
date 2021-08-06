@@ -12,15 +12,30 @@ public class CommitteeSchedulingConstraintProvider implements ConstraintProvider
 
     @Override
     public Constraint[] defineConstraints(ConstraintFactory constraintFactory) {
-        return new Constraint[] {requiredPersonType(constraintFactory),
+        return new Constraint[] {selfConflict(constraintFactory),
+                committeeConflict(constraintFactory), requiredPersonType(constraintFactory),
                 requiredSkillsToCertificate(constraintFactory)};
     }
 
+    private Constraint selfConflict(ConstraintFactory constraintFactory) {
+        return constraintFactory.from(CommitteeAssignment.class)
+                .filter(committeeAssignment -> committeeAssignment.assignedPerson.name
+                        .equals(committeeAssignment.committee.evaluatedPerson.name))
+                .penalize("A person cannot be assigned to its self committee",
+                        HardSoftScore.ONE_HARD);
+    }
+
+    private Constraint committeeConflict(ConstraintFactory constraintFactory) {
+        return constraintFactory.from(CommitteeAssignment.class).filter(
+                committeeAssignment -> (committeeAssignment.assignedPerson.assignments.size() > 1))
+                .penalize("Only one committee per person", HardSoftScore.ONE_HARD);
+    }
+
     private Constraint requiredPersonType(ConstraintFactory constraintFactory) {
-        return constraintFactory.from(CommitteeAssignment.class).filter(committeeAssignment -> {
-            return !committeeAssignment.assignedPerson.personType
-                    .equals(committeeAssignment.requiredPersonType);
-        }).penalize("Required person type to certificate", HardSoftScore.ONE_HARD);
+        return constraintFactory.from(CommitteeAssignment.class)
+                .filter(committeeAssignment -> !committeeAssignment.assignedPerson.personType.name
+                        .equals(committeeAssignment.requiredPersonType.name))
+                .penalize("Required person type to certificate", HardSoftScore.ONE_HARD);
     }
 
     private Constraint requiredSkillsToCertificate(ConstraintFactory constraintFactory) {

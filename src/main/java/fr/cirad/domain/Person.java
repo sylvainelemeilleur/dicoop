@@ -1,10 +1,17 @@
 package fr.cirad.domain;
 
+import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import org.optaplanner.core.api.domain.entity.PlanningEntity;
+import org.optaplanner.core.api.domain.lookup.PlanningId;
+import org.optaplanner.core.api.domain.variable.InverseRelationShadowVariable;
 
+@PlanningEntity
 public class Person implements Comparable<Person> {
 
+    @PlanningId
     public String name;
 
     public PersonType personType;
@@ -18,6 +25,10 @@ public class Person implements Comparable<Person> {
     public List<TimeSlot> availability;
 
     public List<Skill> skillsToCertificate;
+
+    @InverseRelationShadowVariable(sourceVariableName = "assignedPerson")
+    @JsonIgnore
+    public List<CommitteeAssignment> assignments;
 
     private static final Comparator<Person> COMPARATOR = Comparator.comparing(p -> p.name);
 
@@ -40,11 +51,13 @@ public class Person implements Comparable<Person> {
         this.languages = languages;
         this.availability = availability;
         this.skillsToCertificate = skillsToCertificate;
+        this.assignments = new ArrayList<>();
     }
 
     public boolean hasAtListOneSkill(List<Skill> skills) {
         return this.skills.stream().anyMatch(skills::contains);
     }
+
 
     @Override
     public int compareTo(Person o) {

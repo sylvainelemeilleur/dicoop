@@ -1,9 +1,11 @@
 package fr.cirad.domain;
 
 import java.util.Comparator;
+import org.optaplanner.core.api.domain.lookup.PlanningId;
 
 public class Language implements Comparable<Language> {
 
+    @PlanningId
     public String name;
 
     private static final Comparator<Language> COMPARATOR = Comparator.comparing(l -> l.name);

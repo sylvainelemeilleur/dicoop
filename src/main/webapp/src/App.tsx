@@ -29,15 +29,17 @@ function App() {
         <thead>
           <tr role="row">
             <th role="columnheader" scope="col">Committee ID</th>
+            <th role="columnheader" scope="col">Assignment Person Type Required</th>
             <th role="columnheader" scope="col">Evaluated Person</th>
             <th role="columnheader" scope="col">Assigned Person</th>
             <th role="columnheader" scope="col">Assigned Person Type</th>
           </tr>
         </thead>
         {committeeSolution.committeeAssignments.map((assignment: any) => (
-          <tbody role="rowgroup" key={assignment.committee.id}>
+          <tbody role="rowgroup" key={assignment.id}>
             <tr role="row">
               <td role="cell" data-label="Committee ID">{assignment.committee.id}</td>
+              <td role="cell" data-label="Assignment Person Type Required">{assignment.requiredPersonType.name}</td>
               <td role="cell" data-label="Evaluated Person">{assignment.committee.evaluatedPerson.name}</td>
               <td role="cell" data-label="Assigned Person">{assignment.assignedPerson.name}</td>
               <td role="cell" data-label="Assigned Person Type">{assignment.assignedPerson.personType.name}</td>
