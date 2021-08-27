@@ -50,7 +50,7 @@ public class CommitteeSolutionResource {
         return solution;
     }
 
-    @POST
+    @GET
     @Path("solve2")
     public CommitteeSolution solve2() {
         UUID problemId = UUID.randomUUID();
@@ -66,7 +66,7 @@ public class CommitteeSolutionResource {
         return solution;
     }
 
-    @POST
+    @GET
     @Path("solve")
     public void solve() {
         solverManager.solveAndListen(SINGLETON_TIME_TABLE_ID, this::findById, this::save);

@@ -4,7 +4,12 @@ import '@patternfly/patternfly/patternfly.css';
 
 function App() {
   const [persons, setPersons] = useState([]);
-  const [committeeSolution, setCommitteeSolution] = useState({committeeAssignments:[]});
+  const [committeeSolution, setCommitteeSolution] = useState({
+    committeeAssignments: [],
+    committees: {},
+    solverStatus: 'NOT_STARTED',
+    score: ''
+  });
 
   useEffect(() => {
     fetch('/api/persons')
@@ -13,36 +18,60 @@ function App() {
       .catch(console.log);
   }, [])
 
-  useEffect(() => {
+  const parseSolution = (solution: any) => {
+    const committees = solution.committeeAssignments.reduce((r: any, a: any) => {
+      r[a.committee.id] = r[a.committee.id] || {
+        id: a.committee.id,
+        evaluatedPerson: a.committee.evaluatedPerson,
+        assignments: []
+      };
+      r[a.committee.id].assignments.push(a);
+      return r;
+    }, Object.create(null));
+    return {
+      committees,
+      committeeAssignments: solution.committeeAssignments,
+      solverStatus: solution.solverStatus,
+      score: solution.score
+    };
+  }
+
+  const startSolving = () => {
+    fetch('/api/committeeSolution/solve').catch(console.log);
+  }
+
+  const refreshSolution = () => {
     fetch('/api/committeeSolution')
       .then(res => res.json())
-      .then((res) => { setCommitteeSolution(res) })
+      .then((res) => { setCommitteeSolution(parseSolution(res)) })
       .catch(console.log);
-  }, [])
+  }
 
   const badge = (item: any) => <span key={item} className="pf-c-badge pf-m-read">{item}</span>
 
+  const assignmentsList = (assignments: any) => <ul>
+    {assignments.map((assignment: any) => <li key={assignment.assignedPerson.id}>{assignment.assignedPerson.name}</li>)}
+  </ul>
+
   return (
     <div className="App">
+      <button className="pf-c-button pf-m-primary" type="button" onClick={startSolving}>Solve</button>
+      <button className="pf-c-button pf-m-secondary" type="button" onClick={refreshSolution}>Refresh</button>
       <table className="pf-c-table pf-m-grid-md" role="grid" aria-label="Solution" id="table-basic">
-        <caption>Solution</caption>
+        <caption>Solution status: {committeeSolution.solverStatus} score: {committeeSolution.score}</caption>
         <thead>
           <tr role="row">
             <th role="columnheader" scope="col">Committee ID</th>
-            <th role="columnheader" scope="col">Assignment Person Type Required</th>
             <th role="columnheader" scope="col">Evaluated Person</th>
-            <th role="columnheader" scope="col">Assigned Person</th>
-            <th role="columnheader" scope="col">Assigned Person Type</th>
+            <th role="columnheader" scope="col">Assignments</th>
           </tr>
         </thead>
-        {committeeSolution.committeeAssignments.map((assignment: any) => (
-          <tbody role="rowgroup" key={assignment.id}>
+        {Object.values(committeeSolution.committees).map((committee: any) => (
+          <tbody role="rowgroup" key={committee.id}>
             <tr role="row">
-              <td role="cell" data-label="Committee ID">{assignment.committee.id}</td>
-              <td role="cell" data-label="Assignment Person Type Required">{assignment.requiredPersonType.name}</td>
-              <td role="cell" data-label="Evaluated Person">{assignment.committee.evaluatedPerson.name}</td>
-              <td role="cell" data-label="Assigned Person">{assignment.assignedPerson.name}</td>
-              <td role="cell" data-label="Assigned Person Type">{assignment.assignedPerson.personType.name}</td>
+              <td role="cell" data-label="Committee ID">{committee.id}</td>
+              <td role="cell" data-label="Evaluated Person">{committee.evaluatedPerson?.name}</td>
+              <td role="cell" data-label="Assignments">{assignmentsList(committee.assignments)}</td>
             </tr>
           </tbody>
         ))}
