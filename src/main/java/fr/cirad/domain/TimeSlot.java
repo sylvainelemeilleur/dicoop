@@ -25,12 +25,16 @@ public class TimeSlot implements Comparable<TimeSlot> {
 
     @Override
     public boolean equals(Object o) {
-        return COMPARATOR.equals(o);
+        if (!(o instanceof TimeSlot)) {
+            return false;
+        }
+        TimeSlot other = (TimeSlot) o;
+        return this.name.equals(other.name);
     }
 
     @Override
     public int hashCode() {
-        return COMPARATOR.hashCode();
+        return this.name.hashCode();
     }
 
 }

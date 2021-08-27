@@ -69,6 +69,10 @@ public class CommitteeSolutionResource {
     @GET
     @Path("solve")
     public void solve() {
+        if (currentSolution == null) {
+            currentSolution = new CommitteeSolution(service.committees, service.persons,
+                    service.skills, service.timeSlots, service.assignments);
+        }
         solverManager.solveAndListen(SINGLETON_TIME_TABLE_ID, this::findById, this::save);
     }
 

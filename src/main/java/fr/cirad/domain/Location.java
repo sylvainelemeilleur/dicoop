@@ -25,12 +25,16 @@ public class Location implements Comparable<Location> {
 
     @Override
     public boolean equals(Object o) {
-        return COMPARATOR.equals(o);
+        if (!(o instanceof Location)) {
+            return false;
+        }
+        Location other = (Location) o;
+        return this.name.equals(other.name);
     }
 
     @Override
     public int hashCode() {
-        return COMPARATOR.hashCode();
+        return this.name.hashCode();
     }
 
 }

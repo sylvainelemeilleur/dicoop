@@ -25,12 +25,16 @@ public class Language implements Comparable<Language> {
 
     @Override
     public boolean equals(Object o) {
-        return COMPARATOR.equals(o);
+        if (!(o instanceof Language)) {
+            return false;
+        }
+        Language other = (Language) o;
+        return this.name.equals(other.name);
     }
 
     @Override
     public int hashCode() {
-        return COMPARATOR.hashCode();
+        return this.name.hashCode();
     }
 
 }

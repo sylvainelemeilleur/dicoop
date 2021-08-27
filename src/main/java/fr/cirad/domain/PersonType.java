@@ -25,12 +25,16 @@ public class PersonType implements Comparable<PersonType> {
 
     @Override
     public boolean equals(Object o) {
-        return COMPARATOR.equals(o);
+        if (!(o instanceof PersonType)) {
+            return false;
+        }
+        PersonType other = (PersonType) o;
+        return this.name.equals(other.name);
     }
 
     @Override
     public int hashCode() {
-        return COMPARATOR.hashCode();
+        return this.name.hashCode();
     }
 
     @Override

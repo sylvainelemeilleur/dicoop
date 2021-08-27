@@ -5,7 +5,7 @@ import org.optaplanner.core.api.domain.lookup.PlanningId;
 import org.optaplanner.core.api.domain.variable.PlanningVariable;
 
 @PlanningEntity
-public class CommitteeAssignment /* implements Comparable<CommitteeAssignment> */ {
+public class CommitteeAssignment {
 
     @PlanningId
     public Long id;
@@ -25,6 +25,10 @@ public class CommitteeAssignment /* implements Comparable<CommitteeAssignment> *
         this.id = id;
         this.committee = committee;
         this.requiredPersonType = requiredPersonType;
+    }
+
+    public Person getAssignedPerson() {
+        return assignedPerson;
     }
 
     @Override

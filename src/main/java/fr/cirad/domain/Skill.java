@@ -25,12 +25,16 @@ public class Skill implements Comparable<Skill> {
 
     @Override
     public boolean equals(Object o) {
-        return COMPARATOR.equals(o);
+        if (!(o instanceof Skill)) {
+            return false;
+        }
+        Skill other = (Skill) o;
+        return this.name.equals(other.name);
     }
 
     @Override
     public int hashCode() {
-        return COMPARATOR.hashCode();
+        return this.name.hashCode();
     }
 
 }
