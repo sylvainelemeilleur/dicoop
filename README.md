@@ -61,5 +61,5 @@ npm run dev
 
 To build the frontend:
 ```shell script
-npm build
+npm run build
 ```
