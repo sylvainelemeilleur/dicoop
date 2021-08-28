@@ -9,6 +9,7 @@ function App() {
     committees: {},
     solverStatus: "NOT_STARTED",
     score: "",
+    scoreExplanation: "",
   });
 
   useEffect(() => {
@@ -37,7 +38,8 @@ function App() {
       committees,
       committeeAssignments: solution.committeeAssignments,
       solverStatus: solution.solverStatus,
-      score: solution.score,
+      score: JSON.stringify(solution.score),
+      scoreExplanation: solution.scoreExplanation,
     };
   };
 
@@ -49,6 +51,7 @@ function App() {
           committees: {},
           solverStatus: "INITIALIZING",
           score: "",
+          scoreExplanation: "",
         });
         setTimeout(() => {
           refreshSolution();
@@ -98,13 +101,6 @@ function App() {
       >
         Solve
       </button>
-      <button
-        className="pf-c-button pf-m-secondary"
-        type="button"
-        onClick={refreshSolution}
-      >
-        Refresh
-      </button>
       <table
         className="pf-c-table pf-m-grid-md"
         role="grid"
@@ -114,6 +110,7 @@ function App() {
         <caption>
           Solution status: {committeeSolution.solverStatus} score:{" "}
           {committeeSolution.score}
+          <div>Score explanation: {committeeSolution.scoreExplanation}</div>
         </caption>
         <thead>
           <tr role="row">

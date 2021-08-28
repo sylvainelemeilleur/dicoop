@@ -47,6 +47,9 @@ public class CommitteeSolutionResource {
         CommitteeSolution solution = findById(SINGLETON_TIME_TABLE_ID);
         scoreManager.updateScore(solution); // Sets the score
         solution.solverStatus = solverStatus;
+        var scoreExplanation = scoreManager.explainScore(solution);
+        System.out.println(scoreExplanation);
+        solution.scoreExplanation = scoreExplanation.toString();
         return solution;
     }
 

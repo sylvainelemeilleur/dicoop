@@ -15,7 +15,6 @@ dependencies {
     implementation 'io.quarkus:quarkus-smallrye-openapi'
     implementation 'io.quarkus:quarkus-resteasy'
     implementation 'io.quarkus:quarkus-resteasy-jackson'
-    implementation 'org.optaplanner:optaplanner-quarkus-jackson'
     implementation 'io.quarkus:quarkus-arc'
     testImplementation 'io.quarkus:quarkus-junit5'
     testImplementation 'io.rest-assured:rest-assured'
@@ -38,7 +37,15 @@ compileTestJava {
     options.encoding = 'UTF-8'
 }
 
+/*
 frontend {
     nodeVersion = '14.16.1'
     assembleScript = '--prefix ./src/main/webapp run build'
 }
+
+
+quarkusBuild {
+    nativeArgs {
+        additionalBuildArgs = "--initialize-at-run-time=org.drools.core.common.CompositeDefaultAgenda"
+    }
+}*/

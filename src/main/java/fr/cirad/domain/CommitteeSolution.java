@@ -37,6 +37,8 @@ public class CommitteeSolution {
     @PlanningScore
     public HardSoftScore score = null;
 
+    public String scoreExplanation = "";
+
     // Ignored by OptaPlanner, used by the UI to display solve or stop solving button
     public SolverStatus solverStatus;
 
