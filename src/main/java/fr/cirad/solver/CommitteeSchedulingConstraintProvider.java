@@ -30,9 +30,10 @@ public class CommitteeSchedulingConstraintProvider implements ConstraintProvider
         }
 
         private Constraint committeeConflict(ConstraintFactory constraintFactory) {
-                return constraintFactory
-                                .fromUniquePair(CommitteeAssignment.class,
-                                                equal(CommitteeAssignment::getAssignedPerson))
+                return constraintFactory.fromUniquePair(CommitteeAssignment.class,
+
+                                equal(CommitteeAssignment::getCommittee),
+                                equal(CommitteeAssignment::getAssignedPerson))
                                 .penalize("A person cannot be assigned multiple times to the same committee",
                                                 HardSoftScore.ONE_HARD);
         }
@@ -40,15 +41,15 @@ public class CommitteeSchedulingConstraintProvider implements ConstraintProvider
         private Constraint committeeAssignmentsConflict(ConstraintFactory constraintFactory) {
                 return constraintFactory.from(CommitteeAssignment.class).filter(
                                 committeeAssignment -> (committeeAssignment.assignedPerson.assignments
-                                                .size() > 3))
-                                .penalize("Only three committee per person",
-                                                HardSoftScore.ONE_HARD);
+                                                .size() > 5))
+                                .penalize("Only five committees per person",
+                                                HardSoftScore.ONE_SOFT);
         }
 
         private Constraint requiredPersonType(ConstraintFactory constraintFactory) {
-                return constraintFactory.from(CommitteeAssignment.class).filter(
-                                committeeAssignment -> !committeeAssignment.assignedPerson.personType
-                                                .equals(committeeAssignment.requiredPersonType))
+                return constraintFactory.from(CommitteeAssignment.class)
+                                .filter(committeeAssignment -> !committeeAssignment
+                                                .isRequiredPersonTypeCorrect())
                                 .penalize("Required person type to certificate",
                                                 HardSoftScore.ONE_HARD);
         }

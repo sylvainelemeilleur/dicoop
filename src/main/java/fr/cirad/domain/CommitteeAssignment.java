@@ -31,6 +31,16 @@ public class CommitteeAssignment {
         return assignedPerson;
     }
 
+    public Committee getCommittee() {
+        return committee;
+    }
+
+    public boolean isRequiredPersonTypeCorrect() {
+        if (assignedPerson == null || requiredPersonType == null)
+            return false;
+        return assignedPerson.personType.equals(requiredPersonType);
+    }
+
     @Override
     public String toString() {
         return " CommitteeAssignment " + id + " " + assignedPerson + " " + committee;
