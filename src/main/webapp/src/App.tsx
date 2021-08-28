@@ -85,8 +85,11 @@ function App() {
       {assignments
         .filter((assignment: any) => assignment.assignedPerson)
         .map((assignment: any) => (
-          <li key={assignment.assignedPerson?.id}>
-            {assignment.assignedPerson?.name}
+          <li key={assignment.assignedPerson.id}>
+            Required {assignment.requiredPersonType.name}:
+            <b>{assignment.assignedPerson.name}</b> (
+            {assignment.assignedPerson.personType.name}) (
+            {assignment.timeSlot.name})
           </li>
         ))}
     </ul>

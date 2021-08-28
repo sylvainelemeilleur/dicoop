@@ -9,16 +9,35 @@ import fr.cirad.domain.CommitteeAssignment;
 import fr.cirad.domain.Skill;
 
 import static org.optaplanner.core.api.score.stream.Joiners.equal;
+import static org.optaplanner.core.api.score.stream.ConstraintCollectors.toList;
 
 public class CommitteeSchedulingConstraintProvider implements ConstraintProvider {
 
         @Override
         public Constraint[] defineConstraints(ConstraintFactory constraintFactory) {
-                return new Constraint[] {selfConflict(constraintFactory),
+                return new Constraint[] {timeSlotAvailabilityConflict(constraintFactory),
+                                timeSlotConflict(constraintFactory),
+                                selfConflict(constraintFactory),
                                 committeeConflict(constraintFactory),
                                 committeeAssignmentsConflict(constraintFactory),
                                 requiredPersonType(constraintFactory),
                                 requiredSkillsToCertificate(constraintFactory)};
+        }
+
+        private Constraint timeSlotAvailabilityConflict(ConstraintFactory constraintFactory) {
+                return constraintFactory.from(CommitteeAssignment.class)
+                                .filter(committeeAssignment -> !committeeAssignment.isAvailable())
+                                .penalize("A person must be available for the committee time slot",
+                                                HardSoftScore.ONE_HARD);
+        }
+
+        private Constraint timeSlotConflict(ConstraintFactory constraintFactory) {
+                return constraintFactory.from(CommitteeAssignment.class)
+                                .groupBy(CommitteeAssignment::getCommittee, toList())
+                                .filter((committee,
+                                                list) -> !committee.allPersonsAreAvailable(list))
+                                .penalize("All persons in a committee must be available for the same committee time slot",
+                                                HardSoftScore.ONE_HARD);
         }
 
         private Constraint selfConflict(ConstraintFactory constraintFactory) {

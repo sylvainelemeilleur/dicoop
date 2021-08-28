@@ -1,11 +1,10 @@
 package fr.cirad.domain;
 
 import java.time.Instant;
-import org.optaplanner.core.api.domain.lookup.PlanningId;
+import java.util.List;
 
 public class Committee {
 
-    @PlanningId
     public Long id;
 
     public Person evaluatedPerson;
@@ -21,6 +20,10 @@ public class Committee {
     public Committee(Person evaluatedPerson) {
         this.id = currentId++;
         this.evaluatedPerson = evaluatedPerson;
+    }
+
+    public boolean allPersonsAreAvailable(List<CommitteeAssignment> assignments) {
+        return assignments.stream().map(CommitteeAssignment::getTimeSlot).distinct().count() <= 1;
     }
 
     @Override
