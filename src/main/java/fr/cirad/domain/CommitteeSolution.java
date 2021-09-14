@@ -1,6 +1,7 @@
 package fr.cirad.domain;
 
 import java.util.List;
+import java.util.UUID;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import org.optaplanner.core.api.domain.solution.PlanningEntityCollectionProperty;
 import org.optaplanner.core.api.domain.solution.PlanningScore;
@@ -12,6 +13,8 @@ import org.optaplanner.core.api.solver.SolverStatus;
 
 @PlanningSolution
 public class CommitteeSolution {
+
+    public UUID id;
 
     @ProblemFactCollectionProperty
     @JsonIgnore
@@ -48,6 +51,7 @@ public class CommitteeSolution {
 
     public CommitteeSolution(List<Committee> committees, List<Person> persons, List<Skill> skills,
             List<TimeSlot> timeSlots, List<CommitteeAssignment> committeeAssignments) {
+        this.id = UUID.randomUUID();
         this.committees = committees;
         this.persons = persons;
         this.skills = skills;

@@ -3,8 +3,10 @@ import "./App.css";
 import "@patternfly/patternfly/patternfly.css";
 
 function App() {
+  const [isSolving, setIsSolving] = useState(false);
   const [persons, setPersons] = useState([]);
   const [committeeSolution, setCommitteeSolution] = useState({
+    id: null,
     committeeAssignments: [],
     committees: {},
     solverStatus: "NOT_STARTED",
@@ -35,6 +37,7 @@ function App() {
       Object.create(null)
     );
     return {
+      id: solution.id,
       committees,
       committeeAssignments: solution.committeeAssignments,
       solverStatus: solution.solverStatus,
@@ -45,8 +48,11 @@ function App() {
 
   const startSolving = () => {
     fetch("/api/committeeSolution/solve")
-      .then(() => {
+      .then((res) => res.json())
+      .then((res) => {
+        setIsSolving(true);
         setCommitteeSolution({
+          id: res.id,
           committeeAssignments: [],
           committees: {},
           solverStatus: "INITIALIZING",
@@ -54,21 +60,31 @@ function App() {
           scoreExplanation: "",
         });
         setTimeout(() => {
-          refreshSolution();
+          refreshSolution(res.id);
         }, 2000);
       })
       .catch(console.log);
   };
 
-  const refreshSolution = () => {
-    fetch("/api/committeeSolution")
+  const stopSolving = () => {
+    fetch(`/api/committeeSolution/stopSolving/${committeeSolution.id}`).then(
+      () => {
+        setIsSolving(false);
+      }
+    );
+  };
+
+  const refreshSolution = (id: string) => {
+    fetch(`/api/committeeSolution/${id}`)
       .then((res) => res.json())
       .then((res) => {
         setCommitteeSolution(parseSolution(res));
         if (res.solverStatus === "SOLVING_ACTIVE") {
           setTimeout(() => {
-            refreshSolution();
+            refreshSolution(id);
           }, 2000);
+        } else {
+          setIsSolving(false);
         }
       })
       .catch(console.log);
@@ -97,13 +113,23 @@ function App() {
 
   return (
     <div className="App">
-      <button
-        className="pf-c-button pf-m-primary"
-        type="button"
-        onClick={startSolving}
-      >
-        Solve
-      </button>
+      {isSolving ? (
+        <button
+          className="pf-c-button pf-m-secondary"
+          type="button"
+          onClick={stopSolving}
+        >
+          Stop
+        </button>
+      ) : (
+        <button
+          className="pf-c-button pf-m-primary"
+          type="button"
+          onClick={startSolving}
+        >
+          Solve
+        </button>
+      )}
       <table
         className="pf-c-table pf-m-grid-md"
         role="grid"
@@ -111,8 +137,12 @@ function App() {
         id="table-basic"
       >
         <caption>
-          Solution status: {committeeSolution.solverStatus} score:{" "}
+          Solution status: {committeeSolution.solverStatus}
+          <br />
+          Score: <br />
           {committeeSolution.score}
+          <br />
+          ID: {committeeSolution.id}
           <div>Score explanation: {committeeSolution.scoreExplanation}</div>
         </caption>
         <thead>

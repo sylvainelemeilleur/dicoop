@@ -1,30 +1,32 @@
 package fr.cirad.rest;
 
+import java.util.Map;
 import java.util.UUID;
-import java.util.concurrent.ExecutionException;
+import java.util.concurrent.TimeUnit;
 import javax.inject.Inject;
 import javax.transaction.Transactional;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.GET;
-import javax.ws.rs.POST;
 import javax.ws.rs.Path;
+import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
+import org.jboss.logging.Logger;
 import org.optaplanner.core.api.score.ScoreManager;
 import org.optaplanner.core.api.score.buildin.hardsoft.HardSoftScore;
-import org.optaplanner.core.api.solver.SolverJob;
 import org.optaplanner.core.api.solver.SolverManager;
 import org.optaplanner.core.api.solver.SolverStatus;
 import fr.cirad.bootstrap.DemoDataService;
 import fr.cirad.domain.CommitteeSolution;
+import net.jodah.expiringmap.ExpiringMap;
 
 @Path("api/committeeSolution")
 @Produces(MediaType.APPLICATION_JSON)
 @Consumes(MediaType.APPLICATION_JSON)
 public class CommitteeSolutionResource {
 
-    public static final UUID SINGLETON_TIME_TABLE_ID = UUID.randomUUID();
-    public CommitteeSolution currentSolution;
+    static Map<UUID, CommitteeSolution> solutions =
+            ExpiringMap.builder().maxSize(50).expiration(1, TimeUnit.DAYS).build();
 
     @Inject
     SolverManager<CommitteeSolution, UUID> solverManager;
@@ -35,70 +37,60 @@ public class CommitteeSolutionResource {
     @Inject
     DemoDataService service;
 
+    @Inject
+    Logger log;
+
     @GET
-    public CommitteeSolution getSolution() {
-        if (currentSolution == null) {
-            currentSolution = new CommitteeSolution(service.committees, service.persons,
-                    service.skills, service.timeSlots, service.assignments);
-        }
+    @Path("/{id}")
+    public CommitteeSolution getSolution(@PathParam(value = "id") UUID id) {
         // Get the solver status before loading the solution
         // to avoid the race condition that the solver terminates between them
-        SolverStatus solverStatus = getSolverStatus();
-        CommitteeSolution solution = findById(SINGLETON_TIME_TABLE_ID);
+        SolverStatus solverStatus = getSolverStatus(id);
+        CommitteeSolution solution = findById(id);
         scoreManager.updateScore(solution); // Sets the score
         solution.solverStatus = solverStatus;
         var scoreExplanation = scoreManager.explainScore(solution);
-        System.out.println(scoreExplanation);
+        log.info(scoreExplanation);
         solution.scoreExplanation = scoreExplanation.toString();
         return solution;
     }
 
     @GET
-    @Path("solve2")
-    public CommitteeSolution solve2() {
-        UUID problemId = UUID.randomUUID();
-        CommitteeSolution problem = new CommitteeSolution(service.committees, service.persons,
-                service.skills, service.timeSlots, service.assignments);
-        SolverJob<CommitteeSolution, UUID> solverJob = solverManager.solve(problemId, problem);
-        CommitteeSolution solution;
-        try {
-            solution = solverJob.getFinalBestSolution();
-        } catch (InterruptedException | ExecutionException e) {
-            throw new IllegalStateException("Solving failed.", e);
-        }
+    @Path("solve")
+    public CommitteeSolution solve() {
+        var solution = initSolution();
+        solverManager.solveAndListen(solution.id, this::findById, this::save);
         return solution;
     }
 
     @GET
-    @Path("solve")
-    public void solve() {
-        if (currentSolution == null) {
-            currentSolution = new CommitteeSolution(service.committees, service.persons,
-                    service.skills, service.timeSlots, service.assignments);
-        }
-        solverManager.solveAndListen(SINGLETON_TIME_TABLE_ID, this::findById, this::save);
+    @Path("stopSolving/{id}")
+    public String stopSolving(@PathParam(value = "id") UUID id) {
+        solverManager.terminateEarly(id);
+        return "The solving solution " + id + " has been terminated.";
     }
 
-    public SolverStatus getSolverStatus() {
-        return solverManager.getSolverStatus(SINGLETON_TIME_TABLE_ID);
+    CommitteeSolution initSolution() {
+        var solution = new CommitteeSolution(service.committees, service.persons, service.skills,
+                service.timeSlots, service.assignments);
+        solutions.put(solution.id, solution);
+        return solution;
     }
 
-    @POST
-    @Path("stopSolving")
-    public void stopSolving() {
-        solverManager.terminateEarly(SINGLETON_TIME_TABLE_ID);
-    }
-
-    @Transactional
-    protected CommitteeSolution findById(UUID id) {
-        if (!SINGLETON_TIME_TABLE_ID.equals(id)) {
-            throw new IllegalStateException("There is no timeTable with id (" + id + ").");
-        }
-        return currentSolution;
+    SolverStatus getSolverStatus(UUID id) {
+        return solverManager.getSolverStatus(id);
     }
 
     @Transactional
-    protected void save(CommitteeSolution committeeSolution) {
-        currentSolution = committeeSolution;
+    CommitteeSolution findById(UUID id) {
+        if (!solutions.containsKey(id)) {
+            throw new IllegalStateException("There is no solution with id (" + id + ").");
+        }
+        return solutions.get(id);
+    }
+
+    @Transactional
+    void save(CommitteeSolution solution) {
+        solutions.put(solution.id, solution);
     }
 }

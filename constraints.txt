@@ -1,0 +1,37 @@
+
+## Main constraints
+
+core:
+- First party participants may be reviewed by others.
+- Each farm gets sufficiently many first party, second party, and total certifiers.
+- Each participant PX performs <= K certificates.
+- Can only select participants PX able/willing to certify PY.
+
+reciprocity:
+- Compute reachability in k steps
+
+follow-up
+
+skills
+
+communication
+
+committee-meeting
+
+location
+
+## Custom constraints
+
+active
+
+enum
+
+config
+
+2018
+
+2019
+
+2020
+
+2021
