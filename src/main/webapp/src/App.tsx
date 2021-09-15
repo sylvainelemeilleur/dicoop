@@ -3,6 +3,7 @@ import "./App.css";
 import "@patternfly/patternfly/patternfly.css";
 import SolutionTable from "./Solution/SolutionTable";
 import ParticipantsTable from "./Participant/ParticipantsTable";
+import NumberInput from "./Visual/NumberInput";
 
 function App() {
   const [isSolving, setIsSolving] = useState(false);
@@ -94,13 +95,23 @@ function App() {
 
   return (
     <div className="App">
+      <NumberInput value={2} />
       {isSolving ? (
         <button
           className="pf-c-button pf-m-secondary"
           type="button"
           onClick={stopSolving}
         >
-          Stop
+          Stop &nbsp;
+          <span
+            className="pf-c-spinner pf-m-sm"
+            role="progressbar"
+            aria-valuetext="Loading..."
+          >
+            <span className="pf-c-spinner__clipper"></span>
+            <span className="pf-c-spinner__lead-ball"></span>
+            <span className="pf-c-spinner__tail-ball"></span>
+          </span>
         </button>
       ) : (
         <button

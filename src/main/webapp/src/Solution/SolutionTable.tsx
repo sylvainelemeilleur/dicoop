@@ -2,18 +2,20 @@ import React from "react";
 
 function SolutionTable(props: any) {
   const assignmentsList = (assignments: any) => (
-    <ul>
+    <React.Fragment>
       {assignments
         .filter((assignment: any) => assignment.assignedPerson)
         .map((assignment: any) => (
-          <li key={assignment.assignedPerson.name}>
-            Required {assignment.requiredPersonType.name}:
-            <b>{assignment.assignedPerson.name}</b> (
-            {assignment.assignedPerson.personType.name}) (
-            {assignment.timeSlot.name})
-          </li>
+          <td
+            role="cell"
+            data-label="Assignments"
+            key={assignment.assignedPerson.name}
+          >
+            <b>{assignment.assignedPerson.name}</b>
+            <br />({assignment.assignedPerson.personType.name})
+          </td>
         ))}
-    </ul>
+    </React.Fragment>
   );
 
   return (
@@ -37,8 +39,11 @@ function SolutionTable(props: any) {
           <th role="columnheader" scope="col">
             Evaluated Person
           </th>
-          <th role="columnheader" scope="col">
+          <th role="columnheader" scope="col" colSpan={3}>
             Assignments
+          </th>
+          <th role="columnheader" scope="col">
+            Timeslot
           </th>
         </tr>
       </thead>
@@ -49,8 +54,9 @@ function SolutionTable(props: any) {
               <td role="cell" data-label="Evaluated Person">
                 {committee.evaluatedPerson?.name}
               </td>
-              <td role="cell" data-label="Assignments">
-                {assignmentsList(committee.assignments)}
+              {assignmentsList(committee.assignments)}
+              <td role="cell" data-label="Timeslot">
+                {committee.assignments[0]?.timeSlot?.name}
               </td>
             </tr>
           )
