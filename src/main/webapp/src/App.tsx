@@ -1,6 +1,8 @@
 import React, { useEffect, useState } from "react";
 import "./App.css";
 import "@patternfly/patternfly/patternfly.css";
+import SolutionTable from "./Solution/SolutionTable";
+import ParticipantsTable from "./Participant/ParticipantsTable";
 
 function App() {
   const [isSolving, setIsSolving] = useState(false);
@@ -90,27 +92,6 @@ function App() {
       .catch(console.log);
   };
 
-  const badge = (item: any) => (
-    <span key={item} className="pf-c-badge pf-m-read">
-      {item}
-    </span>
-  );
-
-  const assignmentsList = (assignments: any) => (
-    <ul>
-      {assignments
-        .filter((assignment: any) => assignment.assignedPerson)
-        .map((assignment: any) => (
-          <li key={assignment.assignedPerson.id}>
-            Required {assignment.requiredPersonType.name}:
-            <b>{assignment.assignedPerson.name}</b> (
-            {assignment.assignedPerson.personType.name}) (
-            {assignment.timeSlot.name})
-          </li>
-        ))}
-    </ul>
-  );
-
   return (
     <div className="App">
       {isSolving ? (
@@ -130,114 +111,8 @@ function App() {
           Solve
         </button>
       )}
-      <table
-        className="pf-c-table pf-m-grid-md"
-        role="grid"
-        aria-label="Solution"
-        id="table-basic"
-      >
-        <caption>
-          Solution status: {committeeSolution.solverStatus}
-          <br />
-          Score: <br />
-          {committeeSolution.score}
-          <br />
-          ID: {committeeSolution.id}
-          <div>Score explanation: {committeeSolution.scoreExplanation}</div>
-        </caption>
-        <thead>
-          <tr role="row">
-            <th role="columnheader" scope="col">
-              Committee ID
-            </th>
-            <th role="columnheader" scope="col">
-              Evaluated Person
-            </th>
-            <th role="columnheader" scope="col">
-              Assignments
-            </th>
-          </tr>
-        </thead>
-        {Object.values(committeeSolution.committees).map((committee: any) => (
-          <tbody role="rowgroup" key={committee.id}>
-            <tr role="row">
-              <td role="cell" data-label="Committee ID">
-                {committee.id}
-              </td>
-              <td role="cell" data-label="Evaluated Person">
-                {committee.evaluatedPerson?.name}
-              </td>
-              <td role="cell" data-label="Assignments">
-                {assignmentsList(committee.assignments)}
-              </td>
-            </tr>
-          </tbody>
-        ))}
-      </table>
-      <table
-        className="pf-c-table pf-m-grid-md"
-        role="grid"
-        aria-label="Participants"
-        id="table-basic"
-      >
-        <caption>Participants</caption>
-        <thead>
-          <tr role="row">
-            <th role="columnheader" scope="col">
-              Name
-            </th>
-            <th role="columnheader" scope="col">
-              Type
-            </th>
-            <th role="columnheader" scope="col">
-              Location
-            </th>
-            <th role="columnheader" scope="col">
-              Skills
-            </th>
-            <th role="columnheader" scope="col">
-              Languages
-            </th>
-            <th role="columnheader" scope="col">
-              Availability
-            </th>
-            <th role="columnheader" scope="col">
-              Skills to certificate
-            </th>
-          </tr>
-        </thead>
-        {persons.map((person: any) => (
-          <tbody role="rowgroup" key={person.name}>
-            <tr role="row">
-              <td role="cell" data-label="Name">
-                {person.name}
-              </td>
-              <td role="cell" data-label="Type">
-                {person.personType.name}
-              </td>
-              <td role="cell" data-label="Location">
-                {person.location.name}
-              </td>
-              <td role="cell" data-label="Skills">
-                {person.skills.map((skill: any) => badge(skill.name))}
-              </td>
-              <td role="cell" data-label="Languages">
-                {person.languages.map((language: any) => badge(language.name))}
-              </td>
-              <td role="cell" data-label="Availability">
-                {person.availability.map((availability: any) =>
-                  badge(availability.name)
-                )}
-              </td>
-              <td role="cell" data-label="Skills to certificate">
-                {person.skillsToCertificate.map((skill: any) =>
-                  badge(skill.name)
-                )}
-              </td>
-            </tr>
-          </tbody>
-        ))}
-      </table>
+      <SolutionTable committeeSolution={committeeSolution} />
+      <ParticipantsTable persons={persons} />
     </div>
   );
 }
