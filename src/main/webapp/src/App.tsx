@@ -3,7 +3,6 @@ import "./App.css";
 import SolutionSettingsForm from "./Solution/SolutionSettingsForm";
 import SolutionTable from "./Solution/SolutionTable";
 import ParticipantsTable from "./Participant/ParticipantsTable";
-import NumberInput from "./Visual/NumberInput";
 
 function App() {
   const [isSolving, setIsSolving] = useState(false);
@@ -96,7 +95,6 @@ function App() {
   return (
     <div className="App">
       <SolutionSettingsForm />
-      <NumberInput value={2} />
       {isSolving ? (
         <button
           className="pf-c-button pf-m-secondary"

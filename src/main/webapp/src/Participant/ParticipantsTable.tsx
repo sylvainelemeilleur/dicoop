@@ -1,5 +1,5 @@
+import { Badge } from "@patternfly/react-core";
 import React from "react";
-import Badge from "../Visual/Badge";
 
 function ParticipantsTable(props: any) {
   return (
@@ -36,7 +36,7 @@ function ParticipantsTable(props: any) {
         </tr>
       </thead>
       {props.persons.map((person: any) => (
-        <tbody role="rowgroup" key={person.name}>
+        <tbody key={person.name}>
           <tr role="row">
             <td role="cell" data-label="Name">
               {person.name}
@@ -48,20 +48,32 @@ function ParticipantsTable(props: any) {
               {person.location.name}
             </td>
             <td role="cell" data-label="Skills">
-              {person.skills.map((skill: any) => Badge(skill.name))}
+              {person.skills.map((skill: any) => (
+                <Badge key={skill.name} isRead>
+                  {skill.name}
+                </Badge>
+              ))}
             </td>
             <td role="cell" data-label="Languages">
-              {person.languages.map((language: any) => Badge(language.name))}
+              {person.languages.map((language: any) => (
+                <Badge key={language.name} isRead>
+                  {language.name}
+                </Badge>
+              ))}
             </td>
             <td role="cell" data-label="Availability">
-              {person.availability.map((availability: any) =>
-                Badge(availability.name)
-              )}
+              {person.availability.map((availability: any) => (
+                <Badge key={availability.name} isRead>
+                  {availability.name}
+                </Badge>
+              ))}
             </td>
             <td role="cell" data-label="Skills to certificate">
-              {person.skillsToCertificate.map((skill: any) =>
-                Badge(skill.name)
-              )}
+              {person.skillsToCertificate.map((skill: any) => (
+                <Badge key={skill.name} isRead>
+                  {skill.name}
+                </Badge>
+              ))}
             </td>
           </tr>
         </tbody>
