@@ -38,13 +38,12 @@ compileTestJava {
     options.encoding = 'UTF-8'
 }
 
-/*
 frontend {
-    nodeVersion = '14.16.1'
-    assembleScript = '--prefix ./src/main/webapp run build'
+    nodeVersion = '14.17.6'
+    assembleScript = '--prefix ./src/main/webapp run prod'
 }
 
-
+/*
 quarkusBuild {
     nativeArgs {
         additionalBuildArgs = "--initialize-at-run-time=org.drools.core.common.CompositeDefaultAgenda"

@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import "./App.css";
-import "@patternfly/patternfly/patternfly.css";
+import SolutionSettingsForm from "./Solution/SolutionSettingsForm";
 import SolutionTable from "./Solution/SolutionTable";
 import ParticipantsTable from "./Participant/ParticipantsTable";
 import NumberInput from "./Visual/NumberInput";
@@ -95,6 +95,7 @@ function App() {
 
   return (
     <div className="App">
+      <SolutionSettingsForm />
       <NumberInput value={2} />
       {isSolving ? (
         <button
