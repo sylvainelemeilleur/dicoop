@@ -3,7 +3,7 @@ import "./App.css";
 import SolutionSettingsForm from "./Solution/SolutionSettingsForm";
 import SolutionTable from "./Solution/SolutionTable";
 import ParticipantsTable from "./Participant/ParticipantsTable";
-import { Card, CardBody, Flex, FlexItem } from "@patternfly/react-core";
+import { Flex, FlexItem } from "@patternfly/react-core";
 
 function App() {
   const [isSolving, setIsSolving] = useState(false);
