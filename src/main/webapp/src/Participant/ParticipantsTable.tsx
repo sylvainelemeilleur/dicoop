@@ -2,9 +2,20 @@ import { Badge } from "@patternfly/react-core";
 import React from "react";
 
 function ParticipantsTable(props: any) {
+  const badgeList = (namedList: any) => {
+    return (
+      <React.Fragment>
+        {namedList.map((item: any) => (
+          <Badge key={item.name} isRead>
+            {item.name}
+          </Badge>
+        ))}
+      </React.Fragment>
+    );
+  };
   return (
     <table
-      className="pf-c-table pf-m-grid-md"
+      className="pf-c-table pf-m-compact pf-m-grid-md"
       role="grid"
       aria-label="Participants"
       id="table-basic"
@@ -48,32 +59,16 @@ function ParticipantsTable(props: any) {
               {person.location.name}
             </td>
             <td role="cell" data-label="Skills">
-              {person.skills.map((skill: any) => (
-                <Badge key={skill.name} isRead>
-                  {skill.name}
-                </Badge>
-              ))}
+              {badgeList(person.skills)}
             </td>
             <td role="cell" data-label="Languages">
-              {person.languages.map((language: any) => (
-                <Badge key={language.name} isRead>
-                  {language.name}
-                </Badge>
-              ))}
+              {badgeList(person.languages)}
             </td>
             <td role="cell" data-label="Availability">
-              {person.availability.map((availability: any) => (
-                <Badge key={availability.name} isRead>
-                  {availability.name}
-                </Badge>
-              ))}
+              {badgeList(person.availability)}
             </td>
             <td role="cell" data-label="Skills to certificate">
-              {person.skillsToCertificate.map((skill: any) => (
-                <Badge key={skill.name} isRead>
-                  {skill.name}
-                </Badge>
-              ))}
+              {badgeList(person.skillsToCertificate)}
             </td>
           </tr>
         </tbody>

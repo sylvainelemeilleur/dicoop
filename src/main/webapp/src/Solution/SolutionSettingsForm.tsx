@@ -1,10 +1,13 @@
 import React, { useState } from "react";
 import {
+  ActionGroup,
   Card,
   CardBody,
   CardTitle,
   Form,
   FormGroup,
+  Grid,
+  GridItem,
   NumberInput,
   Popover,
 } from "@patternfly/react-core";
@@ -25,9 +28,8 @@ function SolutionSettingsForm(props: any) {
     return () => setControlledValue(val + 1, valueSetter);
   };
   return (
-    <Card cellPadding={30}>
-      <CardTitle>Settings</CardTitle>
-      <CardBody>
+    <Grid cellPadding={30}>
+      <GridItem sm={6}>
         <Form isHorizontal>
           <FormGroup
             label="Number of professionals"
@@ -122,9 +124,56 @@ function SolutionSettingsForm(props: any) {
               widthChars={2}
             />
           </FormGroup>
+          <ActionGroup>
+            {props.isSolving ? (
+              <button
+                className="pf-c-button pf-m-secondary"
+                type="button"
+                onClick={props.stopSolving}
+              >
+                Stop &nbsp;
+                <span
+                  className="pf-c-spinner pf-m-sm"
+                  role="progressbar"
+                  aria-valuetext="Loading..."
+                >
+                  <span className="pf-c-spinner__clipper"></span>
+                  <span className="pf-c-spinner__lead-ball"></span>
+                  <span className="pf-c-spinner__tail-ball"></span>
+                </span>
+              </button>
+            ) : (
+              <button
+                className="pf-c-button pf-m-primary"
+                type="button"
+                onClick={props.startSolving}
+              >
+                Solve
+              </button>
+            )}
+          </ActionGroup>
         </Form>
-      </CardBody>
-    </Card>
+      </GridItem>
+      <GridItem sm={6}>
+        <b>Status</b>: {props.committeeSolution.solverStatus}
+        <br />
+        {props.committeeSolution.id && (
+          <div>
+            <b>ID</b>: {props.committeeSolution.id}
+          </div>
+        )}
+        {props.committeeSolution.score && (
+          <div>
+            <b>Score:</b> {props.committeeSolution.score}
+          </div>
+        )}
+        {props.committeeSolution.scoreExplanation && (
+          <div>
+            <b>Explanation:</b> {props.committeeSolution.scoreExplanation}
+          </div>
+        )}
+      </GridItem>
+    </Grid>
   );
 }
 

@@ -3,7 +3,7 @@ import "./App.css";
 import SolutionSettingsForm from "./Solution/SolutionSettingsForm";
 import SolutionTable from "./Solution/SolutionTable";
 import ParticipantsTable from "./Participant/ParticipantsTable";
-import { Flex, FlexItem } from "@patternfly/react-core";
+import { Card, CardBody, Flex, FlexItem } from "@patternfly/react-core";
 
 function App() {
   const [isSolving, setIsSolving] = useState(false);
@@ -95,41 +95,20 @@ function App() {
 
   return (
     <Flex direction={{ default: "column" }}>
-      <FlexItem>
-        <SolutionSettingsForm />
+      <FlexItem cellPadding={30}>
+        <SolutionSettingsForm
+          isSolving={isSolving}
+          startSolving={startSolving}
+          stopSolving={stopSolving}
+          committeeSolution={committeeSolution}
+        />
       </FlexItem>
-      <FlexItem>
-        {isSolving ? (
-          <button
-            className="pf-c-button pf-m-secondary"
-            type="button"
-            onClick={stopSolving}
-          >
-            Stop &nbsp;
-            <span
-              className="pf-c-spinner pf-m-sm"
-              role="progressbar"
-              aria-valuetext="Loading..."
-            >
-              <span className="pf-c-spinner__clipper"></span>
-              <span className="pf-c-spinner__lead-ball"></span>
-              <span className="pf-c-spinner__tail-ball"></span>
-            </span>
-          </button>
-        ) : (
-          <button
-            className="pf-c-button pf-m-primary"
-            type="button"
-            onClick={startSolving}
-          >
-            Solve
-          </button>
-        )}
-      </FlexItem>
-      <FlexItem>
-        <SolutionTable committeeSolution={committeeSolution} />
-      </FlexItem>
-      <FlexItem>
+      {committeeSolution.id && (
+        <FlexItem cellPadding={30}>
+          <SolutionTable committeeSolution={committeeSolution} />
+        </FlexItem>
+      )}
+      <FlexItem cellPadding={30}>
         <ParticipantsTable persons={persons} />
       </FlexItem>
     </Flex>

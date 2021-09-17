@@ -20,20 +20,12 @@ function SolutionTable(props: any) {
 
   return (
     <table
-      className="pf-c-table pf-m-grid-md"
+      className="pf-c-table pf-m-compact pf-m-grid-md"
       role="grid"
       aria-label="Solution"
       id="table-basic"
     >
-      <caption>
-        Solution status: {props.committeeSolution.solverStatus}
-        <br />
-        Score: <br />
-        {props.committeeSolution.score}
-        <br />
-        ID: {props.committeeSolution.id}
-        <div>Score explanation: {props.committeeSolution.scoreExplanation}</div>
-      </caption>
+      <caption>Solution</caption>
       <thead>
         <tr role="row">
           <th role="columnheader" scope="col">
@@ -47,7 +39,7 @@ function SolutionTable(props: any) {
           </th>
         </tr>
       </thead>
-      <tbody role="rowgroup">
+      <tbody>
         {Object.values(props.committeeSolution.committees).map(
           (committee: any) => (
             <tr role="row" key={committee.id}>
