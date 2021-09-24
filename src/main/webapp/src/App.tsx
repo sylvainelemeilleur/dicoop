@@ -49,11 +49,16 @@ function App() {
     };
   };
 
-  const startSolving = () => {
-    fetch("/api/committeeSolution/solve")
+  const startSolving = (options) => {
+    setIsSolving(true);
+    const requestOptions = {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(options),
+    };
+    fetch("/api/committeeSolution/solve", requestOptions)
       .then((res) => res.json())
       .then((res) => {
-        setIsSolving(true);
         setCommitteeSolution({
           id: res.id,
           committeeAssignments: [],

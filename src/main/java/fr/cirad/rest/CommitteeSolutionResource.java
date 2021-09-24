@@ -7,6 +7,7 @@ import javax.inject.Inject;
 import javax.transaction.Transactional;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.GET;
+import javax.ws.rs.POST;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
@@ -18,6 +19,7 @@ import org.optaplanner.core.api.solver.SolverManager;
 import org.optaplanner.core.api.solver.SolverStatus;
 import fr.cirad.bootstrap.DemoDataService;
 import fr.cirad.domain.CommitteeSolution;
+import fr.cirad.domain.SolverOptions;
 import net.jodah.expiringmap.ExpiringMap;
 
 @Path("api/committeeSolution")
@@ -55,10 +57,10 @@ public class CommitteeSolutionResource {
         return solution;
     }
 
-    @GET
+    @POST
     @Path("solve")
-    public CommitteeSolution solve() {
-        var solution = initSolution();
+    public CommitteeSolution solve(SolverOptions options) {
+        var solution = initSolution(options);
         solverManager.solveAndListen(solution.id, this::findById, this::save);
         return solution;
     }
@@ -70,9 +72,9 @@ public class CommitteeSolutionResource {
         return "The solving solution " + id + " has been terminated.";
     }
 
-    CommitteeSolution initSolution() {
+    CommitteeSolution initSolution(SolverOptions options) {
         var solution = new CommitteeSolution(service.committees, service.persons, service.skills,
-                service.timeSlots, service.assignments);
+                service.timeSlots, options);
         solutions.put(solution.id, solution);
         return solution;
     }

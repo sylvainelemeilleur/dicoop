@@ -31,11 +31,11 @@ function SolutionTable(props: any) {
           <th role="columnheader" scope="col">
             Evaluated Person
           </th>
-          <th role="columnheader" scope="col" colSpan={3}>
-            Assignments
-          </th>
           <th role="columnheader" scope="col">
             Timeslot
+          </th>
+          <th role="columnheader" scope="col">
+            Assignments
           </th>
         </tr>
       </thead>
@@ -46,10 +46,11 @@ function SolutionTable(props: any) {
               <td role="cell" data-label="Evaluated Person">
                 {committee.evaluatedPerson?.name}
               </td>
-              {assignmentsList(committee.assignments)}
+
               <td role="cell" data-label="Timeslot">
                 {committee.assignments[0]?.timeSlot?.name}
               </td>
+              {assignmentsList(committee.assignments)}
             </tr>
           )
         )}

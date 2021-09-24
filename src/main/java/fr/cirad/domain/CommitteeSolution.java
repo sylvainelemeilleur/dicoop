@@ -1,5 +1,6 @@
 package fr.cirad.domain;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 import com.fasterxml.jackson.annotation.JsonIgnore;
@@ -50,12 +51,27 @@ public class CommitteeSolution {
     }
 
     public CommitteeSolution(List<Committee> committees, List<Person> persons, List<Skill> skills,
-            List<TimeSlot> timeSlots, List<CommitteeAssignment> committeeAssignments) {
+            List<TimeSlot> timeSlots, SolverOptions options) {
         this.id = UUID.randomUUID();
         this.committees = committees;
         this.persons = persons;
         this.skills = skills;
         this.timeSlots = timeSlots;
-        this.committeeAssignments = committeeAssignments;
+        this.committeeAssignments = new ArrayList<>();
+        // initialization of the Committees assigments needed, 2 professionals ans 1
+        // non-professional person
+        var professionalPersonType = new PersonType("professional");
+        var nonProfessionalPersonType = new PersonType("non-professional");
+        Long committeeAssignmentId = 0L;
+        for (var committee : committees) {
+            for (int i = 1; i <= options.nbProParticipants; i++) {
+                this.committeeAssignments.add(new CommitteeAssignment(committeeAssignmentId++,
+                        committee, professionalPersonType));
+            }
+            for (int i = 1; i <= options.nbNonProParticipants; i++) {
+                this.committeeAssignments.add(new CommitteeAssignment(committeeAssignmentId++,
+                        committee, nonProfessionalPersonType));
+            }
+        }
     }
 }
