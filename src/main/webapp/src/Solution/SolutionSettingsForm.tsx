@@ -119,13 +119,22 @@ function SolutionSettingsForm(props: any) {
                 </span>
               </button>
             ) : (
-              <button
-                className="pf-c-button pf-m-primary"
-                type="button"
-                onClick={solve}
-              >
-                Solve
-              </button>
+              <>
+                <button
+                  className="pf-c-button pf-m-primary"
+                  type="button"
+                  onClick={solve}
+                >
+                  Solve
+                </button>
+                <button
+                  className="pf-c-button pf-m-primary"
+                  type="button"
+                  onClick={props.dataExport}
+                >
+                  Export
+                </button>
+              </>
             )}
           </ActionGroup>
         </Form>

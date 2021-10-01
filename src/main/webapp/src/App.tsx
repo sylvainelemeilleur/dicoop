@@ -4,10 +4,15 @@ import SolutionSettingsForm from "./Solution/SolutionSettingsForm";
 import SolutionTable from "./Solution/SolutionTable";
 import ParticipantsTable from "./Participant/ParticipantsTable";
 import { Flex, FlexItem } from "@patternfly/react-core";
+import { excelExport } from "./Persistence/Excel";
 
 function App() {
   const [isSolving, setIsSolving] = useState(false);
   const [persons, setPersons] = useState([]);
+  const [settings, setSettings] = useState({
+    nbProParticipants: 2,
+    nbNonProParticipants: 1,
+  });
   const [committeeSolution, setCommitteeSolution] = useState({
     id: null,
     committeeAssignments: [],
@@ -49,7 +54,12 @@ function App() {
     };
   };
 
+  const dataExport = () => {
+    excelExport(settings, persons, committeeSolution);
+  };
+
   const startSolving = (options) => {
+    setSettings(options);
     setIsSolving(true);
     const requestOptions = {
       method: "POST",
@@ -105,6 +115,7 @@ function App() {
           isSolving={isSolving}
           startSolving={startSolving}
           stopSolving={stopSolving}
+          dataExport={dataExport}
           committeeSolution={committeeSolution}
         />
       </FlexItem>
