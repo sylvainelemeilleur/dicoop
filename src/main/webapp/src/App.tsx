@@ -12,6 +12,7 @@ function App() {
   const [settings, setSettings] = useState({
     nbProParticipants: 2,
     nbNonProParticipants: 1,
+    maximumNumberOfAssignments: 5,
   });
   const [committeeSolution, setCommitteeSolution] = useState({
     id: null,

@@ -11,6 +11,8 @@ public class Committee {
 
     public Instant createdDate = Instant.now();
 
+    public int maximumNumberOfAssignments = 5;
+
     private static Long currentId = 0L; // Fake ID generator for the demo
 
     public Committee() {

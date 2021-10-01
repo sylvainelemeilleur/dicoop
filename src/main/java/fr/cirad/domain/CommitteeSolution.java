@@ -43,7 +43,8 @@ public class CommitteeSolution {
 
     public String scoreExplanation = "";
 
-    // Ignored by OptaPlanner, used by the UI to display solve or stop solving button
+    // Ignored by OptaPlanner, used by the UI to display solve or stop solving
+    // button
     public SolverStatus solverStatus;
 
     public CommitteeSolution() {
@@ -58,19 +59,20 @@ public class CommitteeSolution {
         this.skills = skills;
         this.timeSlots = timeSlots;
         this.committeeAssignments = new ArrayList<>();
-        // initialization of the Committees assigments needed, 2 professionals ans 1
+        // initialization of the Committees assignments needed, 2 professionals ans 1
         // non-professional person
         var professionalPersonType = new PersonType("professional");
         var nonProfessionalPersonType = new PersonType("non-professional");
         Long committeeAssignmentId = 0L;
         for (var committee : committees) {
+            committee.maximumNumberOfAssignments = options.maximumNumberOfAssignments;
             for (int i = 1; i <= options.nbProParticipants; i++) {
-                this.committeeAssignments.add(new CommitteeAssignment(committeeAssignmentId++,
-                        committee, professionalPersonType));
+                this.committeeAssignments
+                        .add(new CommitteeAssignment(committeeAssignmentId++, committee, professionalPersonType));
             }
             for (int i = 1; i <= options.nbNonProParticipants; i++) {
-                this.committeeAssignments.add(new CommitteeAssignment(committeeAssignmentId++,
-                        committee, nonProfessionalPersonType));
+                this.committeeAssignments
+                        .add(new CommitteeAssignment(committeeAssignmentId++, committee, nonProfessionalPersonType));
             }
         }
     }

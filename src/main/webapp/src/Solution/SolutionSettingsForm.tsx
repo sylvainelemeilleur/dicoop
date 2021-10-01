@@ -16,6 +16,8 @@ import React, { useState } from "react";
 function SolutionSettingsForm(props: any) {
   const [nbProParticipants, setNbProParticipants] = useState(2);
   const [nbNonProParticipants, setNbNonProParticipants] = useState(1);
+  const [maximumNumberOfAssignments, setMaximumNumberOfAssignments] =
+    useState(5);
   const min = 0;
   const max = 5;
   const [showMore, setShowMore] = useState(false);
@@ -24,6 +26,7 @@ function SolutionSettingsForm(props: any) {
     const options = {
       nbProParticipants,
       nbNonProParticipants,
+      maximumNumberOfAssignments,
     };
     props.startSolving(options);
   };
@@ -92,6 +95,29 @@ function SolutionSettingsForm(props: any) {
                 value={nbNonProParticipants}
                 inputValue={nbNonProParticipants}
                 onChange={setNbNonProParticipants}
+                min={0}
+                max={5}
+                step={1}
+                showTicks
+                isInputVisible
+              />
+            </div>
+          </FormGroup>
+          <FormGroup
+            label="Maximum number of assignments per participant"
+            fieldId="maximumNumberOfAssignments"
+            labelIcon={makePopover(
+              `Maximum number of assignments per participant`,
+              `Between ${min} and ${max}`
+            )}
+            isInline
+          >
+            <div style={sliderDivStyle}>
+              <Slider
+                id="maximumNumberOfAssignments"
+                value={maximumNumberOfAssignments}
+                inputValue={maximumNumberOfAssignments}
+                onChange={setMaximumNumberOfAssignments}
                 min={0}
                 max={5}
                 step={1}

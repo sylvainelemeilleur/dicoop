@@ -9,6 +9,10 @@ export function excelExport(
   const settingsData = [
     ["Number of pro participants", settings.nbProParticipants],
     ["Number of non pro participants", settings.nbNonProParticipants],
+    [
+      "Maximum number of assignments per participant",
+      settings.maximumNumberOfAssignments,
+    ],
   ];
   const settingsWorksheet = XLSX.utils.aoa_to_sheet(settingsData);
 
