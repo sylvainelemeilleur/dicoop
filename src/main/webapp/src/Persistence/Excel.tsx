@@ -1,8 +1,8 @@
-import { Person } from "../api";
+import { Person, SolverOptions } from "../api";
 import XLSX from "xlsx";
 
 export function excelExport(
-  settings: any,
+  settings: SolverOptions,
   persons: Array<Person>,
   committeeSolution: any
 ) {

@@ -5,7 +5,15 @@ import SolutionTable from "./Solution/SolutionTable";
 import ParticipantsTable from "./Participant/ParticipantsTable";
 import { Flex, FlexItem } from "@patternfly/react-core";
 import { excelExport } from "./Persistence/Excel";
-import { Configuration, Person, PersonResourceApi } from "./api";
+import {
+  CommitteeSolution,
+  CommitteeSolutionResourceApi,
+  Configuration,
+  Person,
+  PersonResourceApi,
+  SolverOptions,
+} from "./api";
+import { Solution } from "./Model/Solution";
 
 function App() {
   const [isSolving, setIsSolving] = useState(false);
@@ -14,31 +22,31 @@ function App() {
     nbProParticipants: 2,
     nbNonProParticipants: 1,
     maximumNumberOfAssignments: 5,
-  });
-  const [committeeSolution, setCommitteeSolution] = useState({
-    id: null,
-    committeeAssignments: [],
-    committees: {},
-    solverStatus: "NOT_STARTED",
-    score: "",
-    scoreExplanation: "",
-  });
+  } as SolverOptions);
+  const [committeeSolution, setCommitteeSolution] = useState(
+    new Solution("UNDEFINED", [], {}, "NOT_STARTED", "", "")
+  );
 
   // API configuration
   const apiConfig = new Configuration({
     basePath: window.location.origin,
   });
-  const personResourceApi = new PersonResourceApi(apiConfig);
-
-  useEffect(() => {
+  const committeeSolutionResourceApi = new CommitteeSolutionResourceApi(
+    apiConfig
+  );
+  const fetchPersons = () => {
+    const personResourceApi = new PersonResourceApi(apiConfig);
     personResourceApi
       .apiPersonsGet()
       .then((resp) => setPersons(resp.data))
       .catch(console.log);
-  });
+  };
 
-  const parseSolution = (solution: any) => {
-    const committees = solution.committeeAssignments.reduce(
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  useEffect(fetchPersons, []);
+
+  const parseSolution = (solution: CommitteeSolution): Solution => {
+    const committees = solution.committeeAssignments?.reduce(
       (r: any, a: any) => {
         r[a.committee.id] = r[a.committee.id] || {
           id: a.committee.id,
@@ -50,33 +58,29 @@ function App() {
       },
       Object.create(null)
     );
-    return {
-      id: solution.id,
+    return new Solution(
+      solution.id ?? "ID_UNDEFINED",
       committees,
-      committeeAssignments: solution.committeeAssignments,
-      solverStatus: solution.solverStatus,
-      score: JSON.stringify(solution.score),
-      scoreExplanation: solution.scoreExplanation,
-    };
+      solution.committeeAssignments,
+      solution.solverStatus ?? "STATUS_UNDEFINED",
+      JSON.stringify(solution.score),
+      solution.scoreExplanation ?? "SCORE_EXPLANATION_UNDEFINED"
+    );
   };
 
   const dataExport = () => {
     excelExport(settings, persons, committeeSolution);
   };
 
-  const startSolving = (options) => {
-    setSettings(options);
+  const startSolving = (solverOptions: SolverOptions) => {
+    setSettings(solverOptions);
     setIsSolving(true);
-    const requestOptions = {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify(options),
-    };
-    fetch("/api/committeeSolution/solve", requestOptions)
-      .then((res) => res.json())
-      .then((res) => {
+    committeeSolutionResourceApi
+      .apiCommitteeSolutionSolvePost(solverOptions)
+      .then((resp) => {
+        const solutionId = resp.data.id ?? "ID_ERROR";
         setCommitteeSolution({
-          id: res.id,
+          id: solutionId,
           committeeAssignments: [],
           committees: {},
           solverStatus: "INITIALIZING",
@@ -84,26 +88,26 @@ function App() {
           scoreExplanation: "",
         });
         setTimeout(() => {
-          refreshSolution(res.id);
+          refreshSolution(solutionId);
         }, 2000);
       })
       .catch(console.log);
   };
 
   const stopSolving = () => {
-    fetch(`/api/committeeSolution/stopSolving/${committeeSolution.id}`).then(
-      () => {
+    committeeSolutionResourceApi
+      .apiCommitteeSolutionStopSolvingIdGet(committeeSolution.id)
+      .then(() => {
         setIsSolving(false);
-      }
-    );
+      });
   };
 
   const refreshSolution = (id: string) => {
-    fetch(`/api/committeeSolution/${id}`)
-      .then((res) => res.json())
+    committeeSolutionResourceApi
+      .apiCommitteeSolutionIdGet(id)
       .then((res) => {
-        setCommitteeSolution(parseSolution(res));
-        if (res.solverStatus === "SOLVING_ACTIVE") {
+        setCommitteeSolution(parseSolution(res.data));
+        if (res.data.solverStatus === "SOLVING_ACTIVE") {
           setTimeout(() => {
             refreshSolution(id);
           }, 2000);
