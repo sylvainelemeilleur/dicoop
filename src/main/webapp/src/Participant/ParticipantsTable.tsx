@@ -1,7 +1,12 @@
 import { Badge } from "@patternfly/react-core";
 import React from "react";
+import { Person } from "../api";
 
-function ParticipantsTable(props: any) {
+type ParticipantsTableProps = {
+  persons: Array<Person>;
+};
+
+function ParticipantsTable({ persons }: ParticipantsTableProps) {
   const badgeList = (namedList: any) => {
     return (
       <React.Fragment>
@@ -46,17 +51,17 @@ function ParticipantsTable(props: any) {
           </th>
         </tr>
       </thead>
-      {props.persons.map((person: any) => (
+      {persons.map((person) => (
         <tbody key={person.name}>
           <tr role="row">
             <td role="cell" data-label="Name">
               {person.name}
             </td>
             <td role="cell" data-label="Type">
-              {person.personType.name}
+              {person.personType?.name}
             </td>
             <td role="cell" data-label="Location">
-              {person.location.name}
+              {person.location?.name}
             </td>
             <td role="cell" data-label="Skills">
               {badgeList(person.skills)}

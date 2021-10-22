@@ -1,8 +1,9 @@
+import { Person } from "../api";
 import XLSX from "xlsx";
 
 export function excelExport(
   settings: any,
-  persons: any,
+  persons: Array<Person>,
   committeeSolution: any
 ) {
   // Settings sheet
@@ -16,6 +17,18 @@ export function excelExport(
   ];
   const settingsWorksheet = XLSX.utils.aoa_to_sheet(settingsData);
 
+  const sanitizeString = (s?: string) => {
+    return s ?? "";
+  };
+
+  const sanitizeNamedArray = (a?: Array<any>): string => {
+    if (a === undefined) {
+      return "";
+    } else {
+      return a.map((i: any) => i.name).join(",");
+    }
+  };
+
   // Participants sheet
   const participantsData = [
     [
@@ -28,15 +41,15 @@ export function excelExport(
       "Skills to Certificate",
     ],
   ];
-  persons.forEach((p: any) =>
+  persons.forEach((p: Person) =>
     participantsData.push([
-      p.name,
-      p.personType.name,
-      p.location.name,
-      p.skills.map((s: any) => s.name).join(","),
-      p.languages.map((l: any) => l.name).join(","),
-      p.availability.map((a: any) => a.name).join(","),
-      p.skillsToCertificate.map((s: any) => s.name).join(","),
+      sanitizeString(p.name),
+      sanitizeString(p.personType?.name),
+      sanitizeString(p.location?.name),
+      sanitizeNamedArray(p.skills),
+      sanitizeNamedArray(p.languages),
+      sanitizeNamedArray(p.availability),
+      sanitizeNamedArray(p.skillsToCertificate),
     ])
   );
   const participantsWorksheet = XLSX.utils.aoa_to_sheet(participantsData);

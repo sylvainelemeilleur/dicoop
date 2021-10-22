@@ -12,6 +12,7 @@
     "@types/node": "^12.0.0",
     "@types/react": "^17.0.0",
     "@types/react-dom": "^17.0.0",
+    "axios": "^0.22.0",
     "react": "^17.0.2",
     "react-dom": "^17.0.2",
     "react-scripts": "4.0.3",
@@ -24,7 +25,8 @@
     "build": "react-scripts build",
     "test": "react-scripts test",
     "eject": "react-scripts eject",
-    "prod": "react-scripts build --dest && rsync -a build/* ../resources/META-INF/resources"
+    "prod": "react-scripts build --dest && rsync -a build/* ../resources/META-INF/resources",
+    "api": "npx openapi-generator-cli generate -i http://localhost:8080/q/openapi -g typescript-axios -o src/api --skip-validate-spec"
   },
   "eslintConfig": {
     "extends": [
@@ -44,5 +46,8 @@
       "last 1 firefox version",
       "last 1 safari version"
     ]
+  },
+  "devDependencies": {
+    "@openapitools/openapi-generator-cli": "^2.4.12"
   }
 }

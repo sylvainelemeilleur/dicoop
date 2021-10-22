@@ -5,10 +5,11 @@ import SolutionTable from "./Solution/SolutionTable";
 import ParticipantsTable from "./Participant/ParticipantsTable";
 import { Flex, FlexItem } from "@patternfly/react-core";
 import { excelExport } from "./Persistence/Excel";
+import { Configuration, Person, PersonResourceApi } from "./api";
 
 function App() {
   const [isSolving, setIsSolving] = useState(false);
-  const [persons, setPersons] = useState([]);
+  const [persons, setPersons] = useState(new Array<Person>());
   const [settings, setSettings] = useState({
     nbProParticipants: 2,
     nbNonProParticipants: 1,
@@ -23,14 +24,18 @@ function App() {
     scoreExplanation: "",
   });
 
+  // API configuration
+  const apiConfig = new Configuration({
+    basePath: window.location.origin,
+  });
+  const personResourceApi = new PersonResourceApi(apiConfig);
+
   useEffect(() => {
-    fetch("/api/persons")
-      .then((res) => res.json())
-      .then((res) => {
-        setPersons(res);
-      })
+    personResourceApi
+      .apiPersonsGet()
+      .then((resp) => setPersons(resp.data))
       .catch(console.log);
-  }, []);
+  });
 
   const parseSolution = (solution: any) => {
     const committees = solution.committeeAssignments.reduce(
