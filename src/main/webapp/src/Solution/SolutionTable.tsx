@@ -1,6 +1,12 @@
 import React from "react";
+import { Solution } from "src/Model/Solution";
+import { SolvedCommittee } from "src/Model/SolvedCommittee";
 
-function SolutionTable(props: any) {
+type SolutionTableProps = {
+  committeeSolution: Solution;
+};
+
+function SolutionTable({ committeeSolution }: SolutionTableProps) {
   const assignmentsList = (assignments: any) => (
     <React.Fragment>
       {assignments
@@ -40,8 +46,8 @@ function SolutionTable(props: any) {
         </tr>
       </thead>
       <tbody>
-        {Object.values(props.committeeSolution.committees).map(
-          (committee: any) => (
+        {Object.values(committeeSolution.committees).map(
+          (committee: SolvedCommittee) => (
             <tr role="row" key={committee.id}>
               <td role="cell" data-label="Evaluated Person">
                 {committee.evaluatedPerson?.name}

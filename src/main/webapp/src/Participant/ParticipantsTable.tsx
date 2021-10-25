@@ -1,16 +1,16 @@
 import { Badge } from "@patternfly/react-core";
 import React from "react";
-import { Person } from "../api";
+import { Person } from "src/api";
 
 type ParticipantsTableProps = {
   persons: Array<Person>;
 };
 
 function ParticipantsTable({ persons }: ParticipantsTableProps) {
-  const badgeList = (namedList: any) => {
+  const badgeList = (namedList?: Array<any>) => {
     return (
       <React.Fragment>
-        {namedList.map((item: any) => (
+        {namedList?.map((item: any) => (
           <Badge key={item.name} isRead>
             {item.name}
           </Badge>

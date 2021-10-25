@@ -1,10 +1,11 @@
-import { Person, SolverOptions } from "../api";
+import { Person, SolverOptions } from "src/api";
+import { Solution } from "src/Model/Solution";
 import XLSX from "xlsx";
 
 export function excelExport(
   settings: SolverOptions,
   persons: Array<Person>,
-  committeeSolution: any
+  committeeSolution: Solution
 ) {
   // Settings sheet
   const settingsData = [

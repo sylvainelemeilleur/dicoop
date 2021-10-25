@@ -1,19 +1,18 @@
-import React, { useEffect, useState } from "react";
-import "./App.css";
-import SolutionSettingsForm from "./Solution/SolutionSettingsForm";
-import SolutionTable from "./Solution/SolutionTable";
-import ParticipantsTable from "./Participant/ParticipantsTable";
 import { Flex, FlexItem } from "@patternfly/react-core";
-import { excelExport } from "./Persistence/Excel";
+import React, { useEffect, useState } from "react";
 import {
-  CommitteeSolution,
   CommitteeSolutionResourceApi,
   Configuration,
   Person,
   PersonResourceApi,
   SolverOptions,
 } from "./api";
+import "./App.css";
 import { Solution } from "./Model/Solution";
+import ParticipantsTable from "./Participant/ParticipantsTable";
+import { excelExport } from "./Persistence/Excel";
+import SolutionSettingsForm from "./Solution/SolutionSettingsForm";
+import SolutionTable from "./Solution/SolutionTable";
 
 function App() {
   const [isSolving, setIsSolving] = useState(false);
@@ -44,29 +43,6 @@ function App() {
 
   // eslint-disable-next-line react-hooks/exhaustive-deps
   useEffect(fetchPersons, []);
-
-  const parseSolution = (solution: CommitteeSolution): Solution => {
-    const committees = solution.committeeAssignments?.reduce(
-      (r: any, a: any) => {
-        r[a.committee.id] = r[a.committee.id] || {
-          id: a.committee.id,
-          evaluatedPerson: a.committee.evaluatedPerson,
-          assignments: [],
-        };
-        r[a.committee.id].assignments.push(a);
-        return r;
-      },
-      Object.create(null)
-    );
-    return new Solution(
-      solution.id ?? "ID_UNDEFINED",
-      committees,
-      solution.committeeAssignments,
-      solution.solverStatus ?? "STATUS_UNDEFINED",
-      JSON.stringify(solution.score),
-      solution.scoreExplanation ?? "SCORE_EXPLANATION_UNDEFINED"
-    );
-  };
 
   const dataExport = () => {
     excelExport(settings, persons, committeeSolution);
@@ -106,7 +82,7 @@ function App() {
     committeeSolutionResourceApi
       .apiCommitteeSolutionIdGet(id)
       .then((res) => {
-        setCommitteeSolution(parseSolution(res.data));
+        setCommitteeSolution(Solution.fromCommitteeSolution(res.data));
         if (res.data.solverStatus === "SOLVING_ACTIVE") {
           setTimeout(() => {
             refreshSolution(id);

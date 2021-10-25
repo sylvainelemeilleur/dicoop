@@ -12,8 +12,24 @@ import {
 } from "@patternfly/react-core";
 import HelpIcon from "@patternfly/react-icons/dist/esm/icons/help-icon";
 import React, { useState } from "react";
+import { SolverOptions } from "src/api";
+import { Solution } from "src/Model/Solution";
 
-function SolutionSettingsForm(props: any) {
+type SolutionSettingsProps = {
+  committeeSolution: Solution;
+  isSolving: boolean;
+  startSolving: (options: SolverOptions) => void;
+  stopSolving: () => void;
+  dataExport: () => void;
+};
+
+function SolutionSettingsForm({
+  committeeSolution,
+  isSolving,
+  startSolving,
+  stopSolving,
+  dataExport,
+}: SolutionSettingsProps) {
   const [nbProParticipants, setNbProParticipants] = useState(2);
   const [nbNonProParticipants, setNbNonProParticipants] = useState(1);
   const [maximumNumberOfAssignments, setMaximumNumberOfAssignments] =
@@ -27,8 +43,8 @@ function SolutionSettingsForm(props: any) {
       nbProParticipants,
       nbNonProParticipants,
       maximumNumberOfAssignments,
-    };
-    props.startSolving(options);
+    } as SolverOptions;
+    startSolving(options);
   };
 
   const sliderDivStyle = {
@@ -127,11 +143,11 @@ function SolutionSettingsForm(props: any) {
             </div>
           </FormGroup>
           <ActionGroup>
-            {props.isSolving ? (
+            {isSolving ? (
               <button
                 className="pf-c-button pf-m-secondary"
                 type="button"
-                onClick={props.stopSolving}
+                onClick={stopSolving}
               >
                 Stop &nbsp;
                 <span
@@ -156,7 +172,7 @@ function SolutionSettingsForm(props: any) {
                 <button
                   className="pf-c-button pf-m-primary"
                   type="button"
-                  onClick={props.dataExport}
+                  onClick={dataExport}
                 >
                   Export
                 </button>
@@ -166,19 +182,19 @@ function SolutionSettingsForm(props: any) {
         </Form>
       </GridItem>
       <GridItem sm={6}>
-        <b>Status</b>: {props.committeeSolution.solverStatus}
+        <b>Status</b>: {committeeSolution.solverStatus}
         <br />
-        {props.committeeSolution.id && (
+        {committeeSolution.id && (
           <div>
-            <b>ID</b>: {props.committeeSolution.id}
+            <b>ID</b>: {committeeSolution.id}
           </div>
         )}
-        {props.committeeSolution.score && (
+        {committeeSolution.score && (
           <div>
-            <b>Score:</b> {props.committeeSolution.score}
+            <b>Score:</b> {committeeSolution.score}
           </div>
         )}
-        {props.committeeSolution.scoreExplanation && (
+        {committeeSolution.scoreExplanation && (
           <ExpandableSection
             toggleText={showMore ? "Show less" : "Show more"}
             onToggle={setShowMore}
@@ -186,7 +202,7 @@ function SolutionSettingsForm(props: any) {
           >
             <CodeBlock>
               <CodeBlockCode id="code-content">
-                {props.committeeSolution.scoreExplanation}
+                {committeeSolution.scoreExplanation}
               </CodeBlockCode>
             </CodeBlock>
           </ExpandableSection>

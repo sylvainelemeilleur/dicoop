@@ -1,9 +1,9 @@
+import "@patternfly/patternfly/patternfly.css";
 import React from "react";
 import ReactDOM from "react-dom";
-import "./index.css";
 import App from "./App";
+import "./index.css";
 import reportWebVitals from "./reportWebVitals";
-import "@patternfly/patternfly/patternfly.css";
 
 ReactDOM.render(
   <React.StrictMode>
