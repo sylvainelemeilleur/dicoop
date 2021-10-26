@@ -2,6 +2,18 @@ import { Person, SolverOptions } from "src/api";
 import { Solution } from "src/Model/Solution";
 import XLSX from "xlsx";
 
+export function excelImport(file: any, callback) {
+  const reader = new FileReader();
+
+  reader.onload = (e) => {
+    const ab = e?.target?.result;
+    const workbook = XLSX.read(ab, { type: "binary" });
+    callback(workbook.SheetNames);
+  };
+
+  reader.readAsBinaryString(file);
+}
+
 export function excelExport(
   settings: SolverOptions,
   persons: Array<Person>,

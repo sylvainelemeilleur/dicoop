@@ -11,7 +11,7 @@ import {
   Slider,
 } from "@patternfly/react-core";
 import HelpIcon from "@patternfly/react-icons/dist/esm/icons/help-icon";
-import React, { useState } from "react";
+import React, { useRef, useState } from "react";
 import { SolverOptions } from "src/api";
 import { Solution } from "src/Model/Solution";
 
@@ -20,6 +20,7 @@ type SolutionSettingsProps = {
   isSolving: boolean;
   startSolving: (options: SolverOptions) => void;
   stopSolving: () => void;
+  dataImport: (file: any) => void;
   dataExport: () => void;
 };
 
@@ -28,6 +29,7 @@ function SolutionSettingsForm({
   isSolving,
   startSolving,
   stopSolving,
+  dataImport,
   dataExport,
 }: SolutionSettingsProps) {
   const [nbProParticipants, setNbProParticipants] = useState(2);
@@ -37,6 +39,19 @@ function SolutionSettingsForm({
   const min = 0;
   const max = 5;
   const [showMore, setShowMore] = useState(false);
+
+  // file picker
+  const inputFile = useRef<HTMLInputElement>(null);
+  const handleFileOpened = (e: any) => {
+    const { files } = e.target;
+    if (files && files.length) {
+      const file = files[0];
+      dataImport(file);
+    }
+  };
+  const openFileDialog = () => {
+    inputFile?.current?.click();
+  };
 
   const solve = () => {
     const options = {
@@ -168,6 +183,20 @@ function SolutionSettingsForm({
                   onClick={solve}
                 >
                   Solve
+                </button>
+                <input
+                  style={{ display: "none" }}
+                  accept=".xlsx"
+                  ref={inputFile}
+                  onChange={handleFileOpened}
+                  type="file"
+                />
+                <button
+                  className="pf-c-button pf-m-primary"
+                  type="button"
+                  onClick={openFileDialog}
+                >
+                  Import
                 </button>
                 <button
                   className="pf-c-button pf-m-primary"

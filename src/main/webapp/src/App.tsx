@@ -10,7 +10,7 @@ import {
 import "./App.css";
 import { Solution } from "./Model/Solution";
 import ParticipantsTable from "./Participant/ParticipantsTable";
-import { excelExport } from "./Persistence/Excel";
+import { excelImport, excelExport } from "./Persistence/Excel";
 import SolutionSettingsForm from "./Solution/SolutionSettingsForm";
 import SolutionTable from "./Solution/SolutionTable";
 
@@ -44,8 +44,17 @@ function App() {
   // eslint-disable-next-line react-hooks/exhaustive-deps
   useEffect(fetchPersons, []);
 
+  // data import and export
   const dataExport = () => {
     excelExport(settings, persons, committeeSolution);
+  };
+
+  const onDataImport = (data: any) => {
+    console.log(data);
+  };
+
+  const dataImport = (file: any) => {
+    excelImport(file, onDataImport);
   };
 
   const startSolving = (solverOptions: SolverOptions) => {
@@ -101,6 +110,7 @@ function App() {
           isSolving={isSolving}
           startSolving={startSolving}
           stopSolving={stopSolving}
+          dataImport={dataImport}
           dataExport={dataExport}
           committeeSolution={committeeSolution}
         />
