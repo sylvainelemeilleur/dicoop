@@ -1,13 +1,24 @@
 import { Person, SolverOptions } from "src/api";
 import { Solution } from "src/Model/Solution";
 import XLSX from "xlsx";
+import { Constants, ValidationResult, Validators } from "./ExcelValidation";
 
-export function excelImport(file: any, callback) {
+export function excelImport(
+  file: any,
+  callback: any,
+  error: (validationResult: ValidationResult) => void
+) {
   const reader = new FileReader();
 
   reader.onload = (e) => {
     const ab = e?.target?.result;
     const workbook = XLSX.read(ab, { type: "binary" });
+    const sheetsValidationError = Validators.validateSheetsNames(
+      workbook.SheetNames
+    );
+    if (sheetsValidationError.hasError()) {
+      error(sheetsValidationError);
+    }
     callback(workbook.SheetNames);
   };
 
@@ -84,8 +95,16 @@ export function excelExport(
 
   // Saving the workbook
   const workbook = XLSX.utils.book_new();
-  XLSX.utils.book_append_sheet(workbook, settingsWorksheet, "Settings");
-  XLSX.utils.book_append_sheet(workbook, participantsWorksheet, "Participants");
-  XLSX.utils.book_append_sheet(workbook, solutionsWorksheet, "Solutions");
+  XLSX.utils.book_append_sheet(workbook, settingsWorksheet, Constants.SETTINGS);
+  XLSX.utils.book_append_sheet(
+    workbook,
+    participantsWorksheet,
+    Constants.PARTICIPANTS
+  );
+  XLSX.utils.book_append_sheet(
+    workbook,
+    solutionsWorksheet,
+    Constants.SOLUTIONS
+  );
   XLSX.writeFile(workbook, "pgs-planner-export.xlsx");
 }

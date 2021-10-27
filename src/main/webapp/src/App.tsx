@@ -1,4 +1,4 @@
-import { Flex, FlexItem } from "@patternfly/react-core";
+import { Flex, FlexItem, Modal, ModalVariant } from "@patternfly/react-core";
 import React, { useEffect, useState } from "react";
 import {
   CommitteeSolutionResourceApi,
@@ -11,11 +11,17 @@ import "./App.css";
 import { Solution } from "./Model/Solution";
 import ParticipantsTable from "./Participant/ParticipantsTable";
 import { excelImport, excelExport } from "./Persistence/Excel";
+import { ValidationResult } from "./Persistence/ExcelValidation";
 import SolutionSettingsForm from "./Solution/SolutionSettingsForm";
 import SolutionTable from "./Solution/SolutionTable";
 
 function App() {
   const [isSolving, setIsSolving] = useState(false);
+  const [isErrorModalOpen, setIsErrorModalOpen] = useState(false);
+  const [errorMessage, setErrorMessage] = useState({
+    header: "",
+    message: "",
+  });
   const [persons, setPersons] = useState(new Array<Person>());
   const [settings, setSettings] = useState({
     nbProParticipants: 2,
@@ -53,8 +59,16 @@ function App() {
     console.log(data);
   };
 
+  const onDataImportError = (result: ValidationResult) => {
+    setErrorMessage({
+      header: "Excel import error",
+      message: result.getMessage(),
+    });
+    setIsErrorModalOpen(true);
+  };
+
   const dataImport = (file: any) => {
-    excelImport(file, onDataImport);
+    excelImport(file, onDataImport, onDataImportError);
   };
 
   const startSolving = (solverOptions: SolverOptions) => {
@@ -76,7 +90,15 @@ function App() {
           refreshSolution(solutionId);
         }, 2000);
       })
-      .catch(console.log);
+      .catch((error) => {
+        setIsSolving(false);
+        console.log(error);
+        setErrorMessage({
+          header: "Error while starting the solver",
+          message: error.message,
+        });
+        setIsErrorModalOpen(true);
+      });
   };
 
   const stopSolving = () => {
@@ -84,6 +106,15 @@ function App() {
       .apiCommitteeSolutionStopSolvingIdGet(committeeSolution.id)
       .then(() => {
         setIsSolving(false);
+      })
+      .catch((error) => {
+        setIsSolving(false);
+        console.log(error);
+        setErrorMessage({
+          header: "Error while stopping the solver",
+          message: error.message,
+        });
+        setIsErrorModalOpen(true);
       });
   };
 
@@ -100,30 +131,55 @@ function App() {
           setIsSolving(false);
         }
       })
-      .catch(console.log);
+      .catch((error) => {
+        setIsSolving(false);
+        console.log(error);
+        setErrorMessage({
+          header: "Error while refreshing the solution",
+          message: error.message,
+        });
+        setIsErrorModalOpen(true);
+      });
+  };
+
+  const handleErrorModalToggle = () => {
+    setIsErrorModalOpen(!isErrorModalOpen);
   };
 
   return (
-    <Flex direction={{ default: "column" }}>
-      <FlexItem cellPadding={30}>
-        <SolutionSettingsForm
-          isSolving={isSolving}
-          startSolving={startSolving}
-          stopSolving={stopSolving}
-          dataImport={dataImport}
-          dataExport={dataExport}
-          committeeSolution={committeeSolution}
-        />
-      </FlexItem>
-      {committeeSolution.id && (
+    <React.Fragment>
+      <Flex direction={{ default: "column" }}>
         <FlexItem cellPadding={30}>
-          <SolutionTable committeeSolution={committeeSolution} />
+          <SolutionSettingsForm
+            isSolving={isSolving}
+            startSolving={startSolving}
+            stopSolving={stopSolving}
+            dataImport={dataImport}
+            dataExport={dataExport}
+            committeeSolution={committeeSolution}
+          />
         </FlexItem>
-      )}
-      <FlexItem cellPadding={30}>
-        <ParticipantsTable persons={persons} />
-      </FlexItem>
-    </Flex>
+        {committeeSolution.id && (
+          <FlexItem cellPadding={30}>
+            <SolutionTable committeeSolution={committeeSolution} />
+          </FlexItem>
+        )}
+        <FlexItem cellPadding={30}>
+          <ParticipantsTable persons={persons} />
+        </FlexItem>
+      </Flex>
+      <Modal
+        variant={ModalVariant.small}
+        isOpen={isErrorModalOpen}
+        aria-label="Modal warning example"
+        title={errorMessage.header}
+        titleIconVariant="danger"
+        showClose={true}
+        onClose={handleErrorModalToggle}
+      >
+        {errorMessage.message}
+      </Modal>
+    </React.Fragment>
   );
 }
 
