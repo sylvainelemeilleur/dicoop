@@ -19,7 +19,19 @@ export function excelImport(
     if (sheetsValidationError.hasError()) {
       error(sheetsValidationError);
     }
-    callback(workbook.SheetNames);
+    const data = {};
+    workbook.SheetNames.forEach((name) => {
+      const sheet = workbook.Sheets[name];
+      const options =
+        name === Constants.PARTICIPANTS
+          ? {}
+          : {
+              header: 1,
+            };
+      const sheetData = XLSX.utils.sheet_to_json(sheet, options);
+      data[name] = sheetData;
+    });
+    callback(data);
   };
 
   reader.readAsBinaryString(file);
