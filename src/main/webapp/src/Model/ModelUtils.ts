@@ -7,3 +7,7 @@ export function copySettings(settings: Settings): Settings {
     maximumNumberOfAssignments: settings.maximumNumberOfAssignments,
   } as Settings;
 }
+
+export function stringNotEmpty(s: string): boolean {
+  return /\S/.test(s);
+}

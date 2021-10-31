@@ -1,5 +1,6 @@
 import { Location, Person, PersonType, Settings } from "src/api";
 import { DEFAULT_SETTINGS } from "src/Model/Defaults";
+import { stringNotEmpty } from "src/Model/ModelUtils";
 import { NamedEntity } from "src/Model/NamedEntity";
 import { PersistenceData } from "src/Model/PersistenceData";
 import XLSX from "xlsx";
@@ -83,9 +84,11 @@ function parseNamedList(s: string): Array<NamedEntity> {
   const list = new Array<NamedEntity>();
   s.split(",").forEach((item) => {
     item = item.trim();
-    list.push({
-      name: item,
-    } as NamedEntity);
+    if (stringNotEmpty(item)) {
+      list.push({
+        name: item,
+      } as NamedEntity);
+    }
   });
   return list;
 }
