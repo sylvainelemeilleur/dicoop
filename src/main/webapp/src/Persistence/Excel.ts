@@ -1,4 +1,4 @@
-import { Person, SolverOptions } from "src/api";
+import { Person, Settings } from "src/api";
 import { PersistenceData } from "src/Model/PersistenceData";
 import { Solution } from "src/Model/Solution";
 import XLSX from "xlsx";
@@ -33,7 +33,7 @@ export function excelImport(
 }
 
 export function excelExport(
-  settings: SolverOptions,
+  settings: Settings,
   persons: Array<Person>,
   committeeSolution: Solution
 ) {

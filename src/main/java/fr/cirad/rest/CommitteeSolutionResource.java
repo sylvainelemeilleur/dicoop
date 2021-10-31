@@ -17,7 +17,6 @@ import org.optaplanner.core.api.score.ScoreManager;
 import org.optaplanner.core.api.score.buildin.hardsoft.HardSoftScore;
 import org.optaplanner.core.api.solver.SolverManager;
 import org.optaplanner.core.api.solver.SolverStatus;
-import fr.cirad.bootstrap.DemoDataService;
 import fr.cirad.domain.CommitteeSolution;
 import fr.cirad.domain.SolverOptions;
 import net.jodah.expiringmap.ExpiringMap;
@@ -35,9 +34,6 @@ public class CommitteeSolutionResource {
 
     @Inject
     ScoreManager<CommitteeSolution, HardSoftScore> scoreManager;
-
-    @Inject
-    DemoDataService service;
 
     @Inject
     Logger log;
@@ -73,8 +69,7 @@ public class CommitteeSolutionResource {
     }
 
     CommitteeSolution initSolution(SolverOptions options) {
-        var solution = new CommitteeSolution(service.committees, service.persons, service.skills,
-                service.timeSlots, options);
+        var solution = new CommitteeSolution(options);
         solutions.put(solution.id, solution);
         return solution;
     }

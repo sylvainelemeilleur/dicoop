@@ -29,7 +29,7 @@ public class Language implements Comparable<Language> {
             return false;
         }
         Language other = (Language) o;
-        return this.name.equals(other.name);
+        return this.name.equalsIgnoreCase(other.name);
     }
 
     @Override

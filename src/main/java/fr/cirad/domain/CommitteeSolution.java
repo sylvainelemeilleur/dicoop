@@ -3,6 +3,7 @@ package fr.cirad.domain;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
+import java.util.stream.Collectors;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import org.optaplanner.core.api.domain.solution.PlanningEntityCollectionProperty;
 import org.optaplanner.core.api.domain.solution.PlanningScore;
@@ -51,28 +52,34 @@ public class CommitteeSolution {
         // No-arg constructor required for OptaPlanner
     }
 
-    public CommitteeSolution(List<Committee> committees, List<Person> persons, List<Skill> skills,
-            List<TimeSlot> timeSlots, SolverOptions options) {
+    public CommitteeSolution(SolverOptions options) {
         this.id = UUID.randomUUID();
-        this.committees = committees;
-        this.persons = persons;
-        this.skills = skills;
-        this.timeSlots = timeSlots;
+        this.persons = options.participants;
+        this.skills = options.participants.stream().flatMap(person -> person.skills.stream())
+                .distinct().collect(Collectors.toList());
+        this.timeSlots =
+                options.participants.stream().flatMap(person -> person.availability.stream())
+                        .distinct().collect(Collectors.toList());
+
+        // Committees based on persons skills to certificate
+        this.committees = options.participants.stream()
+                .filter(person -> !person.skillsToCertificate.isEmpty()).map(Committee::new)
+                .collect(Collectors.toList());
         this.committeeAssignments = new ArrayList<>();
         // initialization of the Committees assignments needed, 2 professionals ans 1
         // non-professional person
         var professionalPersonType = new PersonType("professional");
         var nonProfessionalPersonType = new PersonType("non-professional");
         Long committeeAssignmentId = 0L;
-        for (var committee : committees) {
-            committee.maximumNumberOfAssignments = options.maximumNumberOfAssignments;
-            for (int i = 1; i <= options.nbProParticipants; i++) {
-                this.committeeAssignments
-                        .add(new CommitteeAssignment(committeeAssignmentId++, committee, professionalPersonType));
+        for (var committee : this.committees) {
+            committee.maximumNumberOfAssignments = options.settings.maximumNumberOfAssignments;
+            for (int i = 1; i <= options.settings.nbProParticipants; i++) {
+                this.committeeAssignments.add(new CommitteeAssignment(committeeAssignmentId++,
+                        committee, professionalPersonType));
             }
-            for (int i = 1; i <= options.nbNonProParticipants; i++) {
-                this.committeeAssignments
-                        .add(new CommitteeAssignment(committeeAssignmentId++, committee, nonProfessionalPersonType));
+            for (int i = 1; i <= options.settings.nbNonProParticipants; i++) {
+                this.committeeAssignments.add(new CommitteeAssignment(committeeAssignmentId++,
+                        committee, nonProfessionalPersonType));
             }
         }
     }

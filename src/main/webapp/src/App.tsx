@@ -1,6 +1,10 @@
 import { Flex, FlexItem, Modal, ModalVariant } from "@patternfly/react-core";
 import React, { useState } from "react";
-import { CommitteeSolutionResourceApi, Configuration } from "./api";
+import {
+  CommitteeSolutionResourceApi,
+  Configuration,
+  SolverOptions,
+} from "./api";
 import "./App.css";
 import {
   DEFAULT_SETTINGS,
@@ -59,8 +63,9 @@ function App() {
 
   const startSolving = () => {
     setIsSolving(true);
+    const options = { settings, participants } as SolverOptions;
     committeeSolutionResourceApi
-      .apiCommitteeSolutionSolvePost(settings)
+      .apiCommitteeSolutionSolvePost(options)
       .then((resp) => {
         const solutionId = resp.data.id ?? "ID_ERROR";
         const initializedSolution = UNDEFINED_SOLUTION;

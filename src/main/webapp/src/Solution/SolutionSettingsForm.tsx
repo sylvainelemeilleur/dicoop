@@ -12,13 +12,13 @@ import {
 } from "@patternfly/react-core";
 import HelpIcon from "@patternfly/react-icons/dist/esm/icons/help-icon";
 import React, { useRef, useState } from "react";
-import { SolverOptions } from "src/api";
+import { Settings } from "src/api";
 import { copySettings } from "src/Model/ModelUtils";
 import { Solution } from "src/Model/Solution";
 
 type SolutionSettingsProps = {
-  settings: SolverOptions;
-  setSettings: (settings: SolverOptions) => void;
+  settings: Settings;
+  setSettings: (settings: Settings) => void;
   committeeSolution: Solution;
   isSolving: boolean;
   startSolving: () => void;

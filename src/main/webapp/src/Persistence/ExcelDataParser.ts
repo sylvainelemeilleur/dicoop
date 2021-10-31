@@ -1,4 +1,4 @@
-import { Location, Person, PersonType, SolverOptions } from "src/api";
+import { Location, Person, PersonType, Settings } from "src/api";
 import { DEFAULT_SETTINGS } from "src/Model/Defaults";
 import { NamedEntity } from "src/Model/NamedEntity";
 import { PersistenceData } from "src/Model/PersistenceData";
@@ -33,7 +33,7 @@ export function parseExcelData(workbook: XLSX.WorkBook): PersistenceData {
   return data;
 }
 
-function parseSettings(sheetData: Array<any>): SolverOptions {
+function parseSettings(sheetData: Array<any>): Settings {
   const settings = DEFAULT_SETTINGS;
   sheetData.forEach((rowData: Array<any>) => {
     const settingName = rowData[0];

@@ -1,9 +1,10 @@
 package fr.cirad.domain;
 
+import java.util.List;
+
 public class SolverOptions {
-    public int nbProParticipants;
-    public int nbNonProParticipants;
-    public int maximumNumberOfAssignments;
+    public Settings settings;
+    public List<Person> participants;
 
     public SolverOptions() {
         // Empty constructor needed by serialization

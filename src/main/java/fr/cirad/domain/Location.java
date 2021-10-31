@@ -29,7 +29,7 @@ public class Location implements Comparable<Location> {
             return false;
         }
         Location other = (Location) o;
-        return this.name.equals(other.name);
+        return this.name.equalsIgnoreCase(other.name);
     }
 
     @Override

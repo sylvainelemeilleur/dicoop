@@ -272,6 +272,31 @@ export interface PersonType {
 /**
  * 
  * @export
+ * @interface Settings
+ */
+export interface Settings {
+    /**
+     * 
+     * @type {number}
+     * @memberof Settings
+     */
+    nbProParticipants?: number;
+    /**
+     * 
+     * @type {number}
+     * @memberof Settings
+     */
+    nbNonProParticipants?: number;
+    /**
+     * 
+     * @type {number}
+     * @memberof Settings
+     */
+    maximumNumberOfAssignments?: number;
+}
+/**
+ * 
+ * @export
  * @interface Skill
  */
 export interface Skill {
@@ -290,22 +315,16 @@ export interface Skill {
 export interface SolverOptions {
     /**
      * 
-     * @type {number}
+     * @type {Settings}
      * @memberof SolverOptions
      */
-    nbProParticipants?: number;
+    settings?: Settings;
     /**
      * 
-     * @type {number}
+     * @type {Array<Person>}
      * @memberof SolverOptions
      */
-    nbNonProParticipants?: number;
-    /**
-     * 
-     * @type {number}
-     * @memberof SolverOptions
-     */
-    maximumNumberOfAssignments?: number;
+    participants?: Array<Person>;
 }
 /**
  * 
@@ -556,100 +575,6 @@ export class CommitteeSolutionResourceApi extends BaseAPI {
      */
     public apiCommitteeSolutionStopSolvingIdGet(id: string, options?: any) {
         return CommitteeSolutionResourceApiFp(this.configuration).apiCommitteeSolutionStopSolvingIdGet(id, options).then((request) => request(this.axios, this.basePath));
-    }
-}
-
-
-/**
- * PersonResourceApi - axios parameter creator
- * @export
- */
-export const PersonResourceApiAxiosParamCreator = function (configuration?: Configuration) {
-    return {
-        /**
-         * 
-         * @param {*} [options] Override http request option.
-         * @throws {RequiredError}
-         */
-        apiPersonsGet: async (options: any = {}): Promise<RequestArgs> => {
-            const localVarPath = `/api/persons`;
-            // use dummy base URL string because the URL constructor only accepts absolute URLs.
-            const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
-            let baseOptions;
-            if (configuration) {
-                baseOptions = configuration.baseOptions;
-            }
-
-            const localVarRequestOptions = { method: 'GET', ...baseOptions, ...options};
-            const localVarHeaderParameter = {} as any;
-            const localVarQueryParameter = {} as any;
-
-
-    
-            setSearchParams(localVarUrlObj, localVarQueryParameter, options.query);
-            let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
-            localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
-
-            return {
-                url: toPathString(localVarUrlObj),
-                options: localVarRequestOptions,
-            };
-        },
-    }
-};
-
-/**
- * PersonResourceApi - functional programming interface
- * @export
- */
-export const PersonResourceApiFp = function(configuration?: Configuration) {
-    const localVarAxiosParamCreator = PersonResourceApiAxiosParamCreator(configuration)
-    return {
-        /**
-         * 
-         * @param {*} [options] Override http request option.
-         * @throws {RequiredError}
-         */
-        async apiPersonsGet(options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<Array<Person>>> {
-            const localVarAxiosArgs = await localVarAxiosParamCreator.apiPersonsGet(options);
-            return createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration);
-        },
-    }
-};
-
-/**
- * PersonResourceApi - factory interface
- * @export
- */
-export const PersonResourceApiFactory = function (configuration?: Configuration, basePath?: string, axios?: AxiosInstance) {
-    const localVarFp = PersonResourceApiFp(configuration)
-    return {
-        /**
-         * 
-         * @param {*} [options] Override http request option.
-         * @throws {RequiredError}
-         */
-        apiPersonsGet(options?: any): AxiosPromise<Array<Person>> {
-            return localVarFp.apiPersonsGet(options).then((request) => request(axios, basePath));
-        },
-    };
-};
-
-/**
- * PersonResourceApi - object-oriented interface
- * @export
- * @class PersonResourceApi
- * @extends {BaseAPI}
- */
-export class PersonResourceApi extends BaseAPI {
-    /**
-     * 
-     * @param {*} [options] Override http request option.
-     * @throws {RequiredError}
-     * @memberof PersonResourceApi
-     */
-    public apiPersonsGet(options?: any) {
-        return PersonResourceApiFp(this.configuration).apiPersonsGet(options).then((request) => request(this.axios, this.basePath));
     }
 }
 

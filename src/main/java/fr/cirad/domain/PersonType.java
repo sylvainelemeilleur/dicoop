@@ -29,7 +29,7 @@ public class PersonType implements Comparable<PersonType> {
             return false;
         }
         PersonType other = (PersonType) o;
-        return this.name.equals(other.name);
+        return this.name.equalsIgnoreCase(other.name);
     }
 
     @Override

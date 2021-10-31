@@ -29,7 +29,7 @@ public class Skill implements Comparable<Skill> {
             return false;
         }
         Skill other = (Skill) o;
-        return this.name.equals(other.name);
+        return this.name.equalsIgnoreCase(other.name);
     }
 
     @Override

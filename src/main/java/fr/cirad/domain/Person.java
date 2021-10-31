@@ -33,7 +33,7 @@ public class Person implements Comparable<Person> {
     private static final Comparator<Person> COMPARATOR = Comparator.comparing(p -> p.name);
 
     public Person() {
-        // No-arg constructor required for Hibernate and OptaPlanner
+        assignments = new ArrayList<>();
     }
 
     public Person(String name, PersonType personType, List<Skill> skills, Location location,
@@ -70,7 +70,7 @@ public class Person implements Comparable<Person> {
             return false;
         }
         Person other = (Person) o;
-        return this.name.equals(other.name);
+        return this.name.equalsIgnoreCase(other.name);
     }
 
     @Override
