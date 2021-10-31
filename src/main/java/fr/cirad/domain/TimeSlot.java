@@ -37,4 +37,9 @@ public class TimeSlot implements Comparable<TimeSlot> {
         return this.name.hashCode();
     }
 
+    @Override
+    public String toString() {
+        return "TimeSlot: " + name;
+    }
+
 }

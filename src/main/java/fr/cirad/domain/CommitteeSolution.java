@@ -5,6 +5,7 @@ import java.util.List;
 import java.util.UUID;
 import java.util.stream.Collectors;
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.google.common.base.Strings;
 import org.optaplanner.core.api.domain.solution.PlanningEntityCollectionProperty;
 import org.optaplanner.core.api.domain.solution.PlanningScore;
 import org.optaplanner.core.api.domain.solution.PlanningSolution;
@@ -56,11 +57,12 @@ public class CommitteeSolution {
         this.id = UUID.randomUUID();
         this.persons = options.participants;
         this.skills = options.participants.stream().flatMap(person -> person.skills.stream())
-                .distinct().collect(Collectors.toList());
+                .filter(skill -> !Strings.isNullOrEmpty(skill.name)).distinct()
+                .collect(Collectors.toList());
         this.timeSlots =
                 options.participants.stream().flatMap(person -> person.availability.stream())
-                        .distinct().collect(Collectors.toList());
-
+                        .filter(timeSlot -> !Strings.isNullOrEmpty(timeSlot.name)).distinct()
+                        .collect(Collectors.toList());
         // Committees based on persons skills to certificate
         this.committees = options.participants.stream()
                 .filter(person -> !person.skillsToCertificate.isEmpty()).map(Committee::new)

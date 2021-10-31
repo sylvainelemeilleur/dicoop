@@ -37,4 +37,9 @@ public class Location implements Comparable<Location> {
         return this.name.hashCode();
     }
 
+    @Override
+    public String toString() {
+        return "Location: " + name;
+    }
+
 }

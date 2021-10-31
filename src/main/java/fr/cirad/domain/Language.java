@@ -37,4 +37,9 @@ public class Language implements Comparable<Language> {
         return this.name.hashCode();
     }
 
+    @Override
+    public String toString() {
+        return "Language: " + name;
+    }
+
 }

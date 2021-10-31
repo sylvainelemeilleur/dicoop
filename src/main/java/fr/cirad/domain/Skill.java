@@ -37,4 +37,9 @@ public class Skill implements Comparable<Skill> {
         return this.name.hashCode();
     }
 
+    @Override
+    public String toString() {
+        return "Skill: " + name;
+    }
+
 }
