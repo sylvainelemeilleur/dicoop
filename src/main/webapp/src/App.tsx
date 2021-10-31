@@ -1,16 +1,16 @@
 import { Flex, FlexItem, Modal, ModalVariant } from "@patternfly/react-core";
-import React, { useEffect, useState } from "react";
-import {
-  CommitteeSolutionResourceApi,
-  Configuration,
-  Person,
-  PersonResourceApi,
-  SolverOptions,
-} from "./api";
+import React, { useState } from "react";
+import { CommitteeSolutionResourceApi, Configuration } from "./api";
 import "./App.css";
+import {
+  DEFAULT_SETTINGS,
+  NO_PARTICIPANTS,
+  UNDEFINED_SOLUTION,
+} from "./Model/Defaults";
+import { PersistenceData } from "./Model/PersistenceData";
 import { Solution } from "./Model/Solution";
 import ParticipantsTable from "./Participant/ParticipantsTable";
-import { excelImport, excelExport } from "./Persistence/Excel";
+import { excelExport, excelImport } from "./Persistence/Excel";
 import { ValidationResult } from "./Persistence/ExcelValidation";
 import SolutionSettingsForm from "./Solution/SolutionSettingsForm";
 import SolutionTable from "./Solution/SolutionTable";
@@ -22,15 +22,10 @@ function App() {
     header: "",
     message: "",
   });
-  const [persons, setPersons] = useState(new Array<Person>());
-  const [settings, setSettings] = useState({
-    nbProParticipants: 2,
-    nbNonProParticipants: 1,
-    maximumNumberOfAssignments: 5,
-  } as SolverOptions);
-  const [committeeSolution, setCommitteeSolution] = useState(
-    new Solution("UNDEFINED", [], {}, "NOT_STARTED", "", "")
-  );
+  const [participants, setParticipants] = useState(NO_PARTICIPANTS);
+  const [settings, setSettings] = useState(DEFAULT_SETTINGS);
+  const [committeeSolution, setCommitteeSolution] =
+    useState(UNDEFINED_SOLUTION);
 
   // API configuration
   const apiConfig = new Configuration({
@@ -39,24 +34,15 @@ function App() {
   const committeeSolutionResourceApi = new CommitteeSolutionResourceApi(
     apiConfig
   );
-  const fetchPersons = () => {
-    const personResourceApi = new PersonResourceApi(apiConfig);
-    personResourceApi
-      .apiPersonsGet()
-      .then((resp) => setPersons(resp.data))
-      .catch(console.log);
-  };
-
-  // eslint-disable-next-line react-hooks/exhaustive-deps
-  useEffect(fetchPersons, []);
 
   // data import and export
   const dataExport = () => {
-    excelExport(settings, persons, committeeSolution);
+    excelExport(settings, participants, committeeSolution);
   };
 
-  const onDataImport = (data: any) => {
-    console.log(data);
+  const onDataImport = (data: PersistenceData) => {
+    setSettings(data.settings);
+    setParticipants(data.participants);
   };
 
   const onDataImportError = (result: ValidationResult) => {
@@ -71,21 +57,16 @@ function App() {
     excelImport(file, onDataImport, onDataImportError);
   };
 
-  const startSolving = (solverOptions: SolverOptions) => {
-    setSettings(solverOptions);
+  const startSolving = () => {
     setIsSolving(true);
     committeeSolutionResourceApi
-      .apiCommitteeSolutionSolvePost(solverOptions)
+      .apiCommitteeSolutionSolvePost(settings)
       .then((resp) => {
         const solutionId = resp.data.id ?? "ID_ERROR";
-        setCommitteeSolution({
-          id: solutionId,
-          committeeAssignments: [],
-          committees: {},
-          solverStatus: "INITIALIZING",
-          score: "",
-          scoreExplanation: "",
-        });
+        const initializedSolution = UNDEFINED_SOLUTION;
+        initializedSolution.id = solutionId;
+        initializedSolution.solverStatus = "INITIALIZING";
+        setCommitteeSolution(initializedSolution);
         setTimeout(() => {
           refreshSolution(solutionId);
         }, 2000);
@@ -151,6 +132,8 @@ function App() {
       <Flex direction={{ default: "column" }}>
         <FlexItem cellPadding={30}>
           <SolutionSettingsForm
+            settings={settings}
+            setSettings={setSettings}
             isSolving={isSolving}
             startSolving={startSolving}
             stopSolving={stopSolving}
@@ -165,7 +148,7 @@ function App() {
           </FlexItem>
         )}
         <FlexItem cellPadding={30}>
-          <ParticipantsTable persons={persons} />
+          <ParticipantsTable participants={participants} />
         </FlexItem>
       </Flex>
       <Modal

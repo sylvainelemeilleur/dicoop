@@ -1,13 +1,14 @@
 import { Badge } from "@patternfly/react-core";
 import React from "react";
 import { Person } from "src/api";
+import { NamedEntity } from "src/Model/NamedEntity";
 
 type ParticipantsTableProps = {
-  persons: Array<Person>;
+  participants: Array<Person>;
 };
 
-function ParticipantsTable({ persons }: ParticipantsTableProps) {
-  const badgeList = (namedList?: Array<any>) => {
+function ParticipantsTable({ participants }: ParticipantsTableProps) {
+  const badgeList = (namedList?: Array<NamedEntity>) => {
     return (
       <React.Fragment>
         {namedList?.map((item: any) => (
@@ -51,7 +52,7 @@ function ParticipantsTable({ persons }: ParticipantsTableProps) {
           </th>
         </tr>
       </thead>
-      {persons.map((person) => (
+      {participants.map((person) => (
         <tbody key={person.name}>
           <tr role="row">
             <td role="cell" data-label="Name">
@@ -64,16 +65,16 @@ function ParticipantsTable({ persons }: ParticipantsTableProps) {
               {person.location?.name}
             </td>
             <td role="cell" data-label="Skills">
-              {badgeList(person.skills)}
+              {badgeList(person.skills as Array<NamedEntity>)}
             </td>
             <td role="cell" data-label="Languages">
-              {badgeList(person.languages)}
+              {badgeList(person.languages as Array<NamedEntity>)}
             </td>
             <td role="cell" data-label="Availability">
-              {badgeList(person.availability)}
+              {badgeList(person.availability as Array<NamedEntity>)}
             </td>
             <td role="cell" data-label="Skills to certificate">
-              {badgeList(person.skillsToCertificate)}
+              {badgeList(person.skillsToCertificate as Array<NamedEntity>)}
             </td>
           </tr>
         </tbody>

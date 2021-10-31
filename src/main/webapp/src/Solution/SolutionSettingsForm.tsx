@@ -13,18 +13,23 @@ import {
 import HelpIcon from "@patternfly/react-icons/dist/esm/icons/help-icon";
 import React, { useRef, useState } from "react";
 import { SolverOptions } from "src/api";
+import { copySettings } from "src/Model/ModelUtils";
 import { Solution } from "src/Model/Solution";
 
 type SolutionSettingsProps = {
+  settings: SolverOptions;
+  setSettings: (settings: SolverOptions) => void;
   committeeSolution: Solution;
   isSolving: boolean;
-  startSolving: (options: SolverOptions) => void;
+  startSolving: () => void;
   stopSolving: () => void;
   dataImport: (file: any) => void;
   dataExport: () => void;
 };
 
 function SolutionSettingsForm({
+  settings,
+  setSettings,
   committeeSolution,
   isSolving,
   startSolving,
@@ -32,10 +37,6 @@ function SolutionSettingsForm({
   dataImport,
   dataExport,
 }: SolutionSettingsProps) {
-  const [nbProParticipants, setNbProParticipants] = useState(2);
-  const [nbNonProParticipants, setNbNonProParticipants] = useState(1);
-  const [maximumNumberOfAssignments, setMaximumNumberOfAssignments] =
-    useState(5);
   const min = 0;
   const max = 5;
   const [showMore, setShowMore] = useState(false);
@@ -51,15 +52,6 @@ function SolutionSettingsForm({
   };
   const openFileDialog = () => {
     inputFile?.current?.click();
-  };
-
-  const solve = () => {
-    const options = {
-      nbProParticipants,
-      nbNonProParticipants,
-      maximumNumberOfAssignments,
-    } as SolverOptions;
-    startSolving(options);
   };
 
   const sliderDivStyle = {
@@ -100,9 +92,13 @@ function SolutionSettingsForm({
             <div style={sliderDivStyle}>
               <Slider
                 id="nbProParticipants"
-                value={nbProParticipants}
-                inputValue={nbProParticipants}
-                onChange={setNbProParticipants}
+                value={settings.nbProParticipants}
+                inputValue={settings.nbProParticipants}
+                onChange={(value) => {
+                  const newSettings = copySettings(settings);
+                  newSettings.nbProParticipants = value;
+                  setSettings(newSettings);
+                }}
                 min={0}
                 max={5}
                 step={1}
@@ -123,9 +119,13 @@ function SolutionSettingsForm({
             <div style={sliderDivStyle}>
               <Slider
                 id="nbNonProParticipants"
-                value={nbNonProParticipants}
-                inputValue={nbNonProParticipants}
-                onChange={setNbNonProParticipants}
+                value={settings.nbNonProParticipants}
+                inputValue={settings.nbNonProParticipants}
+                onChange={(value) => {
+                  const newSettings = copySettings(settings);
+                  newSettings.nbNonProParticipants = value;
+                  setSettings(newSettings);
+                }}
                 min={0}
                 max={5}
                 step={1}
@@ -146,9 +146,13 @@ function SolutionSettingsForm({
             <div style={sliderDivStyle}>
               <Slider
                 id="maximumNumberOfAssignments"
-                value={maximumNumberOfAssignments}
-                inputValue={maximumNumberOfAssignments}
-                onChange={setMaximumNumberOfAssignments}
+                value={settings.maximumNumberOfAssignments}
+                inputValue={settings.maximumNumberOfAssignments}
+                onChange={(value) => {
+                  const newSettings = copySettings(settings);
+                  newSettings.maximumNumberOfAssignments = value;
+                  setSettings(newSettings);
+                }}
                 min={0}
                 max={5}
                 step={1}
@@ -180,7 +184,7 @@ function SolutionSettingsForm({
                 <button
                   className="pf-c-button pf-m-primary"
                   type="button"
-                  onClick={solve}
+                  onClick={startSolving}
                 >
                   Solve
                 </button>

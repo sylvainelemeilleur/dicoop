@@ -1,11 +1,18 @@
 import { Person, SolverOptions } from "src/api";
+import { PersistenceData } from "src/Model/PersistenceData";
 import { Solution } from "src/Model/Solution";
 import XLSX from "xlsx";
-import { Constants, ValidationResult, Validators } from "./ExcelValidation";
+import { parseExcelData } from "./ExcelDataParser";
+import {
+  Constants,
+  participantsColumns,
+  ValidationResult,
+  Validators,
+} from "./ExcelValidation";
 
 export function excelImport(
   file: any,
-  callback: any,
+  callback: (data: PersistenceData) => void,
   error: (validationResult: ValidationResult) => void
 ) {
   const reader = new FileReader();
@@ -19,19 +26,7 @@ export function excelImport(
     if (sheetsValidationError.hasError()) {
       error(sheetsValidationError);
     }
-    const data = {};
-    workbook.SheetNames.forEach((name) => {
-      const sheet = workbook.Sheets[name];
-      const options =
-        name === Constants.PARTICIPANTS
-          ? {}
-          : {
-              header: 1,
-            };
-      const sheetData = XLSX.utils.sheet_to_json(sheet, options);
-      data[name] = sheetData;
-    });
-    callback(data);
+    callback(parseExcelData(workbook));
   };
 
   reader.readAsBinaryString(file);
@@ -44,10 +39,10 @@ export function excelExport(
 ) {
   // Settings sheet
   const settingsData = [
-    ["Number of pro participants", settings.nbProParticipants],
-    ["Number of non pro participants", settings.nbNonProParticipants],
+    [Constants.SETTING_NUMBER_OF_PRO, settings.nbProParticipants],
+    [Constants.SETTING_NUMBER_OF_NON_PRO, settings.nbNonProParticipants],
     [
-      "Maximum number of assignments per participant",
+      Constants.SETTING_MAX_NUMBER_OF_ASSIGNMENTS,
       settings.maximumNumberOfAssignments,
     ],
   ];
@@ -66,17 +61,7 @@ export function excelExport(
   };
 
   // Participants sheet
-  const participantsData = [
-    [
-      "Name",
-      "Type",
-      "Location",
-      "Skills",
-      "Languages",
-      "Availability",
-      "Skills to Certificate",
-    ],
-  ];
+  const participantsData = [participantsColumns];
   persons.forEach((p: Person) =>
     participantsData.push([
       sanitizeString(p.name),
