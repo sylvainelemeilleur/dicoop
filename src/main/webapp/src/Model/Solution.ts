@@ -1,11 +1,11 @@
 import { CommitteeAssignment, CommitteeSolution } from "src/api";
-import { SolvedCommitteeDictionary } from "./SolvedCommitteeDictionary";
+import { CommitteeSet } from "./CommitteeSet";
 
 export class Solution {
   constructor(
     public id: string,
     public committeeAssignments: Array<CommitteeAssignment>,
-    public committees: SolvedCommitteeDictionary,
+    public committees: CommitteeSet,
     public solverStatus: string,
     public score: string,
     public scoreExplanation: string
@@ -14,20 +14,7 @@ export class Solution {
   public static fromCommitteeSolution = (
     solution: CommitteeSolution
   ): Solution => {
-    const committees =
-      solution.committeeAssignments?.reduce(
-        (r: SolvedCommitteeDictionary, a: CommitteeAssignment) => {
-          const committeeId = a.committee?.id ?? -1;
-          r[committeeId] = r[committeeId] || {
-            id: committeeId,
-            evaluatedPerson: a.committee?.evaluatedPerson,
-            assignments: [],
-          };
-          r[committeeId].assignments.push(a);
-          return r;
-        },
-        Object.create(null)
-      ) ?? {};
+    const committees = CommitteeSet.fromCommitteeSolution(solution);
     return new Solution(
       solution.id ?? "ID_UNDEFINED",
       solution.committeeAssignments ?? [],

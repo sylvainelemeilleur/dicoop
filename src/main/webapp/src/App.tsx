@@ -6,6 +6,7 @@ import {
   SolverOptions,
 } from "./api";
 import "./App.css";
+import { CommitteeSet } from "./Model/CommitteeSet";
 import {
   DEFAULT_SETTINGS,
   NO_PARTICIPANTS,
@@ -26,10 +27,12 @@ function App() {
     header: "",
     message: "",
   });
+  // State
   const [participants, setParticipants] = useState(NO_PARTICIPANTS);
   const [settings, setSettings] = useState(DEFAULT_SETTINGS);
   const [committeeSolution, setCommitteeSolution] =
     useState(UNDEFINED_SOLUTION);
+  const [history, SetHistory] = useState(new Array<CommitteeSet>());
 
   // API configuration
   const apiConfig = new Configuration({

@@ -1,4 +1,5 @@
 import { Person, Settings } from "src/api";
+import { CommitteeSet } from "./CommitteeSet";
 import { Solution } from "./Solution";
 
 export const DEFAULT_SETTINGS = {
@@ -10,7 +11,7 @@ export const DEFAULT_SETTINGS = {
 export const UNDEFINED_SOLUTION = new Solution(
   "UNDEFINED",
   [],
-  {},
+  new CommitteeSet(),
   "NOT_STARTED",
   "",
   ""

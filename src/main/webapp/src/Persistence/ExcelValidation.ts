@@ -1,7 +1,8 @@
 export const Constants = {
   SETTINGS: "Settings",
   PARTICIPANTS: "Participants",
-  SOLUTIONS: "Solutions",
+  SOLUTIONS: "Solution",
+  HISTORY: "History",
 
   SETTING_NUMBER_OF_PRO: "Number of pro participants",
   SETTING_NUMBER_OF_NON_PRO: "Number of non pro participants",
@@ -21,6 +22,7 @@ const sheetsNames = [
   Constants.SETTINGS,
   Constants.PARTICIPANTS,
   Constants.SOLUTIONS,
+  Constants.HISTORY,
 ];
 
 export const participantsColumns = [

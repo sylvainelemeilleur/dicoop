@@ -46,7 +46,7 @@ function SolutionTable({ committeeSolution }: SolutionTableProps) {
         </tr>
       </thead>
       <tbody>
-        {Object.values(committeeSolution.committees).map(
+        {Object.values(committeeSolution.committees.committees).map(
           (committee: SolvedCommittee) => (
             <tr role="row" key={committee.id}>
               <td role="cell" data-label="Evaluated Person">

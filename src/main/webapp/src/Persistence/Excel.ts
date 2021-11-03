@@ -77,10 +77,10 @@ export function excelExport(
 
   // Solutions sheet
   const solutionsData = [
-    ["Solution of " + new Date()],
+    ["Solution", new Date()],
     ["Evaluated Person", "Timeslot", "Assignments"],
   ];
-  Object.values(committeeSolution.committees).forEach((c: any) => {
+  Object.values(committeeSolution.committees.committees).forEach((c: any) => {
     const rowData = [c.evaluatedPerson.name];
     if (c.assignments.length) {
       rowData.push(c.assignments[0]?.timeSlot?.name);
