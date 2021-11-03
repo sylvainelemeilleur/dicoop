@@ -29,10 +29,10 @@ import { BASE_PATH, COLLECTION_FORMATS, RequestArgs, BaseAPI, RequiredError } fr
 export interface Committee {
     /**
      * 
-     * @type {number}
+     * @type {string}
      * @memberof Committee
      */
-    id?: number;
+    id?: string;
     /**
      * 
      * @type {Person}
@@ -60,12 +60,6 @@ export interface Committee {
 export interface CommitteeAssignment {
     /**
      * 
-     * @type {number}
-     * @memberof CommitteeAssignment
-     */
-    id?: number;
-    /**
-     * 
      * @type {Person}
      * @memberof CommitteeAssignment
      */
@@ -88,18 +82,6 @@ export interface CommitteeAssignment {
      * @memberof CommitteeAssignment
      */
     requiredPersonType?: PersonType;
-    /**
-     * 
-     * @type {boolean}
-     * @memberof CommitteeAssignment
-     */
-    requiredPersonTypeCorrect?: boolean;
-    /**
-     * 
-     * @type {boolean}
-     * @memberof CommitteeAssignment
-     */
-    available?: boolean;
 }
 /**
  * 

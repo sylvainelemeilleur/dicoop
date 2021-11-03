@@ -1,14 +1,10 @@
 import { Person, Settings } from "src/api";
-import {
-  DEFAULT_SETTINGS,
-  NO_PARTICIPANTS,
-  UNDEFINED_SOLUTION,
-} from "./Defaults";
-import { Solution } from "./Solution";
+import { CommitteeSet } from "./CommitteeSet";
+import { DEFAULT_SETTINGS, NO_HISTORY, NO_PARTICIPANTS } from "./Defaults";
 
 export class PersistenceData {
   // Defaults values
   public settings: Settings = DEFAULT_SETTINGS;
   public participants: Array<Person> = NO_PARTICIPANTS;
-  public committeeSolution: Solution = UNDEFINED_SOLUTION;
+  public history: Array<CommitteeSet> = NO_HISTORY;
 }

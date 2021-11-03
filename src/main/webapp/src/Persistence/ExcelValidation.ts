@@ -1,7 +1,7 @@
 export const Constants = {
   SETTINGS: "Settings",
   PARTICIPANTS: "Participants",
-  SOLUTIONS: "Solution",
+  SOLUTION: "Solution",
   HISTORY: "History",
 
   SETTING_NUMBER_OF_PRO: "Number of pro participants",
@@ -16,13 +16,23 @@ export const Constants = {
   PARTICIPANT_LANGUAGES: "Languages",
   PARTICIPANT_AVAILABILITY: "Availability",
   PARTICIPANT_SKILLS_TO_CERTIFICATE: "Skills to Certificate",
+
+  SOLUTION_EVALUATED_PERSON: "Evaluated Person",
+  SOLUTION_TIMESLOT: "Timeslot",
+  SOLUTION_ASSIGNMENTS: "Assignments",
 };
 
 const sheetsNames = [
   Constants.SETTINGS,
   Constants.PARTICIPANTS,
-  Constants.SOLUTIONS,
+  Constants.SOLUTION,
   Constants.HISTORY,
+];
+
+export const solutionHeaders = [
+  Constants.SOLUTION_EVALUATED_PERSON,
+  Constants.SOLUTION_TIMESLOT,
+  Constants.SOLUTION_ASSIGNMENTS,
 ];
 
 export const participantsColumns = [

@@ -1,10 +1,21 @@
-import { Location, Person, PersonType, Settings } from "src/api";
+import {
+  Committee,
+  CommitteeAssignment,
+  Location,
+  Person,
+  PersonType,
+  Settings,
+  TimeSlot,
+} from "src/api";
+import { CommitteeSet } from "src/Model/CommitteeSet";
 import { DEFAULT_SETTINGS } from "src/Model/Defaults";
 import { stringNotEmpty } from "src/Model/ModelUtils";
 import { NamedEntity } from "src/Model/NamedEntity";
 import { PersistenceData } from "src/Model/PersistenceData";
+import { SolvedCommittee } from "src/Model/SolvedCommittee";
 import XLSX from "xlsx";
 import { Constants } from "./ExcelValidation";
+import { v4 as uuid } from "uuid";
 
 export function parseExcelData(workbook: XLSX.WorkBook): PersistenceData {
   const data = new PersistenceData();
@@ -15,6 +26,7 @@ export function parseExcelData(workbook: XLSX.WorkBook): PersistenceData {
         ? {}
         : {
             header: 1,
+            raw: false,
           };
     const sheetData = XLSX.utils.sheet_to_json(sheet, options);
     switch (name) {
@@ -24,7 +36,12 @@ export function parseExcelData(workbook: XLSX.WorkBook): PersistenceData {
       case Constants.PARTICIPANTS:
         data.participants = parseParticipants(sheetData);
         break;
-      case Constants.SOLUTIONS:
+      case Constants.HISTORY:
+        console.log("HISTORY SHEET PARSING TO DO");
+        break;
+      case Constants.SOLUTION:
+        data.history.push(parseSolution(sheetData));
+        console.log(data.history);
         break;
       default:
         console.log(`Unknown sheet name: ${name}`);
@@ -32,6 +49,39 @@ export function parseExcelData(workbook: XLSX.WorkBook): PersistenceData {
     }
   });
   return data;
+}
+
+function parseSolution(sheetData: Array<any>): CommitteeSet {
+  const set: CommitteeSet = new CommitteeSet();
+  sheetData.forEach((rowData: Array<any>) => {
+    const firstCell = rowData[0];
+    if (firstCell === Constants.SOLUTION_EVALUATED_PERSON) {
+      // ignore headers
+    } else if (firstCell === Constants.SOLUTION) {
+      set.date = rowData[1];
+    } else {
+      const evaluatedPerson = {
+        name: rowData[0],
+      } as Person;
+      const solvedCommittee = new SolvedCommittee(uuid(), evaluatedPerson);
+      const timeSlot = { name: rowData[1] } as TimeSlot;
+      const committee = {
+        id: uuid(),
+        createdDate: ``,
+        evaluatedPerson,
+      } as Committee;
+      for (let i = 2; i < rowData.length; i++) {
+        const assignedPerson = { name: rowData[i] } as Person;
+        solvedCommittee.assignments.push({
+          assignedPerson,
+          timeSlot,
+          committee,
+        } as CommitteeAssignment);
+      }
+      set.add(solvedCommittee);
+    }
+  });
+  return set;
 }
 
 function parseSettings(sheetData: Array<any>): Settings {

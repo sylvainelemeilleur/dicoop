@@ -14,9 +14,10 @@ import {
   SolverOptions,
 } from "./api";
 import "./App.css";
-import { CommitteeSet } from "./Model/CommitteeSet";
+import HistoryTable from "./History/HistoryTable";
 import {
   DEFAULT_SETTINGS,
+  NO_HISTORY,
   NO_PARTICIPANTS,
   UNDEFINED_SOLUTION,
 } from "./Model/Defaults";
@@ -40,7 +41,7 @@ function App() {
   const [settings, setSettings] = useState(DEFAULT_SETTINGS);
   const [committeeSolution, setCommitteeSolution] =
     useState(UNDEFINED_SOLUTION);
-  const [history, SetHistory] = useState(new Array<CommitteeSet>());
+  const [history, setHistory] = useState(NO_HISTORY);
 
   // Tabs state
   const [activeTabKey, setActiveTabKey] = useState(0);
@@ -59,12 +60,13 @@ function App() {
 
   // data import and export
   const dataExport = () => {
-    excelExport(settings, participants, committeeSolution);
+    excelExport(settings, participants, history, committeeSolution);
   };
 
   const onDataImport = (data: PersistenceData) => {
     setSettings(data.settings);
     setParticipants(data.participants);
+    setHistory(data.history);
   };
 
   const onDataImportError = (result: ValidationResult) => {
@@ -177,14 +179,14 @@ function App() {
                 <ParticipantsTable participants={participants} />
               </Tab>
               <Tab eventKey={1} title={<TabTitleText>History</TabTitleText>}>
-                History
+                <HistoryTable history={history}></HistoryTable>
               </Tab>
               <Tab
                 eventKey={2}
                 title={<TabTitleText>Solution</TabTitleText>}
                 disabled={solutionTabDisabled}
               >
-                <SolutionTable committeeSolution={committeeSolution} />
+                <SolutionTable committees={committeeSolution.committees} />
               </Tab>
             </Tabs>
           </FlexItem>

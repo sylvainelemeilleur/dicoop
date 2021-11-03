@@ -72,16 +72,15 @@ public class CommitteeSolution {
         // non-professional person
         var professionalPersonType = new PersonType("professional");
         var nonProfessionalPersonType = new PersonType("non-professional");
-        Long committeeAssignmentId = 0L;
         for (var committee : this.committees) {
             committee.maximumNumberOfAssignments = options.settings.maximumNumberOfAssignments;
             for (int i = 1; i <= options.settings.nbProParticipants; i++) {
-                this.committeeAssignments.add(new CommitteeAssignment(committeeAssignmentId++,
-                        committee, professionalPersonType));
+                this.committeeAssignments
+                        .add(new CommitteeAssignment(committee, professionalPersonType));
             }
             for (int i = 1; i <= options.settings.nbNonProParticipants; i++) {
-                this.committeeAssignments.add(new CommitteeAssignment(committeeAssignmentId++,
-                        committee, nonProfessionalPersonType));
+                this.committeeAssignments
+                        .add(new CommitteeAssignment(committee, nonProfessionalPersonType));
             }
         }
     }

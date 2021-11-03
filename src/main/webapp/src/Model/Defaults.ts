@@ -17,3 +17,5 @@ export const UNDEFINED_SOLUTION = new Solution(
 );
 
 export const NO_PARTICIPANTS = new Array<Person>();
+
+export const NO_HISTORY = new Array<CommitteeSet>();

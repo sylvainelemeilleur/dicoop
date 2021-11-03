@@ -1,4 +1,5 @@
 import { Person, Settings } from "src/api";
+import { CommitteeSet } from "src/Model/CommitteeSet";
 import { PersistenceData } from "src/Model/PersistenceData";
 import { Solution } from "src/Model/Solution";
 import XLSX from "xlsx";
@@ -6,6 +7,7 @@ import { parseExcelData } from "./ExcelDataParser";
 import {
   Constants,
   participantsColumns,
+  solutionHeaders,
   ValidationResult,
   Validators,
 } from "./ExcelValidation";
@@ -34,7 +36,8 @@ export function excelImport(
 
 export function excelExport(
   settings: Settings,
-  persons: Array<Person>,
+  participants: Array<Person>,
+  history: Array<CommitteeSet>,
   committeeSolution: Solution
 ) {
   // Settings sheet
@@ -62,7 +65,7 @@ export function excelExport(
 
   // Participants sheet
   const participantsData = [participantsColumns];
-  persons.forEach((p: Person) =>
+  participants.forEach((p: Person) =>
     participantsData.push([
       sanitizeString(p.name),
       sanitizeString(p.personType?.name),
@@ -75,20 +78,19 @@ export function excelExport(
   );
   const participantsWorksheet = XLSX.utils.aoa_to_sheet(participantsData);
 
-  // Solutions sheet
-  const solutionsData = [
-    ["Solution", new Date()],
-    ["Evaluated Person", "Timeslot", "Assignments"],
-  ];
-  Object.values(committeeSolution.committees.committees).forEach((c: any) => {
-    const rowData = [c.evaluatedPerson.name];
-    if (c.assignments.length) {
-      rowData.push(c.assignments[0]?.timeSlot?.name);
-      c.assignments.forEach((a: any) => rowData.push(a.assignedPerson.name));
-    }
-    solutionsData.push(rowData);
+  // Solution sheet
+  const solutionsData = [[Constants.SOLUTION, new Date()], solutionHeaders];
+  exportCommittees(committeeSolution.committees, solutionsData);
+  const solutionWorksheet = XLSX.utils.aoa_to_sheet(solutionsData);
+
+  // History sheet
+  const historyData = new Array<any>();
+  history.forEach((committees) => {
+    historyData.push([Constants.SOLUTION, committees.date]);
+    historyData.push(solutionHeaders);
+    exportCommittees(committees, historyData);
   });
-  const solutionsWorksheet = XLSX.utils.aoa_to_sheet(solutionsData);
+  const historyWorksheet = XLSX.utils.aoa_to_sheet(historyData);
 
   // Saving the workbook
   const workbook = XLSX.utils.book_new();
@@ -98,10 +100,21 @@ export function excelExport(
     participantsWorksheet,
     Constants.PARTICIPANTS
   );
-  XLSX.utils.book_append_sheet(
-    workbook,
-    solutionsWorksheet,
-    Constants.SOLUTIONS
-  );
+  XLSX.utils.book_append_sheet(workbook, historyWorksheet, Constants.HISTORY);
+  XLSX.utils.book_append_sheet(workbook, solutionWorksheet, Constants.SOLUTION);
   XLSX.writeFile(workbook, "pgs-planner-export.xlsx");
 }
+
+const exportCommittees = (
+  committees: CommitteeSet,
+  worksheetData: Array<any>
+) => {
+  Object.values(committees.committees).forEach((c: any) => {
+    const rowData = [c.evaluatedPerson.name];
+    if (c.assignments.length) {
+      rowData.push(c.assignments[0]?.timeSlot?.name);
+      c.assignments.forEach((a: any) => rowData.push(a.assignedPerson.name));
+    }
+    worksheetData.push(rowData);
+  });
+};

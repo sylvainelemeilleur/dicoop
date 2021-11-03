@@ -10,13 +10,13 @@ type ParticipantsTableProps = {
 function ParticipantsTable({ participants }: ParticipantsTableProps) {
   const badgeList = (namedList?: Array<NamedEntity>) => {
     return (
-      <React.Fragment>
+      <>
         {namedList?.map((item: any) => (
           <Badge key={item.name} isRead>
             {item.name}
           </Badge>
         ))}
-      </React.Fragment>
+      </>
     );
   };
   return (

@@ -2,10 +2,11 @@ package fr.cirad.domain;
 
 import java.time.Instant;
 import java.util.List;
+import java.util.UUID;
 
 public class Committee {
 
-    public Long id;
+    public UUID id = UUID.randomUUID();
 
     public Person evaluatedPerson;
 
@@ -13,14 +14,11 @@ public class Committee {
 
     public int maximumNumberOfAssignments = 5;
 
-    private static Long currentId = 0L; // Fake ID generator for the demo
-
     public Committee() {
         // No-arg constructor required for Hibernate and OptaPlanner
     }
 
     public Committee(Person evaluatedPerson) {
-        this.id = currentId++;
         this.evaluatedPerson = evaluatedPerson;
     }
 
@@ -30,7 +28,7 @@ public class Committee {
 
     @Override
     public String toString() {
-        return "Committee: " + id;
+        return "Committee for: " + this.evaluatedPerson;
     }
 
 }

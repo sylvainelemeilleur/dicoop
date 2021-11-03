@@ -1,12 +1,12 @@
 import React from "react";
-import { Solution } from "src/Model/Solution";
+import { CommitteeSet } from "src/Model/CommitteeSet";
 import { SolvedCommittee } from "src/Model/SolvedCommittee";
 
 type SolutionTableProps = {
-  committeeSolution: Solution;
+  committees: CommitteeSet;
 };
 
-function SolutionTable({ committeeSolution }: SolutionTableProps) {
+function SolutionTable({ committees }: SolutionTableProps) {
   const assignmentsList = (assignments: any) => (
     <React.Fragment>
       {assignments
@@ -17,8 +17,7 @@ function SolutionTable({ committeeSolution }: SolutionTableProps) {
             data-label="Assignments"
             key={assignment.assignedPerson.name}
           >
-            <b>{assignment.assignedPerson.name}</b>
-            <br />({assignment.assignedPerson.personType.name})
+            {assignment.assignedPerson.name}
           </td>
         ))}
     </React.Fragment>
@@ -45,7 +44,7 @@ function SolutionTable({ committeeSolution }: SolutionTableProps) {
         </tr>
       </thead>
       <tbody>
-        {Object.values(committeeSolution.committees.committees).map(
+        {Object.values(committees.committees).map(
           (committee: SolvedCommittee) => (
             <tr role="row" key={committee.id}>
               <td role="cell" data-label="Evaluated Person">

@@ -1,5 +1,7 @@
 package fr.cirad.domain;
 
+import java.util.UUID;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import org.optaplanner.core.api.domain.entity.PlanningEntity;
 import org.optaplanner.core.api.domain.lookup.PlanningId;
 import org.optaplanner.core.api.domain.variable.PlanningVariable;
@@ -8,7 +10,8 @@ import org.optaplanner.core.api.domain.variable.PlanningVariable;
 public class CommitteeAssignment {
 
     @PlanningId
-    public Long id;
+    @JsonIgnore
+    public UUID id = UUID.randomUUID();
 
     @PlanningVariable(valueRangeProviderRefs = {"personRange"})
     public Person assignedPerson;
@@ -24,8 +27,7 @@ public class CommitteeAssignment {
         // must have a no-args constructor so it can be constructed by OptaPlanner
     }
 
-    public CommitteeAssignment(Long id, Committee committee, PersonType requiredPersonType) {
-        this.id = id;
+    public CommitteeAssignment(Committee committee, PersonType requiredPersonType) {
         this.committee = committee;
         this.requiredPersonType = requiredPersonType;
     }
@@ -42,12 +44,14 @@ public class CommitteeAssignment {
         return timeSlot;
     }
 
+    @JsonIgnore
     public boolean isRequiredPersonTypeCorrect() {
         if (assignedPerson == null || requiredPersonType == null)
             return false;
         return assignedPerson.personType.equals(requiredPersonType);
     }
 
+    @JsonIgnore
     public boolean isAvailable() {
         if (assignedPerson == null)
             return false;
@@ -56,7 +60,7 @@ public class CommitteeAssignment {
 
     @Override
     public String toString() {
-        return " CommitteeAssignment " + id + " " + assignedPerson + " " + committee;
+        return " CommitteeAssignment: " + assignedPerson + " for " + committee;
     }
 
 }
