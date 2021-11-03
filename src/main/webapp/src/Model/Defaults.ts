@@ -9,7 +9,6 @@ export const DEFAULT_SETTINGS = {
 } as Settings;
 
 export const UNDEFINED_SOLUTION = new Solution(
-  "UNDEFINED",
   [],
   new CommitteeSet(),
   "NOT_STARTED",

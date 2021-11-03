@@ -1,4 +1,12 @@
-import { Flex, FlexItem, Modal, ModalVariant } from "@patternfly/react-core";
+import {
+  Flex,
+  FlexItem,
+  Modal,
+  ModalVariant,
+  Tab,
+  Tabs,
+  TabTitleText,
+} from "@patternfly/react-core";
 import React, { useState } from "react";
 import {
   CommitteeSolutionResourceApi,
@@ -33,6 +41,13 @@ function App() {
   const [committeeSolution, setCommitteeSolution] =
     useState(UNDEFINED_SOLUTION);
   const [history, SetHistory] = useState(new Array<CommitteeSet>());
+
+  // Tabs state
+  const [activeTabKey, setActiveTabKey] = useState(0);
+  const [solutionTabDisabled, setSolutionTabDisabled] = useState(true);
+  const handleTabClick = (event, tabIndex) => {
+    setActiveTabKey(tabIndex);
+  };
 
   // API configuration
   const apiConfig = new Configuration({
@@ -108,6 +123,8 @@ function App() {
   };
 
   const refreshSolution = (id: string) => {
+    setSolutionTabDisabled(false);
+    setActiveTabKey(2);
     committeeSolutionResourceApi
       .apiCommitteeSolutionIdGet(id)
       .then((res) => {
@@ -150,14 +167,30 @@ function App() {
             committeeSolution={committeeSolution}
           />
         </FlexItem>
-        {committeeSolution.id && (
+        {participants.length > 0 ? (
           <FlexItem cellPadding={30}>
-            <SolutionTable committeeSolution={committeeSolution} />
+            <Tabs activeKey={activeTabKey} onSelect={handleTabClick}>
+              <Tab
+                eventKey={0}
+                title={<TabTitleText>Participants</TabTitleText>}
+              >
+                <ParticipantsTable participants={participants} />
+              </Tab>
+              <Tab eventKey={1} title={<TabTitleText>History</TabTitleText>}>
+                History
+              </Tab>
+              <Tab
+                eventKey={2}
+                title={<TabTitleText>Solution</TabTitleText>}
+                disabled={solutionTabDisabled}
+              >
+                <SolutionTable committeeSolution={committeeSolution} />
+              </Tab>
+            </Tabs>
           </FlexItem>
+        ) : (
+          <div>Please import a valid pgs-planner xlsx file.</div>
         )}
-        <FlexItem cellPadding={30}>
-          <ParticipantsTable participants={participants} />
-        </FlexItem>
       </Flex>
       <Modal
         variant={ModalVariant.small}

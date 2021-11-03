@@ -181,13 +181,6 @@ function SolutionSettingsForm({
               </button>
             ) : (
               <>
-                <button
-                  className="pf-c-button pf-m-primary"
-                  type="button"
-                  onClick={startSolving}
-                >
-                  Solve
-                </button>
                 <input
                   style={{ display: "none" }}
                   accept=".xlsx"
@@ -208,6 +201,13 @@ function SolutionSettingsForm({
                   onClick={dataExport}
                 >
                   Export
+                </button>
+                <button
+                  className="pf-c-button pf-m-primary"
+                  type="button"
+                  onClick={startSolving}
+                >
+                  Solve
                 </button>
               </>
             )}

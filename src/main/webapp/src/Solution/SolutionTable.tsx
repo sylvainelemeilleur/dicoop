@@ -31,7 +31,6 @@ function SolutionTable({ committeeSolution }: SolutionTableProps) {
       aria-label="Solution"
       id="table-basic"
     >
-      <caption>Solution</caption>
       <thead>
         <tr role="row">
           <th role="columnheader" scope="col">

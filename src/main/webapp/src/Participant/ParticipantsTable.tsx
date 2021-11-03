@@ -26,7 +26,6 @@ function ParticipantsTable({ participants }: ParticipantsTableProps) {
       aria-label="Participants"
       id="table-basic"
     >
-      <caption>Participants</caption>
       <thead>
         <tr role="row">
           <th role="columnheader" scope="col">
