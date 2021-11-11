@@ -51,17 +51,10 @@ export function excelExport(
   ];
   const settingsWorksheet = XLSX.utils.aoa_to_sheet(settingsData);
 
-  const sanitizeString = (s?: string) => {
-    return s ?? "";
-  };
+  const sanitizeString = (s?: string) => s ?? "";
 
-  const sanitizeNamedArray = (a?: Array<any>): string => {
-    if (a === undefined) {
-      return "";
-    } else {
-      return a.map((i: any) => i.name).join(",");
-    }
-  };
+  const sanitizeNamedArray = (a?: Array<any>): string =>
+    a === undefined ? "" : a.map((i: any) => i.name).join(",");
 
   // Participants sheet
   const participantsData = [participantsColumns];

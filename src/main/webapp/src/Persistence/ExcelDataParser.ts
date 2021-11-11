@@ -57,6 +57,7 @@ function parseSolution(sheetData: Array<any>): CommitteeSet {
     const firstCell = rowData[0];
     if (firstCell === Constants.SOLUTION_EVALUATED_PERSON) {
       // ignore headers
+      console.log("Headers ignored in parseSolution");
     } else if (firstCell === Constants.SOLUTION) {
       set.date = rowData[1];
     } else {
