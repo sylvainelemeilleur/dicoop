@@ -86,7 +86,7 @@ export function excelExport(
   // History sheet
   const historyData = new Array<any>();
   history.forEach((committees) => {
-    historyData.push([Constants.SOLUTION, committees.date]);
+    historyData.push([Constants.SOLUTION, `${committees.date}`]);
     historyData.push(solutionHeaders);
     exportCommittees(committees, historyData);
   });

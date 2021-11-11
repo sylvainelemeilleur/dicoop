@@ -1,8 +1,13 @@
 import {
   Flex,
   FlexItem,
+  Masthead,
+  MastheadContent,
   Modal,
   ModalVariant,
+  Page,
+  PageSection,
+  PageSectionVariants,
   Tab,
   Tabs,
   TabTitleText,
@@ -155,45 +160,63 @@ function App() {
   };
 
   return (
-    <React.Fragment>
-      <Flex direction={{ default: "column" }}>
-        <FlexItem cellPadding={30}>
-          <SolutionSettingsForm
-            settings={settings}
-            setSettings={setSettings}
-            isSolving={isSolving}
-            startSolving={startSolving}
-            stopSolving={stopSolving}
-            dataImport={dataImport}
-            dataExport={dataExport}
-            committeeSolution={committeeSolution}
-          />
-        </FlexItem>
-        {participants.length > 0 ? (
-          <FlexItem cellPadding={30}>
-            <Tabs activeKey={activeTabKey} onSelect={handleTabClick}>
-              <Tab
-                eventKey={0}
-                title={<TabTitleText>Participants</TabTitleText>}
-              >
-                <ParticipantsTable participants={participants} />
-              </Tab>
-              <Tab eventKey={1} title={<TabTitleText>History</TabTitleText>}>
-                <HistoryTable history={history}></HistoryTable>
-              </Tab>
-              <Tab
-                eventKey={2}
-                title={<TabTitleText>Solution</TabTitleText>}
-                disabled={solutionTabDisabled}
-              >
-                <SolutionTable committees={committeeSolution.committees} />
-              </Tab>
-            </Tabs>
-          </FlexItem>
-        ) : (
-          <div>Please import a valid pgs-planner xlsx file.</div>
-        )}
-      </Flex>
+    <>
+      <Page
+        header={
+          <Masthead
+            id="stack-masthead"
+            display={{ default: "inline", lg: "stack", "2xl": "inline" }}
+          >
+            <MastheadContent>
+              <span>PGS PLANNER</span>
+            </MastheadContent>
+          </Masthead>
+        }
+      >
+        <PageSection variant={PageSectionVariants.light}>
+          <Flex direction={{ default: "column" }}>
+            <FlexItem>
+              <SolutionSettingsForm
+                settings={settings}
+                setSettings={setSettings}
+                isSolving={isSolving}
+                startSolving={startSolving}
+                stopSolving={stopSolving}
+                dataImport={dataImport}
+                dataExport={dataExport}
+                committeeSolution={committeeSolution}
+              />
+            </FlexItem>
+            {participants.length > 0 ? (
+              <FlexItem>
+                <Tabs activeKey={activeTabKey} onSelect={handleTabClick}>
+                  <Tab
+                    eventKey={0}
+                    title={<TabTitleText>Participants</TabTitleText>}
+                  >
+                    <ParticipantsTable participants={participants} />
+                  </Tab>
+                  <Tab
+                    eventKey={1}
+                    title={<TabTitleText>History</TabTitleText>}
+                  >
+                    <HistoryTable history={history}></HistoryTable>
+                  </Tab>
+                  <Tab
+                    eventKey={2}
+                    title={<TabTitleText>Solution</TabTitleText>}
+                    disabled={solutionTabDisabled}
+                  >
+                    <SolutionTable committees={committeeSolution.committees} />
+                  </Tab>
+                </Tabs>
+              </FlexItem>
+            ) : (
+              <div>Please import a valid pgs-planner xlsx file.</div>
+            )}
+          </Flex>
+        </PageSection>
+      </Page>
       <Modal
         variant={ModalVariant.small}
         isOpen={isErrorModalOpen}
@@ -205,7 +228,7 @@ function App() {
       >
         {errorMessage.message}
       </Modal>
-    </React.Fragment>
+    </>
   );
 }
 
