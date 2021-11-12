@@ -1,3 +1,4 @@
+import { Divider, Space, Title } from "@mantine/core";
 import { CommitteeSet } from "src/Model/CommitteeSet";
 import SolutionTable from "src/Solution/SolutionTable";
 
@@ -10,8 +11,11 @@ function HistoryTable({ history }: HistoryTableProps) {
     <>
       {history.map((committees) => (
         <div key={committees.id}>
-          <span>Solution {committees.date}</span>
+          <Title order={3}>Solution {committees.date}</Title>
           <SolutionTable committees={committees} />
+          <Space h="xl" />
+          <Divider />
+          <Space h="xl" />
         </div>
       ))}
     </>

@@ -46,7 +46,7 @@ export function parseExcelData(workbook: XLSX.WorkBook): PersistenceData {
         });
         break;
       case Constants.SOLUTION:
-        data.history.push(parseSolution(sheetData));
+        data.history.unshift(parseSolution(sheetData));
         break;
       default:
         console.log(`Unknown sheet name: ${name}`);
