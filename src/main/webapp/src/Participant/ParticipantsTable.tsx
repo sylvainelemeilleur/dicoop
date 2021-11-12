@@ -1,4 +1,4 @@
-import { Badge } from "@patternfly/react-core";
+import { Badge, Table } from "@mantine/core";
 import React from "react";
 import { Person } from "src/api";
 import { NamedEntity } from "src/Model/NamedEntity";
@@ -8,24 +8,15 @@ type ParticipantsTableProps = {
 };
 
 function ParticipantsTable({ participants }: ParticipantsTableProps) {
-  const badgeList = (namedList?: Array<NamedEntity>) => {
-    return (
-      <>
-        {namedList?.map((item: any) => (
-          <Badge key={item.name} isRead>
-            {item.name}
-          </Badge>
-        ))}
-      </>
-    );
-  };
+  const badgeList = (namedList?: Array<NamedEntity>) => (
+    <>
+      {namedList?.map((item: any) => (
+        <Badge key={item.name}>{item.name}</Badge>
+      ))}
+    </>
+  );
   return (
-    <table
-      className="pf-c-table pf-m-compact pf-m-grid-md"
-      role="grid"
-      aria-label="Participants"
-      id="table-basic"
-    >
+    <Table highlightOnHover aria-label="Participants" id="table-basic">
       <thead>
         <tr role="row">
           <th role="columnheader" scope="col">
@@ -78,7 +69,7 @@ function ParticipantsTable({ participants }: ParticipantsTableProps) {
           </tr>
         </tbody>
       ))}
-    </table>
+    </Table>
   );
 }
 

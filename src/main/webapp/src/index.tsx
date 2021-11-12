@@ -1,4 +1,3 @@
-import "@patternfly/patternfly/patternfly.css";
 import React from "react";
 import ReactDOM from "react-dom";
 import App from "./App";

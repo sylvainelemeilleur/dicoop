@@ -1,3 +1,4 @@
+import { Table } from "@mantine/core";
 import React from "react";
 import { CommitteeSet } from "src/Model/CommitteeSet";
 import { SolvedCommittee } from "src/Model/SolvedCommittee";
@@ -24,12 +25,7 @@ function SolutionTable({ committees }: SolutionTableProps) {
   );
 
   return (
-    <table
-      className="pf-c-table pf-m-compact pf-m-grid-md"
-      role="grid"
-      aria-label="Solution"
-      id="table-basic"
-    >
+    <Table highlightOnHover aria-label="Solution" id="table-basic">
       <thead>
         <tr role="row">
           <th role="columnheader" scope="col">
@@ -59,7 +55,7 @@ function SolutionTable({ committees }: SolutionTableProps) {
           )
         )}
       </tbody>
-    </table>
+    </Table>
   );
 }
 

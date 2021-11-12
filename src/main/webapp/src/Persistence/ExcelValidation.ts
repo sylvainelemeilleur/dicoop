@@ -6,8 +6,7 @@ export const Constants = {
 
   SETTING_NUMBER_OF_PRO: "Number of pro participants",
   SETTING_NUMBER_OF_NON_PRO: "Number of non pro participants",
-  SETTING_MAX_NUMBER_OF_ASSIGNMENTS:
-    "Maximum number of assignments per participant",
+  SETTING_NUMBER_OF_ASSIGNMENTS: "Number of assignments per participant",
 
   PARTICIPANT_NAME: "Name",
   PARTICIPANT_TYPE: "Type",

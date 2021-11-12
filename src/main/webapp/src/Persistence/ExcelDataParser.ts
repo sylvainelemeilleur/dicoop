@@ -4,6 +4,7 @@ import {
   Location,
   Person,
   PersonType,
+  Range,
   Settings,
   TimeSlot,
 } from "src/api";
@@ -48,6 +49,7 @@ export function parseExcelData(workbook: XLSX.WorkBook): PersistenceData {
         break;
     }
   });
+  console.log("DATA LOADED");
   return data;
 }
 
@@ -97,8 +99,11 @@ function parseSettings(sheetData: Array<any>): Settings {
       case Constants.SETTING_NUMBER_OF_NON_PRO:
         settings.nbNonProParticipants = +settingValue;
         break;
-      case Constants.SETTING_MAX_NUMBER_OF_ASSIGNMENTS:
-        settings.maximumNumberOfAssignments = +settingValue;
+      case Constants.SETTING_NUMBER_OF_ASSIGNMENTS:
+        const settingValue2 = rowData[2];
+        settings.numberOfAssignments = {
+          value: [+settingValue, +settingValue2],
+        } as Range;
         break;
       default:
         console.log(`Unknown setting name ${settingName}`);
