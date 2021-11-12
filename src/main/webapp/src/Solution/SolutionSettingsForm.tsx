@@ -1,247 +1,142 @@
 import {
-  ActionGroup,
-  CodeBlock,
-  CodeBlockCode,
-  ExpandableSection,
-  Form,
-  FormGroup,
+  Button,
+  Col,
+  Container,
+  Drawer,
   Grid,
-  GridItem,
-  Popover,
+  Group,
+  InputWrapper,
+  LoadingOverlay,
+  RangeSlider,
   Slider,
-} from "@patternfly/react-core";
-import HelpIcon from "@patternfly/react-icons/dist/esm/icons/help-icon";
-import React, { useRef, useState } from "react";
-import { Settings } from "src/api";
-import { copySettings } from "src/Model/ModelUtils";
+  Space,
+  Textarea,
+} from "@mantine/core";
+import React, { useState } from "react";
 import { Solution } from "src/Model/Solution";
 
 type SolutionSettingsProps = {
-  settings: Settings;
-  setSettings: (settings: Settings) => void;
+  nbProParticipants: number;
+  setNbProParticipants: (value: number) => void;
+  nbNonProParticipants: number;
+  setNbNonProParticipants: (value: number) => void;
+  numberOfAssignments: [number, number];
+  setNumberOfAssignments: (value: [number, number]) => void;
   committeeSolution: Solution;
   isSolving: boolean;
-  startSolving: () => void;
-  stopSolving: () => void;
-  dataImport: (file: any) => void;
-  dataExport: () => void;
 };
 
 function SolutionSettingsForm({
-  settings,
-  setSettings,
+  nbProParticipants,
+  setNbProParticipants,
+  nbNonProParticipants,
+  setNbNonProParticipants,
+  numberOfAssignments,
+  setNumberOfAssignments,
   committeeSolution,
   isSolving,
-  startSolving,
-  stopSolving,
-  dataImport,
-  dataExport,
 }: SolutionSettingsProps) {
   const min = 0;
   const max = 5;
   const [showMore, setShowMore] = useState(false);
 
-  // file picker
-  const inputFile = useRef<HTMLInputElement>(null);
-  const handleFileOpened = (e: any) => {
-    const { files } = e.target;
-    if (files && files.length) {
-      const file = files[0];
-      dataImport(file);
-    }
-  };
-  const openFileDialog = () => {
-    inputFile?.current?.click();
-  };
+  const marks = [
+    { value: 0, label: "0" },
+    { value: 1, label: "1" },
+    { value: 2, label: "2" },
+    { value: 3, label: "3" },
+    { value: 4, label: "4" },
+    { value: 5, label: "5" },
+  ];
 
-  const sliderDivStyle = {
-    width: "90%",
-  };
-
-  const makePopover = (headerContent: string, bodyContent: string) => {
-    return (
-      <Popover
-        headerContent={<div>{headerContent}</div>}
-        bodyContent={<div>{bodyContent}</div>}
-      >
-        <button
-          type="button"
-          aria-label="More info for name field"
-          onClick={(e) => e.preventDefault()}
-          aria-describedby="simple-form-name-02"
-          className="pf-c-form__group-label-help"
-        >
-          <HelpIcon noVerticalAlign />
-        </button>
-      </Popover>
-    );
-  };
   return (
-    <Grid cellPadding={30}>
-      <GridItem sm={6}>
-        <Form isHorizontal>
-          <FormGroup
-            label="Number of professionals"
-            fieldId="nbProParticipants"
-            labelIcon={makePopover(
-              `The number of professionals participants`,
-              `Between ${min} and ${max}`
-            )}
-            isInline
-          >
-            <div style={sliderDivStyle}>
+    <div style={{ position: "relative", width: "100%" }}>
+      <LoadingOverlay visible={isSolving} />
+      <Grid>
+        <Col span={6}>
+          <Container>
+            <InputWrapper
+              id="nbProParticipants"
+              label="Number of professionals participants"
+            >
               <Slider
                 id="nbProParticipants"
-                value={settings.nbProParticipants}
-                inputValue={settings.nbProParticipants}
-                onChange={(value) => {
-                  const newSettings = copySettings(settings);
-                  newSettings.nbProParticipants = value;
-                  setSettings(newSettings);
-                }}
-                min={0}
-                max={5}
-                step={1}
-                showTicks
-                isInputVisible
-              />
-            </div>
-          </FormGroup>
-          <FormGroup
-            label="Number of non-professionals"
-            fieldId="nbNonProParticipants"
-            labelIcon={makePopover(
-              `The number of non-professionals participants`,
-              `Between ${min} and ${max}`
-            )}
-            isInline
-          >
-            <div style={sliderDivStyle}>
+                value={nbProParticipants}
+                min={min}
+                max={max}
+                marks={marks}
+                onChange={setNbProParticipants}
+              ></Slider>
+            </InputWrapper>
+            <Space h="lg" />
+            <InputWrapper
+              id="nbNonProParticipants"
+              label="Number of non-professionals participants"
+            >
               <Slider
                 id="nbNonProParticipants"
-                value={settings.nbNonProParticipants}
-                inputValue={settings.nbNonProParticipants}
-                onChange={(value) => {
-                  const newSettings = copySettings(settings);
-                  newSettings.nbNonProParticipants = value;
-                  setSettings(newSettings);
-                }}
-                min={0}
-                max={5}
+                value={nbNonProParticipants}
+                min={min}
+                max={max}
+                marks={marks}
+                onChange={setNbNonProParticipants}
+              ></Slider>
+            </InputWrapper>
+            <Space h="lg" />
+            <InputWrapper
+              id="numberOfAssignments"
+              label="Number of assignments per participant"
+            >
+              <RangeSlider
+                id="numberOfAssignments"
+                value={numberOfAssignments}
                 step={1}
-                showTicks
-                isInputVisible
-              />
+                min={min}
+                max={max}
+                minRange={0}
+                marks={marks}
+                onChange={setNumberOfAssignments}
+              ></RangeSlider>
+            </InputWrapper>
+            <Space h="lg" />
+          </Container>
+        </Col>
+        <Col span={6}>
+          <b>Status</b>: {committeeSolution.solverStatus}
+          <br />
+          {committeeSolution.id && (
+            <div>
+              <b>ID</b>: {committeeSolution.id}
             </div>
-          </FormGroup>
-          <FormGroup
-            label="Maximum number of assignments per participant"
-            fieldId="maximumNumberOfAssignments"
-            labelIcon={makePopover(
-              `Maximum number of assignments per participant`,
-              `Between ${min} and ${max}`
-            )}
-            isInline
-          >
-            <div style={sliderDivStyle}>
-              <Slider
-                id="maximumNumberOfAssignments"
-                value={settings.maximumNumberOfAssignments}
-                inputValue={settings.maximumNumberOfAssignments}
-                onChange={(value) => {
-                  const newSettings = copySettings(settings);
-                  newSettings.maximumNumberOfAssignments = value;
-                  setSettings(newSettings);
-                }}
-                min={0}
-                max={5}
-                step={1}
-                showTicks
-                isInputVisible
-              />
+          )}
+          {committeeSolution.score && (
+            <div>
+              <b>Score:</b> {committeeSolution.score}
             </div>
-          </FormGroup>
-          <ActionGroup>
-            {isSolving ? (
-              <button
-                className="pf-c-button pf-m-secondary"
-                type="button"
-                onClick={stopSolving}
+          )}
+          {committeeSolution.scoreExplanation && (
+            <>
+              <Drawer
+                opened={showMore}
+                onClose={() => setShowMore(false)}
+                title="Score explanation"
+                padding="xl"
+                size="xl"
+                position="right"
               >
-                Stop &nbsp;
-                <span
-                  className="pf-c-spinner pf-m-sm"
-                  role="progressbar"
-                  aria-valuetext="Loading..."
-                >
-                  <span className="pf-c-spinner__clipper"></span>
-                  <span className="pf-c-spinner__lead-ball"></span>
-                  <span className="pf-c-spinner__tail-ball"></span>
-                </span>
-              </button>
-            ) : (
-              <>
-                <input
-                  style={{ display: "none" }}
-                  accept=".xlsx"
-                  ref={inputFile}
-                  onChange={handleFileOpened}
-                  type="file"
-                />
-                <button
-                  className="pf-c-button pf-m-primary"
-                  type="button"
-                  onClick={openFileDialog}
-                >
-                  Import
-                </button>
-                <button
-                  className="pf-c-button pf-m-primary"
-                  type="button"
-                  onClick={dataExport}
-                >
-                  Export
-                </button>
-                <button
-                  className="pf-c-button pf-m-primary"
-                  type="button"
-                  onClick={startSolving}
-                >
-                  Solve
-                </button>
-              </>
-            )}
-          </ActionGroup>
-        </Form>
-      </GridItem>
-      <GridItem sm={6}>
-        <b>Status</b>: {committeeSolution.solverStatus}
-        <br />
-        {committeeSolution.id && (
-          <div>
-            <b>ID</b>: {committeeSolution.id}
-          </div>
-        )}
-        {committeeSolution.score && (
-          <div>
-            <b>Score:</b> {committeeSolution.score}
-          </div>
-        )}
-        {committeeSolution.scoreExplanation && (
-          <ExpandableSection
-            toggleText={showMore ? "Show less" : "Show more"}
-            onToggle={setShowMore}
-            isExpanded={showMore}
-          >
-            <CodeBlock>
-              <CodeBlockCode id="code-content">
-                {committeeSolution.scoreExplanation}
-              </CodeBlockCode>
-            </CodeBlock>
-          </ExpandableSection>
-        )}
-      </GridItem>
-    </Grid>
+                <Textarea value={committeeSolution.scoreExplanation} autosize />
+              </Drawer>
+              <Space h="md" />
+              <Group position="left">
+                <Button onClick={() => setShowMore(true)}>
+                  Open score explanation
+                </Button>
+              </Group>
+            </>
+          )}
+        </Col>
+      </Grid>
+    </div>
   );
 }
 

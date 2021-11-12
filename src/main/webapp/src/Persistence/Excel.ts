@@ -45,8 +45,9 @@ export function excelExport(
     [Constants.SETTING_NUMBER_OF_PRO, settings.nbProParticipants],
     [Constants.SETTING_NUMBER_OF_NON_PRO, settings.nbNonProParticipants],
     [
-      Constants.SETTING_MAX_NUMBER_OF_ASSIGNMENTS,
-      settings.maximumNumberOfAssignments,
+      Constants.SETTING_NUMBER_OF_ASSIGNMENTS,
+      settings.numberOfAssignments?.value?.[0],
+      settings.numberOfAssignments?.value?.[1],
     ],
   ];
   const settingsWorksheet = XLSX.utils.aoa_to_sheet(settingsData);

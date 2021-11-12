@@ -30,6 +30,9 @@ public class Person implements Comparable<Person> {
     @JsonIgnore
     public List<CommitteeAssignment> assignments;
 
+    @JsonIgnore
+    public Range numberOfAssignmentsRangeConstraint = new Range(0, 5);
+
     private static final Comparator<Person> COMPARATOR = Comparator.comparing(p -> p.name);
 
     public Person() {

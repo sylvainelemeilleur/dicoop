@@ -1,11 +1,11 @@
-import { Person, Settings } from "src/api";
+import { Person, Range, Settings } from "src/api";
 import { CommitteeSet } from "./CommitteeSet";
 import { Solution } from "./Solution";
 
 export const DEFAULT_SETTINGS = {
   nbProParticipants: 2,
   nbNonProParticipants: 1,
-  maximumNumberOfAssignments: 5,
+  numberOfAssignments: { value: [1, 5] } as Range,
 } as Settings;
 
 export const UNDEFINED_SOLUTION = new Solution(

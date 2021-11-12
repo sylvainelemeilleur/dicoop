@@ -47,10 +47,10 @@ export interface Committee {
     createdDate?: string;
     /**
      * 
-     * @type {number}
+     * @type {Range}
      * @memberof Committee
      */
-    maximumNumberOfAssignments?: number;
+    numberOfAssignments?: Range;
 }
 /**
  * 
@@ -254,6 +254,19 @@ export interface PersonType {
 /**
  * 
  * @export
+ * @interface Range
+ */
+export interface Range {
+    /**
+     * 
+     * @type {Array<number>}
+     * @memberof Range
+     */
+    value?: Array<number>;
+}
+/**
+ * 
+ * @export
  * @interface Settings
  */
 export interface Settings {
@@ -271,10 +284,10 @@ export interface Settings {
     nbNonProParticipants?: number;
     /**
      * 
-     * @type {number}
+     * @type {Range}
      * @memberof Settings
      */
-    maximumNumberOfAssignments?: number;
+    numberOfAssignments?: Range;
 }
 /**
  * 

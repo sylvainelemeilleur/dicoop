@@ -12,8 +12,6 @@ public class Committee {
 
     public Instant createdDate = Instant.now();
 
-    public int maximumNumberOfAssignments = 5;
-
     public Committee() {
         // No-arg constructor required for Hibernate and OptaPlanner
     }

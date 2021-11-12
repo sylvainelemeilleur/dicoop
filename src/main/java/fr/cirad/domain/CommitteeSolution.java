@@ -56,6 +56,9 @@ public class CommitteeSolution {
     public CommitteeSolution(SolverOptions options) {
         this.id = UUID.randomUUID();
         this.persons = options.participants;
+        // set range option for each participant
+        this.persons.stream().forEach(
+                p -> p.numberOfAssignmentsRangeConstraint = options.settings.numberOfAssignments);
         this.skills = options.participants.stream().flatMap(person -> person.skills.stream())
                 .filter(skill -> !Strings.isNullOrEmpty(skill.name)).distinct()
                 .collect(Collectors.toList());
@@ -73,7 +76,6 @@ public class CommitteeSolution {
         var professionalPersonType = new PersonType("professional");
         var nonProfessionalPersonType = new PersonType("non-professional");
         for (var committee : this.committees) {
-            committee.maximumNumberOfAssignments = options.settings.maximumNumberOfAssignments;
             for (int i = 1; i <= options.settings.nbProParticipants; i++) {
                 this.committeeAssignments
                         .add(new CommitteeAssignment(committee, professionalPersonType));
