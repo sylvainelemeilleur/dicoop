@@ -91,9 +91,12 @@ function App() {
   };
 
   const onDataImport = (data: PersistenceData) => {
+    setCommitteeSolution(UNDEFINED_SOLUTION);
     setSettings(data.settings);
     setParticipants(data.participants);
     setHistory(data.history);
+    setSolutionTabDisabled(true);
+    setActiveTabKey(0);
   };
 
   const onDataImportError = (result: ValidationResult) => {

@@ -38,11 +38,15 @@ export function parseExcelData(workbook: XLSX.WorkBook): PersistenceData {
         data.participants = parseParticipants(sheetData);
         break;
       case Constants.HISTORY:
-        console.log("HISTORY SHEET PARSING TO DO");
+        console.log(sheetData);
+        const solutions = parseMultipleSolutions(sheetData);
+        console.log(solutions);
+        solutions.forEach((solution) => {
+          data.history.push(parseSolution(solution));
+        });
         break;
       case Constants.SOLUTION:
         data.history.push(parseSolution(sheetData));
-        console.log(data.history);
         break;
       default:
         console.log(`Unknown sheet name: ${name}`);
@@ -50,7 +54,30 @@ export function parseExcelData(workbook: XLSX.WorkBook): PersistenceData {
     }
   });
   console.log("DATA LOADED");
+  console.log(data);
   return data;
+}
+
+function parseMultipleSolutions(sheetData: Array<any>): Array<any> {
+  const solutions = new Array<any>();
+  if (sheetData?.length > 0) {
+    let currentSolution = new Array<any>();
+    let isFirstSolution = true;
+    sheetData.forEach((rowData: Array<any>) => {
+      const firstCell = rowData[0];
+      if (firstCell === Constants.SOLUTION) {
+        if (isFirstSolution) {
+          isFirstSolution = false;
+        } else {
+          solutions.push(currentSolution);
+          currentSolution = new Array<any>();
+        }
+      }
+      currentSolution.push(rowData);
+    });
+    solutions.push(currentSolution);
+  }
+  return solutions;
 }
 
 function parseSolution(sheetData: Array<any>): CommitteeSet {
