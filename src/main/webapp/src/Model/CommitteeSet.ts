@@ -10,6 +10,7 @@ export class CommitteeSet {
   public id: string;
   public committees: SolvedCommitteeDictionary;
   public date: Date;
+  public size = 0;
 
   constructor() {
     this.id = uuid();
@@ -19,6 +20,11 @@ export class CommitteeSet {
 
   public add(committee: SolvedCommittee) {
     this.committees[committee.id] = committee;
+    this.size++;
+  }
+
+  public getCommittees(): Array<SolvedCommittee> {
+    return Object.values(this.committees);
   }
 
   static fromCommitteeSolution(solution: CommitteeSolution): CommitteeSet {

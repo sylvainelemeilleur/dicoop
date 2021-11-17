@@ -44,7 +44,8 @@ export function parseExcelData(workbook: XLSX.WorkBook): PersistenceData {
         });
         break;
       case Constants.SOLUTION:
-        data.history.unshift(parseSolution(sheetData));
+        const currentSolution = parseSolution(sheetData);
+        if (currentSolution.size) data.history.unshift(currentSolution);
         break;
       default:
         console.log(`Unknown sheet name: ${name}`);
@@ -79,6 +80,7 @@ function parseMultipleSolutions(sheetData: Array<any>): Array<any> {
 
 function parseSolution(sheetData: Array<any>): CommitteeSet {
   const set: CommitteeSet = new CommitteeSet();
+  let isWellFormed = false;
   sheetData.forEach((rowData: Array<any>) => {
     const firstCell = rowData[0];
     if (firstCell === Constants.SOLUTION_EVALUATED_PERSON) {
@@ -86,7 +88,8 @@ function parseSolution(sheetData: Array<any>): CommitteeSet {
       console.log("Headers ignored in parseSolution");
     } else if (firstCell === Constants.SOLUTION) {
       set.date = rowData[1];
-    } else {
+      isWellFormed = true;
+    } else if (isWellFormed) {
       const evaluatedPerson = {
         name: rowData[0],
       } as Person;
@@ -160,6 +163,7 @@ function parseParticipants(sheetData: Array<any>): Array<Person> {
       skillsToCertificate: parseNamedList(
         rowData[Constants.PARTICIPANT_SKILLS_TO_CERTIFICATE]
       ),
+      hasAlreadyInspected: [] as Array<string>,
     } as Person;
     participants.push(person);
   });

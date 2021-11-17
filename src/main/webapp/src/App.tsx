@@ -116,9 +116,32 @@ function App() {
     excelImport(file, onDataImport, onDataImportError);
   };
 
+  const getParticipantsWithHistory = () => {
+    const historyToTake = history.slice(0, nbRotationsToReinspect);
+    participants.forEach((participant) => {
+      const hasAlreadyInspected = [] as string[];
+      historyToTake.forEach((set) => {
+        set.getCommittees().forEach((committee) => {
+          if (
+            committee.assignments
+              .map((a) => a.assignedPerson?.name)
+              .includes(participant.name)
+          ) {
+            hasAlreadyInspected.push(committee.evaluatedPerson?.name ?? "");
+          }
+        });
+      });
+      participant.hasAlreadyInspected = hasAlreadyInspected;
+    });
+    return participants;
+  };
+
   const startSolving = () => {
     setIsSolving(true);
-    const options = { settings: getSettings(), participants } as SolverOptions;
+    const options = {
+      settings: getSettings(),
+      participants: getParticipantsWithHistory(),
+    } as SolverOptions;
     committeeSolutionResourceApi
       .apiCommitteeSolutionSolvePost(options)
       .then((resp) => {

@@ -231,6 +231,12 @@ export interface Person {
      * @memberof Person
      */
     skillsToCertificate?: Array<Skill>;
+    /**
+     * 
+     * @type {Array<string>}
+     * @memberof Person
+     */
+    hasAlreadyInspected?: Array<string>;
 }
 /**
  * 

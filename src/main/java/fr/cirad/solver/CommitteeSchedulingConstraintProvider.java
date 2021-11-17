@@ -23,7 +23,8 @@ public class CommitteeSchedulingConstraintProvider implements ConstraintProvider
                                 requiredPersonType(constraintFactory),
                                 requiredSkillsToCertificate(constraintFactory),
                                 nonReciprocity(constraintFactory),
-                                oneCommonLanguage(constraintFactory)};
+                                oneCommonLanguage(constraintFactory),
+                                inspectionRotation(constraintFactory)};
         }
 
         private Constraint timeSlotAvailabilityConflict(ConstraintFactory constraintFactory) {
@@ -107,6 +108,14 @@ public class CommitteeSchedulingConstraintProvider implements ConstraintProvider
                                         }
                                         return false;
                                 }).penalize("One common language", HardSoftScore.ONE_HARD);
+        }
+
+        private Constraint inspectionRotation(ConstraintFactory constraintFactory) {
+                return constraintFactory.from(CommitteeAssignment.class)
+                                .filter(ca -> ca.assignedPerson.hasAlreadyInspected.stream()
+                                                .anyMatch(name -> ca.committee.evaluatedPerson.name
+                                                                .equalsIgnoreCase(name)))
+                                .penalize("Inspector rotation", HardSoftScore.ONE_HARD);
         }
 
 }

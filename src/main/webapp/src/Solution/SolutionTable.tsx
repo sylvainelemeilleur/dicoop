@@ -40,20 +40,18 @@ function SolutionTable({ committees }: SolutionTableProps) {
         </tr>
       </thead>
       <tbody>
-        {Object.values(committees.committees).map(
-          (committee: SolvedCommittee) => (
-            <tr role="row" key={committee.id}>
-              <td role="cell" data-label="Evaluated Person">
-                {committee.evaluatedPerson?.name}
-              </td>
+        {committees.getCommittees().map((committee: SolvedCommittee) => (
+          <tr role="row" key={committee.id}>
+            <td role="cell" data-label="Evaluated Person">
+              {committee.evaluatedPerson?.name}
+            </td>
 
-              <td role="cell" data-label="Timeslot">
-                {committee.assignments[0]?.timeSlot?.name}
-              </td>
-              {assignmentsList(committee.assignments)}
-            </tr>
-          )
-        )}
+            <td role="cell" data-label="Timeslot">
+              {committee.assignments[0]?.timeSlot?.name}
+            </td>
+            {assignmentsList(committee.assignments)}
+          </tr>
+        ))}
       </tbody>
     </Table>
   );

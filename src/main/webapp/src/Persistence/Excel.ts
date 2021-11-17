@@ -108,7 +108,7 @@ const exportCommittees = (
   committees: CommitteeSet,
   worksheetData: Array<any>
 ) => {
-  Object.values(committees.committees).forEach((c: any) => {
+  committees.getCommittees().forEach((c: any) => {
     const rowData = [c.evaluatedPerson.name];
     if (c.assignments.length) {
       rowData.push(c.assignments[0]?.timeSlot?.name);
