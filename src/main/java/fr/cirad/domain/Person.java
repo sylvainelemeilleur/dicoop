@@ -39,6 +39,11 @@ public class Person implements Comparable<Person> {
         assignments = new ArrayList<>();
     }
 
+    public Person(String name) {
+        this.name = name;
+        assignments = new ArrayList<>();
+    }
+
     public Person(String name, PersonType personType, List<Skill> skills, Location location,
             List<Language> languages, List<TimeSlot> availability) {
         this(name, personType, skills, location, languages, availability, List.of());
@@ -57,10 +62,15 @@ public class Person implements Comparable<Person> {
         this.assignments = new ArrayList<>();
     }
 
+    // Checks if the person has one of the skills
     public boolean hasAtListOneSkill(List<Skill> skills) {
         return this.skills.stream().anyMatch(skills::contains);
     }
 
+    // Checks if a person is evaluated by this person
+    public boolean isEvaluating(Person other) {
+        return this.assignments.stream().anyMatch(a -> a.committee.evaluatedPerson.equals(other));
+    }
 
     @Override
     public int compareTo(Person o) {

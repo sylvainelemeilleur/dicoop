@@ -1,5 +1,7 @@
 package fr.cirad.solver;
 
+import static org.optaplanner.core.api.score.stream.ConstraintCollectors.toList;
+import static org.optaplanner.core.api.score.stream.Joiners.equal;
 import java.util.List;
 import org.optaplanner.core.api.score.buildin.hardsoft.HardSoftScore;
 import org.optaplanner.core.api.score.stream.Constraint;
@@ -8,9 +10,6 @@ import org.optaplanner.core.api.score.stream.ConstraintProvider;
 import fr.cirad.domain.CommitteeAssignment;
 import fr.cirad.domain.Person;
 import fr.cirad.domain.Skill;
-
-import static org.optaplanner.core.api.score.stream.Joiners.equal;
-import static org.optaplanner.core.api.score.stream.ConstraintCollectors.toList;
 
 public class CommitteeSchedulingConstraintProvider implements ConstraintProvider {
 
@@ -22,7 +21,8 @@ public class CommitteeSchedulingConstraintProvider implements ConstraintProvider
                                 committeeConflict(constraintFactory),
                                 committeeAssignmentsConflict(constraintFactory),
                                 requiredPersonType(constraintFactory),
-                                requiredSkillsToCertificate(constraintFactory)};
+                                requiredSkillsToCertificate(constraintFactory),
+                                nonReciprocity(constraintFactory)};
         }
 
         private Constraint timeSlotAvailabilityConflict(ConstraintFactory constraintFactory) {
@@ -83,6 +83,15 @@ public class CommitteeSchedulingConstraintProvider implements ConstraintProvider
                                                         .hasAtListOneSkill(skillsToCertificate);
                                 })
                                 .penalize("Required skills to certificate", HardSoftScore.ONE_HARD);
+        }
+
+        private Constraint nonReciprocity(ConstraintFactory constraintFactory) {
+                return constraintFactory.from(CommitteeAssignment.class)
+                                .join(Person.class,
+                                                equal(ca -> ca.committee.evaluatedPerson, p -> p))
+                                .filter((ca, evaluatedPerson) -> evaluatedPerson
+                                                .isEvaluating(ca.assignedPerson))
+                                .penalize("Non-reciprocity", HardSoftScore.ONE_HARD);
         }
 
 }

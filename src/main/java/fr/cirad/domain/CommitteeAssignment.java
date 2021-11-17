@@ -27,6 +27,13 @@ public class CommitteeAssignment {
         // must have a no-args constructor so it can be constructed by OptaPlanner
     }
 
+    public CommitteeAssignment(Person assignedPerson, Committee committee,
+            PersonType requiredPersonType) {
+        this.assignedPerson = assignedPerson;
+        this.committee = committee;
+        this.requiredPersonType = requiredPersonType;
+    }
+
     public CommitteeAssignment(Committee committee, PersonType requiredPersonType) {
         this.committee = committee;
         this.requiredPersonType = requiredPersonType;

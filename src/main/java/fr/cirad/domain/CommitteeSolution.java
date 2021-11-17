@@ -56,21 +56,24 @@ public class CommitteeSolution {
     public CommitteeSolution(SolverOptions options) {
         this.id = UUID.randomUUID();
         this.persons = options.participants;
+
         // set range option for each participant
         this.persons.stream().forEach(
                 p -> p.numberOfAssignmentsRangeConstraint = options.settings.numberOfAssignments);
-        this.skills = options.participants.stream().flatMap(person -> person.skills.stream())
+
+        this.skills = this.persons.stream().flatMap(person -> person.skills.stream())
                 .filter(skill -> !Strings.isNullOrEmpty(skill.name)).distinct()
                 .collect(Collectors.toList());
-        this.timeSlots =
-                options.participants.stream().flatMap(person -> person.availability.stream())
-                        .filter(timeSlot -> !Strings.isNullOrEmpty(timeSlot.name)).distinct()
-                        .collect(Collectors.toList());
-        // Committees based on persons skills to certificate
-        this.committees = options.participants.stream()
-                .filter(person -> !person.skillsToCertificate.isEmpty()).map(Committee::new)
+        this.timeSlots = this.persons.stream().flatMap(person -> person.availability.stream())
+                .filter(timeSlot -> !Strings.isNullOrEmpty(timeSlot.name)).distinct()
                 .collect(Collectors.toList());
+
+        // Committees based on persons skills to certificate
+        this.committees =
+                this.persons.stream().filter(person -> !person.skillsToCertificate.isEmpty())
+                        .map(Committee::new).collect(Collectors.toList());
         this.committeeAssignments = new ArrayList<>();
+
         // initialization of the Committees assignments needed (professionals, non-professionals and
         // externals)
         for (var committee : this.committees) {
