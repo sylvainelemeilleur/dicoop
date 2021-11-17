@@ -62,6 +62,11 @@ public class Person implements Comparable<Person> {
         this.assignments = new ArrayList<>();
     }
 
+    // Checks if the person has the language
+    public boolean hasLanguage(Language language) {
+        return languages.contains(language);
+    }
+
     // Checks if the person has one of the skills
     public boolean hasAtListOneSkill(List<Skill> skills) {
         return this.skills.stream().anyMatch(skills::contains);

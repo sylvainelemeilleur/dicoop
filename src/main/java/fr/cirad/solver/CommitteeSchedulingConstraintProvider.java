@@ -22,7 +22,8 @@ public class CommitteeSchedulingConstraintProvider implements ConstraintProvider
                                 committeeAssignmentsConflict(constraintFactory),
                                 requiredPersonType(constraintFactory),
                                 requiredSkillsToCertificate(constraintFactory),
-                                nonReciprocity(constraintFactory)};
+                                nonReciprocity(constraintFactory),
+                                oneCommonLanguage(constraintFactory)};
         }
 
         private Constraint timeSlotAvailabilityConflict(ConstraintFactory constraintFactory) {
@@ -92,6 +93,20 @@ public class CommitteeSchedulingConstraintProvider implements ConstraintProvider
                                 .filter((ca, evaluatedPerson) -> evaluatedPerson
                                                 .isEvaluating(ca.assignedPerson))
                                 .penalize("Non-reciprocity", HardSoftScore.ONE_HARD);
+        }
+
+        private Constraint oneCommonLanguage(ConstraintFactory constraintFactory) {
+                return constraintFactory.from(CommitteeAssignment.class)
+                                .groupBy(ca -> ca.committee, toList())
+                                .filter((committee, assignments) -> {
+                                        for (var lang : committee.evaluatedPerson.languages) {
+                                                if (assignments.stream()
+                                                                .allMatch(a -> a.assignedPerson
+                                                                                .hasLanguage(lang)))
+                                                        return true;
+                                        }
+                                        return false;
+                                }).penalize("One common language", HardSoftScore.ONE_HARD);
         }
 
 }
