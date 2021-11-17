@@ -56,6 +56,7 @@ function App() {
     number,
     number
   ]);
+  const [nbRotationsToReinspect, setNbRotationsToReinspect] = useState(0);
 
   const getSettings = () =>
     ({
@@ -64,6 +65,7 @@ function App() {
       numberOfAssignments: {
         value: numberOfAssignments,
       } as Range,
+      nbRotationsToReinspect,
     } as Settings);
 
   const setSettings = (settings: Settings) => {
@@ -73,6 +75,7 @@ function App() {
     setNumberOfAssignments(
       (settings?.numberOfAssignments?.value as [number, number]) ?? [0, 0]
     );
+    setNbRotationsToReinspect(settings?.nbRotationsToReinspect ?? 0);
   };
 
   // Tabs state
@@ -248,6 +251,8 @@ function App() {
             setNbExternalParticipants={setNbExternalParticipants}
             numberOfAssignments={numberOfAssignments}
             setNumberOfAssignments={setNumberOfAssignments}
+            nbRotationsToReinspect={nbRotationsToReinspect}
+            setNbRotationsToReinspect={setNbRotationsToReinspect}
             isSolving={isSolving}
             committeeSolution={committeeSolution}
           />

@@ -50,6 +50,10 @@ export function excelExport(
       settings.numberOfAssignments?.value?.[0],
       settings.numberOfAssignments?.value?.[1],
     ],
+    [
+      Constants.SETTING_NUMBER_OF_ROTATIONS_TO_REINSPECT,
+      settings.nbRotationsToReinspect,
+    ],
   ];
   const settingsWorksheet = XLSX.utils.aoa_to_sheet(settingsData);
 

@@ -24,6 +24,8 @@ type SolutionSettingsProps = {
   setNbExternalParticipants: (value: number) => void;
   numberOfAssignments: [number, number];
   setNumberOfAssignments: (value: [number, number]) => void;
+  nbRotationsToReinspect: number;
+  setNbRotationsToReinspect: (value: number) => void;
   committeeSolution: Solution;
   isSolving: boolean;
 };
@@ -37,6 +39,8 @@ function SolutionSettingsForm({
   setNbExternalParticipants,
   numberOfAssignments,
   setNumberOfAssignments,
+  nbRotationsToReinspect,
+  setNbRotationsToReinspect,
   committeeSolution,
   isSolving,
 }: SolutionSettingsProps) {
@@ -115,6 +119,20 @@ function SolutionSettingsForm({
                 marks={marks}
                 onChange={setNumberOfAssignments}
               ></RangeSlider>
+            </InputWrapper>
+            <Space h="lg" />
+            <InputWrapper
+              id="nbRotationsToReinspect"
+              label="Number of rotations to re-inspect a participant"
+            >
+              <Slider
+                id="nbRotationsToReinspect"
+                value={nbRotationsToReinspect}
+                min={min}
+                max={max}
+                marks={marks}
+                onChange={setNbRotationsToReinspect}
+              ></Slider>
             </InputWrapper>
             <Space h="lg" />
           </Container>

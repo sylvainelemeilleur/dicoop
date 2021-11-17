@@ -5,6 +5,7 @@ public class Settings {
     public int nbNonProParticipants;
     public int nbExternalParticipants;
     public Range numberOfAssignments;
+    public int nbRotationsToReinspect;
 
     public Settings() {
         // Empty constructor needed by serialization

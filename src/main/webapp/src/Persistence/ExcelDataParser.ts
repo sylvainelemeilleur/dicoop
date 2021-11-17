@@ -132,6 +132,9 @@ function parseSettings(sheetData: Array<any>): Settings {
           value: [+settingValue, +settingValue2],
         } as Range;
         break;
+      case Constants.SETTING_NUMBER_OF_ROTATIONS_TO_REINSPECT:
+        settings.nbRotationsToReinspect = +settingValue;
+        break;
       default:
         console.log(`Unknown setting name ${settingName}`);
         break;

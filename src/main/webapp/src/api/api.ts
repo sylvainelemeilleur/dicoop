@@ -288,6 +288,12 @@ export interface Settings {
      * @memberof Settings
      */
     numberOfAssignments?: Range;
+    /**
+     * 
+     * @type {number}
+     * @memberof Settings
+     */
+    nbRotationsToReinspect?: number;
 }
 /**
  * 
