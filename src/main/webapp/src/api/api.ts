@@ -45,12 +45,6 @@ export interface Committee {
      * @memberof Committee
      */
     createdDate?: string;
-    /**
-     * 
-     * @type {Range}
-     * @memberof Committee
-     */
-    numberOfAssignments?: Range;
 }
 /**
  * 
@@ -282,6 +276,12 @@ export interface Settings {
      * @memberof Settings
      */
     nbNonProParticipants?: number;
+    /**
+     * 
+     * @type {number}
+     * @memberof Settings
+     */
+    nbExternalParticipants?: number;
     /**
      * 
      * @type {Range}

@@ -6,6 +6,7 @@ export const Constants = {
 
   SETTING_NUMBER_OF_PRO: "Number of pro participants",
   SETTING_NUMBER_OF_NON_PRO: "Number of non pro participants",
+  SETTING_NUMBER_OF_EXTERNAL: "Number of external participants",
   SETTING_NUMBER_OF_ASSIGNMENTS: "Number of assignments per participant",
 
   PARTICIPANT_NAME: "Name",

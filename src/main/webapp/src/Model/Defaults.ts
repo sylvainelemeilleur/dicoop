@@ -5,6 +5,7 @@ import { Solution } from "./Solution";
 export const DEFAULT_SETTINGS = {
   nbProParticipants: 2,
   nbNonProParticipants: 1,
+  nbExternalParticipants: 0,
   numberOfAssignments: { value: [1, 5] } as Range,
 } as Settings;
 

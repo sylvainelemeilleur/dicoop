@@ -20,6 +20,8 @@ type SolutionSettingsProps = {
   setNbProParticipants: (value: number) => void;
   nbNonProParticipants: number;
   setNbNonProParticipants: (value: number) => void;
+  nbExternalParticipants: number;
+  setNbExternalParticipants: (value: number) => void;
   numberOfAssignments: [number, number];
   setNumberOfAssignments: (value: [number, number]) => void;
   committeeSolution: Solution;
@@ -31,6 +33,8 @@ function SolutionSettingsForm({
   setNbProParticipants,
   nbNonProParticipants,
   setNbNonProParticipants,
+  nbExternalParticipants,
+  setNbExternalParticipants,
   numberOfAssignments,
   setNumberOfAssignments,
   committeeSolution,
@@ -80,6 +84,20 @@ function SolutionSettingsForm({
                 max={max}
                 marks={marks}
                 onChange={setNbNonProParticipants}
+              ></Slider>
+            </InputWrapper>
+            <Space h="lg" />
+            <InputWrapper
+              id="nbExternalParticipants"
+              label="Number of external participants"
+            >
+              <Slider
+                id="nbExternalParticipants"
+                value={nbExternalParticipants}
+                min={min}
+                max={max}
+                marks={marks}
+                onChange={setNbExternalParticipants}
               ></Slider>
             </InputWrapper>
             <Space h="lg" />

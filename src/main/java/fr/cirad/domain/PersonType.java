@@ -8,6 +8,10 @@ public class PersonType implements Comparable<PersonType> {
     @PlanningId
     public String name;
 
+    public static final PersonType PROFESSIONAL = new PersonType("professional");
+    public static final PersonType NON_PROFESSIONAL = new PersonType("non-professional");
+    public static final PersonType EXTERNAL = new PersonType("external");
+
     private static final Comparator<PersonType> COMPARATOR = Comparator.comparing(pt -> pt.name);
 
     public PersonType() {

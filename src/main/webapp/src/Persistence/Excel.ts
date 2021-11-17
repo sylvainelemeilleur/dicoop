@@ -44,6 +44,7 @@ export function excelExport(
   const settingsData = [
     [Constants.SETTING_NUMBER_OF_PRO, settings.nbProParticipants],
     [Constants.SETTING_NUMBER_OF_NON_PRO, settings.nbNonProParticipants],
+    [Constants.SETTING_NUMBER_OF_EXTERNAL, settings.nbExternalParticipants],
     [
       Constants.SETTING_NUMBER_OF_ASSIGNMENTS,
       settings.numberOfAssignments?.value?.[0],

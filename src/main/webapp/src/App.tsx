@@ -51,6 +51,7 @@ function App() {
   // Settings state
   const [nbProParticipants, setNbProParticipants] = useState(2);
   const [nbNonProParticipants, setNbNonProParticipants] = useState(1);
+  const [nbExternalParticipants, setNbExternalParticipants] = useState(0);
   const [numberOfAssignments, setNumberOfAssignments] = useState([1, 5] as [
     number,
     number
@@ -68,6 +69,7 @@ function App() {
   const setSettings = (settings: Settings) => {
     setNbProParticipants(settings?.nbProParticipants ?? 0);
     setNbNonProParticipants(settings?.nbNonProParticipants ?? 0);
+    setNbExternalParticipants(settings?.nbExternalParticipants ?? 0);
     setNumberOfAssignments(
       (settings?.numberOfAssignments?.value as [number, number]) ?? [0, 0]
     );
@@ -242,6 +244,8 @@ function App() {
             setNbProParticipants={setNbProParticipants}
             nbNonProParticipants={nbNonProParticipants}
             setNbNonProParticipants={setNbNonProParticipants}
+            nbExternalParticipants={nbExternalParticipants}
+            setNbExternalParticipants={setNbExternalParticipants}
             numberOfAssignments={numberOfAssignments}
             setNumberOfAssignments={setNumberOfAssignments}
             isSolving={isSolving}

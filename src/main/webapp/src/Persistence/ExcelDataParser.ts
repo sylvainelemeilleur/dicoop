@@ -38,9 +38,7 @@ export function parseExcelData(workbook: XLSX.WorkBook): PersistenceData {
         data.participants = parseParticipants(sheetData);
         break;
       case Constants.HISTORY:
-        console.log(sheetData);
         const solutions = parseMultipleSolutions(sheetData);
-        console.log(solutions);
         solutions.forEach((solution) => {
           data.history.push(parseSolution(solution));
         });
@@ -54,7 +52,6 @@ export function parseExcelData(workbook: XLSX.WorkBook): PersistenceData {
     }
   });
   console.log("DATA LOADED");
-  console.log(data);
   return data;
 }
 
@@ -125,6 +122,9 @@ function parseSettings(sheetData: Array<any>): Settings {
         break;
       case Constants.SETTING_NUMBER_OF_NON_PRO:
         settings.nbNonProParticipants = +settingValue;
+        break;
+      case Constants.SETTING_NUMBER_OF_EXTERNAL:
+        settings.nbExternalParticipants = +settingValue;
         break;
       case Constants.SETTING_NUMBER_OF_ASSIGNMENTS:
         const settingValue2 = rowData[2];

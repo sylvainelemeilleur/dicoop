@@ -71,18 +71,20 @@ public class CommitteeSolution {
                 .filter(person -> !person.skillsToCertificate.isEmpty()).map(Committee::new)
                 .collect(Collectors.toList());
         this.committeeAssignments = new ArrayList<>();
-        // initialization of the Committees assignments needed, 2 professionals ans 1
-        // non-professional person
-        var professionalPersonType = new PersonType("professional");
-        var nonProfessionalPersonType = new PersonType("non-professional");
+        // initialization of the Committees assignments needed (professionals, non-professionals and
+        // externals)
         for (var committee : this.committees) {
             for (int i = 1; i <= options.settings.nbProParticipants; i++) {
                 this.committeeAssignments
-                        .add(new CommitteeAssignment(committee, professionalPersonType));
+                        .add(new CommitteeAssignment(committee, PersonType.PROFESSIONAL));
             }
             for (int i = 1; i <= options.settings.nbNonProParticipants; i++) {
                 this.committeeAssignments
-                        .add(new CommitteeAssignment(committee, nonProfessionalPersonType));
+                        .add(new CommitteeAssignment(committee, PersonType.NON_PROFESSIONAL));
+            }
+            for (int i = 1; i <= options.settings.nbExternalParticipants; i++) {
+                this.committeeAssignments
+                        .add(new CommitteeAssignment(committee, PersonType.EXTERNAL));
             }
         }
     }
