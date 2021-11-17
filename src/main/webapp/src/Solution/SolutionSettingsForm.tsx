@@ -57,6 +57,19 @@ function SolutionSettingsForm({
     { value: 5, label: "5" },
   ];
 
+  const showScore = (score: any) => {
+    const parsedScore = JSON.parse(committeeSolution.score);
+    return (
+      <ul>
+        {Object.keys(parsedScore).map((i) => (
+          <li>
+            {i} = {parsedScore[i].toString()}
+          </li>
+        ))}
+      </ul>
+    );
+  };
+
   return (
     <div style={{ position: "relative", width: "100%" }}>
       <LoadingOverlay visible={isSolving} />
@@ -147,7 +160,7 @@ function SolutionSettingsForm({
           )}
           {committeeSolution.score && (
             <div>
-              <b>Score:</b> {committeeSolution.score}
+              <b>Score:</b> {showScore(committeeSolution.score)}
             </div>
           )}
           {committeeSolution.scoreExplanation && (
