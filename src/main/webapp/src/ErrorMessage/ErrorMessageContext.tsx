@@ -28,34 +28,29 @@ function errorReducer(
         message: action.message,
       };
     case ErrorMessageActionType.CLOSE_ERROR:
-      return {
-        ...state,
-        isErrorModalOpen: false,
-        title: "",
-        message: "",
-      };
+      return defaultState;
     default:
       return state;
   }
 }
 
-const ErrorMessageContext = createContext({
-  state: {
-    isErrorModalOpen: false,
-    title: "",
-    message: "",
-  } as ErrorMessageState,
-  dispatch: (action: ErrorMessageAction) => {
-    // This is intentionally left blank
-  },
-});
+interface ErrorMessageContextProps {
+  state: ErrorMessageState;
+  dispatch: React.Dispatch<ErrorMessageAction>;
+}
+
+const ErrorMessageContext = createContext<ErrorMessageContextProps | null>(
+  null
+);
+
+const defaultState = {
+  isErrorModalOpen: false,
+  title: "",
+  message: "",
+};
 
 const ErrorMessageProvider = ({ children }) => {
-  const [state, dispatch] = useReducer(errorReducer, {
-    isErrorModalOpen: false,
-    title: "",
-    message: "",
-  });
+  const [state, dispatch] = useReducer(errorReducer, defaultState);
   const value = { state, dispatch };
   return (
     <ErrorMessageContext.Provider value={value}>
@@ -72,15 +67,19 @@ const useErrorMessage = () => {
     );
   }
   const showErrorMessage = (title: string, message: string) => {
-    context.dispatch({
+    context?.dispatch({
       type: ErrorMessageActionType.OPEN_ERROR,
       title,
       message,
     });
   };
   const closeErrorMessage = () =>
-    context.dispatch({ type: ErrorMessageActionType.CLOSE_ERROR });
-  return { state: context.state, showErrorMessage, closeErrorMessage };
+    context?.dispatch({ type: ErrorMessageActionType.CLOSE_ERROR });
+  return {
+    state: context?.state ?? defaultState,
+    showErrorMessage,
+    closeErrorMessage,
+  };
 };
 
 export { ErrorMessageProvider, useErrorMessage };
