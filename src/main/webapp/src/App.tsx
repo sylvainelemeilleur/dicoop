@@ -3,16 +3,13 @@ import {
   Button,
   Group,
   Header,
-  Modal,
   Navbar,
   Space,
   Tab,
   Tabs,
-  ThemeIcon,
   Title,
 } from "@mantine/core";
-import { ExclamationTriangleIcon } from "@modulz/radix-icons";
-import React, { useRef, useState } from "react";
+import React, { useReducer, useRef, useState } from "react";
 import {
   CommitteeSolutionResourceApi,
   Configuration,
@@ -21,6 +18,10 @@ import {
   SolverOptions,
 } from "./api";
 import "./App.css";
+import ErrorMessage, {
+  ErrorMessageActionType,
+  errorReducer,
+} from "./ErrorMessage/ErrorMessage";
 import HistoryTable from "./History/HistoryTable";
 import {
   NO_HISTORY,
@@ -36,17 +37,30 @@ import SolutionSettingsForm from "./Solution/SolutionSettingsForm";
 import SolutionTable from "./Solution/SolutionTable";
 
 function App() {
-  const [isSolving, setIsSolving] = useState(false);
-  const [isErrorModalOpen, setIsErrorModalOpen] = useState(false);
-  const [errorMessage, setErrorMessage] = useState({
-    header: "",
+  // Error modal message state
+  const [errorMessageState, errorMessageDispatch] = useReducer(errorReducer, {
+    isErrorModalOpen: false,
+    title: "",
     message: "",
   });
-  // State
+  const showErrorMessage = (title: string, message: string) => {
+    errorMessageDispatch({
+      type: ErrorMessageActionType.OPEN_ERROR,
+      title,
+      message,
+    });
+  };
+
+  // Application state
+  const [isSolving, setIsSolving] = useState(false);
   const [participants, setParticipants] = useState(NO_PARTICIPANTS);
   const [committeeSolution, setCommitteeSolution] =
     useState(UNDEFINED_SOLUTION);
   const [history, setHistory] = useState(NO_HISTORY);
+
+  // Tabs state
+  const [activeTabKey, setActiveTabKey] = useState(0);
+  const [solutionTabDisabled, setSolutionTabDisabled] = useState(true);
 
   // Settings state
   const [nbProParticipants, setNbProParticipants] = useState(2);
@@ -78,10 +92,6 @@ function App() {
     setNbRotationsToReinspect(settings?.nbRotationsToReinspect ?? 0);
   };
 
-  // Tabs state
-  const [activeTabKey, setActiveTabKey] = useState(0);
-  const [solutionTabDisabled, setSolutionTabDisabled] = useState(true);
-
   // API configuration
   const apiConfig = new Configuration({
     basePath: window.location.origin,
@@ -105,11 +115,7 @@ function App() {
   };
 
   const onDataImportError = (result: ValidationResult) => {
-    setErrorMessage({
-      header: "Excel import error",
-      message: result.getMessage(),
-    });
-    setIsErrorModalOpen(true);
+    showErrorMessage("Excel import error", result.getMessage());
   };
 
   const dataImport = (file: any) => {
@@ -156,12 +162,7 @@ function App() {
       })
       .catch((error) => {
         setIsSolving(false);
-        console.log(error);
-        setErrorMessage({
-          header: "Error while starting the solver",
-          message: error.message,
-        });
-        setIsErrorModalOpen(true);
+        showErrorMessage("Error while starting the solver", error.message);
       });
   };
 
@@ -173,12 +174,7 @@ function App() {
       })
       .catch((error) => {
         setIsSolving(false);
-        console.log(error);
-        setErrorMessage({
-          header: "Error while stopping the solver",
-          message: error.message,
-        });
-        setIsErrorModalOpen(true);
+        showErrorMessage("Error while stopping the solver", error.message);
       });
   };
 
@@ -199,12 +195,7 @@ function App() {
       })
       .catch((error) => {
         setIsSolving(false);
-        console.log(error);
-        setErrorMessage({
-          header: "Error while refreshing the solution",
-          message: error.message,
-        });
-        setIsErrorModalOpen(true);
+        showErrorMessage("Error while refreshing the solution", error.message);
       });
   };
 
@@ -295,21 +286,10 @@ function App() {
           ) : (
             <div>Please import a valid pgs-planner xlsx file.</div>
           )}
-          <Modal
-            opened={isErrorModalOpen}
-            onClose={() => setIsErrorModalOpen(false)}
-            title={
-              <>
-                <ThemeIcon color="red">
-                  <ExclamationTriangleIcon />
-                </ThemeIcon>
-                &nbsp;
-                <b>{errorMessage.header}</b>
-              </>
-            }
-          >
-            {errorMessage.message}
-          </Modal>
+          <ErrorMessage
+            errorMessageState={errorMessageState}
+            errorMessageDispatch={errorMessageDispatch}
+          />
         </>
       }
     </AppShell>
