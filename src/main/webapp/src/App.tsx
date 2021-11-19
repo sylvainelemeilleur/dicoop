@@ -9,7 +9,7 @@ import {
   Tabs,
   Title,
 } from "@mantine/core";
-import React, { useReducer, useRef, useState } from "react";
+import React, { useRef, useState } from "react";
 import {
   CommitteeSolutionResourceApi,
   Configuration,
@@ -18,10 +18,8 @@ import {
   SolverOptions,
 } from "./api";
 import "./App.css";
-import ErrorMessage, {
-  ErrorMessageActionType,
-  errorReducer,
-} from "./ErrorMessage/ErrorMessage";
+import ErrorMessage from "./ErrorMessage/ErrorMessage";
+import { useErrorMessage } from "./ErrorMessage/ErrorMessageContext";
 import HistoryTable from "./History/HistoryTable";
 import {
   NO_HISTORY,
@@ -37,19 +35,8 @@ import SolutionSettingsForm from "./Solution/SolutionSettingsForm";
 import SolutionTable from "./Solution/SolutionTable";
 
 function App() {
-  // Error modal message state
-  const [errorMessageState, errorMessageDispatch] = useReducer(errorReducer, {
-    isErrorModalOpen: false,
-    title: "",
-    message: "",
-  });
-  const showErrorMessage = (title: string, message: string) => {
-    errorMessageDispatch({
-      type: ErrorMessageActionType.OPEN_ERROR,
-      title,
-      message,
-    });
-  };
+  // Error modal from the context
+  const showErrorMessage = useErrorMessage().showErrorMessage;
 
   // Application state
   const [isSolving, setIsSolving] = useState(false);
@@ -286,10 +273,7 @@ function App() {
           ) : (
             <div>Please import a valid pgs-planner xlsx file.</div>
           )}
-          <ErrorMessage
-            errorMessageState={errorMessageState}
-            errorMessageDispatch={errorMessageDispatch}
-          />
+          <ErrorMessage />
         </>
       }
     </AppShell>

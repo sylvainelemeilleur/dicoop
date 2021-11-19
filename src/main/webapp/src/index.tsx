@@ -1,12 +1,15 @@
 import React from "react";
 import ReactDOM from "react-dom";
 import App from "./App";
+import { ErrorMessageProvider } from "./ErrorMessage/ErrorMessageContext";
 import "./index.css";
 import reportWebVitals from "./reportWebVitals";
 
 ReactDOM.render(
   <React.StrictMode>
-    <App />
+    <ErrorMessageProvider>
+      <App />
+    </ErrorMessageProvider>
   </React.StrictMode>,
   document.getElementById("root")
 );

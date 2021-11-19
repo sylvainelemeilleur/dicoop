@@ -1,71 +1,24 @@
 import { Modal, ThemeIcon } from "@mantine/core";
 import { ExclamationTriangleIcon } from "@modulz/radix-icons";
+import { useErrorMessage } from "./ErrorMessageContext";
 
-type ErrorMessageState = {
-  isErrorModalOpen: boolean;
-  title: string;
-  message: string;
-};
-
-export enum ErrorMessageActionType {
-  OPEN_ERROR = "openError",
-  CLOSE_ERROR = "closeError",
-}
-
-type ErrorMessageAction =
-  | { type: ErrorMessageActionType.OPEN_ERROR; title: string; message: string }
-  | { type: ErrorMessageActionType.CLOSE_ERROR };
-
-export function errorReducer(
-  state: ErrorMessageState,
-  action: ErrorMessageAction
-): ErrorMessageState {
-  switch (action.type) {
-    case ErrorMessageActionType.OPEN_ERROR:
-      return {
-        ...state,
-        isErrorModalOpen: true,
-        title: action.title,
-        message: action.message,
-      };
-    case ErrorMessageActionType.CLOSE_ERROR:
-      return {
-        ...state,
-        isErrorModalOpen: false,
-        title: "",
-        message: "",
-      };
-    default:
-      return state;
-  }
-}
-
-type ErrorMessageProps = {
-  errorMessageState: ErrorMessageState;
-  errorMessageDispatch: React.Dispatch<ErrorMessageAction>;
-};
-
-export default function ErrorMessage({
-  errorMessageState,
-  errorMessageDispatch,
-}: ErrorMessageProps) {
+export default function ErrorMessage() {
+  const { state, closeErrorMessage } = useErrorMessage();
   return (
     <Modal
-      opened={errorMessageState.isErrorModalOpen}
-      onClose={() =>
-        errorMessageDispatch({ type: ErrorMessageActionType.CLOSE_ERROR })
-      }
+      opened={state.isErrorModalOpen}
+      onClose={closeErrorMessage}
       title={
         <>
           <ThemeIcon color="red">
             <ExclamationTriangleIcon />
           </ThemeIcon>
           &nbsp;
-          <b>{errorMessageState.title}</b>
+          <b>{state.title}</b>
         </>
       }
     >
-      {errorMessageState.message}
+      {state.message}
     </Modal>
   );
 }
