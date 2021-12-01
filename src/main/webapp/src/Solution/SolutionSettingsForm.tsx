@@ -1,18 +1,14 @@
 import {
-  Button,
   Col,
   Container,
-  Drawer,
   Grid,
-  Group,
   InputWrapper,
   LoadingOverlay,
   RangeSlider,
   Slider,
   Space,
-  Textarea,
 } from "@mantine/core";
-import React, { useState } from "react";
+import React from "react";
 import { Solution } from "src/Model/Solution";
 
 type SolutionSettingsProps = {
@@ -46,8 +42,6 @@ function SolutionSettingsForm({
 }: SolutionSettingsProps) {
   const min = 0;
   const max = 5;
-  const [showMore, setShowMore] = useState(false);
-
   const marks = [
     { value: 0, label: "0" },
     { value: 1, label: "1" },
@@ -56,19 +50,6 @@ function SolutionSettingsForm({
     { value: 4, label: "4" },
     { value: 5, label: "5" },
   ];
-
-  const showScore = (score: any) => {
-    const parsedScore = JSON.parse(committeeSolution.score);
-    return (
-      <ul>
-        {Object.keys(parsedScore).map((i) => (
-          <li>
-            {i} = {parsedScore[i].toString()}
-          </li>
-        ))}
-      </ul>
-    );
-  };
 
   return (
     <div style={{ position: "relative", width: "100%" }}>
@@ -150,40 +131,7 @@ function SolutionSettingsForm({
             <Space h="lg" />
           </Container>
         </Col>
-        <Col span={6}>
-          <b>Status</b>: {committeeSolution.solverStatus}
-          <br />
-          {committeeSolution.id && (
-            <div>
-              <b>ID</b>: {committeeSolution.id}
-            </div>
-          )}
-          {committeeSolution.score && (
-            <div>
-              <b>Score:</b> {showScore(committeeSolution.score)}
-            </div>
-          )}
-          {committeeSolution.scoreExplanation && (
-            <>
-              <Drawer
-                opened={showMore}
-                onClose={() => setShowMore(false)}
-                title="Score explanation"
-                padding="xl"
-                size="xl"
-                position="right"
-              >
-                <Textarea value={committeeSolution.scoreExplanation} autosize />
-              </Drawer>
-              <Space h="md" />
-              <Group position="left">
-                <Button onClick={() => setShowMore(true)}>
-                  Open score explanation
-                </Button>
-              </Group>
-            </>
-          )}
-        </Col>
+        <Col span={6}></Col>
       </Grid>
     </div>
   );

@@ -1,12 +1,15 @@
 import {
   AppShell,
   Button,
+  Divider,
+  Drawer,
   Group,
   Header,
   Navbar,
   Space,
   Tab,
   Tabs,
+  Textarea,
   Title,
 } from "@mantine/core";
 import React, { useRef, useState } from "react";
@@ -200,36 +203,91 @@ function App() {
     inputFile?.current?.click();
   };
 
+  // Sore explanation
+  const [showMore, setShowMore] = useState(false);
+  const showScore = (score: any) => {
+    const parsedScore = JSON.parse(committeeSolution.score);
+    return (
+      <ul>
+        {Object.keys(parsedScore).map((i) => (
+          <li>
+            {i} = {parsedScore[i].toString()}
+          </li>
+        ))}
+      </ul>
+    );
+  };
+
   return (
     <AppShell
       padding="md"
       navbar={
         <Navbar width={{ base: 300 }} height={500} padding="xs">
           {
-            <div>
-              <input
-                style={{ display: "none" }}
-                accept=".xlsx"
-                ref={inputFile}
-                onChange={handleFileOpened}
-                type="file"
-              />
-              {isSolving ? (
-                <Button onClick={stopSolving}>Stop</Button>
-              ) : (
-                <Group position="left" direction="column">
-                  <Button onClick={openFileDialog}>Import</Button>
-                  <Button onClick={dataExport}>Export</Button>
-                  <Button onClick={startSolving}>Solve</Button>
-                </Group>
-              )}
-            </div>
+            <>
+              <div>
+                <input
+                  style={{ display: "none" }}
+                  accept=".xlsx"
+                  ref={inputFile}
+                  onChange={handleFileOpened}
+                  type="file"
+                />
+                {isSolving ? (
+                  <Button onClick={stopSolving}>Stop</Button>
+                ) : (
+                  <Group position="left" direction="row">
+                    <Button onClick={openFileDialog}>Import</Button>
+                    <Button onClick={dataExport}>Export</Button>
+                    <Button onClick={startSolving}>Solve</Button>
+                  </Group>
+                )}
+              </div>
+              <Divider my="sm" />
+              <div>
+                <b>Status</b>: {committeeSolution.solverStatus}
+                <br />
+                {committeeSolution.id && (
+                  <div>
+                    <b>ID</b>: {committeeSolution.id}
+                  </div>
+                )}
+                {committeeSolution.score && (
+                  <div>
+                    <b>Score:</b> {showScore(committeeSolution.score)}
+                  </div>
+                )}
+                {committeeSolution.scoreExplanation && (
+                  <>
+                    <Drawer
+                      opened={showMore}
+                      onClose={() => setShowMore(false)}
+                      title="Score explanation"
+                      padding="xl"
+                      size="xl"
+                      position="right"
+                    >
+                      <Textarea
+                        value={committeeSolution.scoreExplanation}
+                        autosize
+                      />
+                    </Drawer>
+                    <Space h="md" />
+                    <Group position="left">
+                      <Button onClick={() => setShowMore(true)}>
+                        Open score explanation
+                      </Button>
+                    </Group>
+                  </>
+                )}
+              </div>
+            </>
           }
         </Navbar>
       }
       header={
         <Header height={50} padding="xs">
-          {<Title order={3}>PGS PLANNER</Title>}
+          {<Title order={3}>DICOOP</Title>}
         </Header>
       }
       styles={(theme) => ({
@@ -271,7 +329,7 @@ function App() {
               </Tab>
             </Tabs>
           ) : (
-            <div>Please import a valid pgs-planner xlsx file.</div>
+            <div>Please import a valid DICOOP xlsx file.</div>
           )}
           <ErrorMessage />
         </>

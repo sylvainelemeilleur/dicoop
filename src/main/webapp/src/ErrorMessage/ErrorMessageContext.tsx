@@ -43,7 +43,7 @@ const ErrorMessageContext = createContext<ErrorMessageContextProps | null>(
   null
 );
 
-const defaultState = {
+const defaultState: ErrorMessageState = {
   isErrorModalOpen: false,
   title: "",
   message: "",
