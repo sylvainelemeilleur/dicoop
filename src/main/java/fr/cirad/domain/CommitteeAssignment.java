@@ -16,9 +16,6 @@ public class CommitteeAssignment {
     @PlanningVariable(valueRangeProviderRefs = {"personRange"})
     public Person assignedPerson;
 
-    @PlanningVariable(valueRangeProviderRefs = {"timeSlotRange"})
-    public TimeSlot timeSlot;
-
     public Committee committee;
 
     public PersonType requiredPersonType;
@@ -47,22 +44,11 @@ public class CommitteeAssignment {
         return committee;
     }
 
-    public TimeSlot getTimeSlot() {
-        return timeSlot;
-    }
-
     @JsonIgnore
     public boolean isRequiredPersonTypeCorrect() {
         if (assignedPerson == null || requiredPersonType == null)
             return false;
         return assignedPerson.personType.equals(requiredPersonType);
-    }
-
-    @JsonIgnore
-    public boolean isAvailable() {
-        if (assignedPerson == null)
-            return false;
-        return assignedPerson.availability.contains(timeSlot);
     }
 
     @Override

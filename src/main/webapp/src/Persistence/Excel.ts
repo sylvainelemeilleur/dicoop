@@ -2,6 +2,7 @@ import { Person, Settings } from "src/api";
 import { CommitteeSet } from "src/Model/CommitteeSet";
 import { PersistenceData } from "src/Model/PersistenceData";
 import { Solution } from "src/Model/Solution";
+import { SolvedCommittee } from "src/Model/SolvedCommittee";
 import XLSX from "xlsx";
 import { parseExcelData } from "./ExcelDataParser";
 import {
@@ -108,10 +109,10 @@ const exportCommittees = (
   committees: CommitteeSet,
   worksheetData: Array<any>
 ) => {
-  committees.getCommittees().forEach((c: any) => {
-    const rowData = [c.evaluatedPerson.name];
+  committees.getCommittees().forEach((c: SolvedCommittee) => {
+    const rowData = [c.evaluatedPerson?.name];
     if (c.assignments.length) {
-      rowData.push(c.assignments[0]?.timeSlot?.name);
+      rowData.push(c.findFirstTimeslotInCommon());
       c.assignments.forEach((a: any) => rowData.push(a.assignedPerson.name));
     }
     worksheetData.push(rowData);

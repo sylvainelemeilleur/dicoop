@@ -47,7 +47,7 @@ function SolutionTable({ committees }: SolutionTableProps) {
             </td>
 
             <td role="cell" data-label="Timeslot">
-              {committee.assignments[0]?.timeSlot?.name}
+              {committee.findFirstTimeslotInCommon()}
             </td>
             {assignmentsList(committee.assignments)}
           </tr>

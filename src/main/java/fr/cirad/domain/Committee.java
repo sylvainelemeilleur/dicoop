@@ -20,8 +20,9 @@ public class Committee {
         this.evaluatedPerson = evaluatedPerson;
     }
 
-    public boolean allPersonsAreAvailable(List<CommitteeAssignment> assignments) {
-        return assignments.stream().map(CommitteeAssignment::getTimeSlot).distinct().count() <= 1;
+    public boolean atLeastOnePersonIsAvailable(List<CommitteeAssignment> assignments) {
+        return assignments.stream().map(CommitteeAssignment::getAssignedPerson)
+                .anyMatch(p -> p.isAvailable(evaluatedPerson.availability));
     }
 
     @Override

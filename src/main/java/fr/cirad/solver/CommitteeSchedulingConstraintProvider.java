@@ -15,7 +15,7 @@ public class CommitteeSchedulingConstraintProvider implements ConstraintProvider
 
         @Override
         public Constraint[] defineConstraints(ConstraintFactory constraintFactory) {
-                return new Constraint[] {timeSlotAvailabilityConflict(constraintFactory),
+                return new Constraint[] {
                                 timeSlotConflict(constraintFactory),
                                 selfConflict(constraintFactory),
                                 committeeConflict(constraintFactory),
@@ -27,19 +27,14 @@ public class CommitteeSchedulingConstraintProvider implements ConstraintProvider
                                 inspectionRotation(constraintFactory)};
         }
 
-        private Constraint timeSlotAvailabilityConflict(ConstraintFactory constraintFactory) {
-                return constraintFactory.from(CommitteeAssignment.class)
-                                .filter(committeeAssignment -> !committeeAssignment.isAvailable())
-                                .penalize("A person must be available for the committee time slot",
-                                                HardSoftScore.ONE_HARD);
-        }
-
         private Constraint timeSlotConflict(ConstraintFactory constraintFactory) {
                 return constraintFactory.from(CommitteeAssignment.class)
                                 .groupBy(CommitteeAssignment::getCommittee, toList())
                                 .filter((committee,
-                                                list) -> !committee.allPersonsAreAvailable(list))
-                                .penalize("All persons in a committee must be available for the same committee time slot",
+                                                assignments) -> !committee
+                                                                .atLeastOnePersonIsAvailable(
+                                                                                assignments))
+                                .penalize("At least one person in a committee is available at the same time slot of the evaluated person",
                                                 HardSoftScore.ONE_HARD);
         }
 
