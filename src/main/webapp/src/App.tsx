@@ -16,6 +16,7 @@ import React, { useRef, useState } from "react";
 import {
   CommitteeSolutionResourceApi,
   Configuration,
+  Person,
   Range,
   Settings,
   SolverOptions,
@@ -47,6 +48,12 @@ function App() {
   const [committeeSolution, setCommitteeSolution] =
     useState(UNDEFINED_SOLUTION);
   const [history, setHistory] = useState(NO_HISTORY);
+
+  const updateParticipant = (key: string, participant: Person) => {
+    setParticipants(
+      participants.map((p) => (p.name === key ? participant : p))
+    );
+  };
 
   // Tabs state
   const [activeTabKey, setActiveTabKey] = useState(0);
@@ -319,7 +326,10 @@ function App() {
           {participants.length > 0 ? (
             <Tabs active={activeTabKey} onTabChange={setActiveTabKey}>
               <Tab label="Participants">
-                <ParticipantsTable participants={participants} />
+                <ParticipantsTable
+                  participants={participants}
+                  updateParticipant={updateParticipant}
+                />
               </Tab>
               <Tab label="History">
                 <HistoryTable history={history}></HistoryTable>

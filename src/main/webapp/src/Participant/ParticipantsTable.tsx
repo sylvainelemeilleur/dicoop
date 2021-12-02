@@ -19,9 +19,13 @@ import "./ParticipantsTable.css";
 
 type ParticipantsTableProps = {
   participants: Array<Person>;
+  updateParticipant: (key: string, participant: Person) => void;
 };
 
-function ParticipantsTable({ participants }: ParticipantsTableProps) {
+function ParticipantsTable({
+  participants,
+  updateParticipant,
+}: ParticipantsTableProps) {
   const badgeList = (namedList?: Array<NamedEntity>) => (
     <>
       {namedList?.map((item: any) => (
@@ -34,6 +38,7 @@ function ParticipantsTable({ participants }: ParticipantsTableProps) {
   const [opened, setOpened] = useState(false);
   const participantForm = useForm({
     initialValues: {
+      key: "",
       name: "",
       type: "professional",
       location: "",
@@ -94,6 +99,7 @@ function ParticipantsTable({ participants }: ParticipantsTableProps) {
     );
 
     // Setting the form values from the participant
+    participantForm.setFieldValue("key", participant?.name ?? "");
     participantForm.setFieldValue("name", participant?.name ?? "");
     participantForm.setFieldValue(
       "type",
@@ -126,7 +132,21 @@ function ParticipantsTable({ participants }: ParticipantsTableProps) {
     <>
       <Modal opened={opened} onClose={() => setOpened(false)} title="Edit">
         <form
-          onSubmit={participantForm.onSubmit((values) => console.log(values))}
+          onSubmit={participantForm.onSubmit((values) => {
+            const participant = {
+              name: values.name,
+              personType: { name: values.type },
+              location: { name: values.location },
+              skills: values.skills.map((s) => ({ name: s })),
+              languages: values.languages.map((s) => ({ name: s })),
+              availability: values.availability.map((s) => ({ name: s })),
+              skillsToCertificate: values.skillsToCertificate.map((s) => ({
+                name: s,
+              })),
+            } as Person;
+            updateParticipant(values.key, participant);
+            setOpened(false);
+          })}
         >
           <TextInput
             data-autofocus
