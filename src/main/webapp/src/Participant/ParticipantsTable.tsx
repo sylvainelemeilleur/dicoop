@@ -38,10 +38,29 @@ function ParticipantsTable({ participants }: ParticipantsTableProps) {
       type: "professional",
       location: "",
       skills: [] as Array<string>,
+      languages: [] as Array<string>,
+      availability: [] as Array<string>,
+      skillsToCertificate: [] as Array<string>,
     },
   });
   const [locations, setLocations] = useState<Array<string>>([]);
   const [skills, setSkills] = useState<Array<string>>([]);
+  const [languages, setLanguages] = useState<Array<string>>([]);
+  const [availabilities, setAvailabilities] = useState<Array<string>>([]);
+  const [skillsToCertificate, setSkillsToCertificate] = useState<Array<string>>(
+    []
+  );
+
+  const getValuesInParticipants = (f: (p: Person) => Array<NamedEntity>) =>
+    Array.from(
+      new Set(
+        participants
+          .flatMap(f)
+          .map((l) => l?.name ?? "")
+          .filter((l) => l && l.length > 0)
+      )
+    ).sort();
+
   const editParticipant = (participant: Person) => {
     // initialize the locations with the existing ones in participants
     setLocations(
@@ -55,15 +74,26 @@ function ParticipantsTable({ participants }: ParticipantsTableProps) {
     );
     // initialize the skills with the existing ones in participants
     setSkills(
-      Array.from(
-        new Set(
-          participants
-            .flatMap((p) => p.skills)
-            .map((s) => s?.name ?? "")
-            .filter((l) => l && l.length > 0)
-        )
-      ).sort()
+      getValuesInParticipants((p: Person) => p.skills as Array<NamedEntity>)
     );
+    // initialize the languages with the existing ones in participants
+    setLanguages(
+      getValuesInParticipants((p: Person) => p.languages as Array<NamedEntity>)
+    );
+    // initialize the availability with the existing ones in participants
+    setAvailabilities(
+      getValuesInParticipants(
+        (p: Person) => p.availability as Array<NamedEntity>
+      )
+    );
+    // initialize the skills to certificate with the existing ones in participants
+    setSkillsToCertificate(
+      getValuesInParticipants(
+        (p: Person) => p.skillsToCertificate as Array<NamedEntity>
+      )
+    );
+
+    // Setting the form values from the participant
     participantForm.setFieldValue("name", participant?.name ?? "");
     participantForm.setFieldValue(
       "type",
@@ -76,6 +106,18 @@ function ParticipantsTable({ participants }: ParticipantsTableProps) {
     participantForm.setFieldValue(
       "skills",
       participant?.skills?.map((s) => s.name ?? "") ?? []
+    );
+    participantForm.setFieldValue(
+      "languages",
+      participant?.languages?.map((s) => s.name ?? "") ?? []
+    );
+    participantForm.setFieldValue(
+      "availability",
+      participant?.availability?.map((s) => s.name ?? "") ?? []
+    );
+    participantForm.setFieldValue(
+      "skillsToCertificate",
+      participant?.skillsToCertificate?.map((s) => s.name ?? "") ?? []
     );
     setOpened(true);
   };
@@ -133,6 +175,52 @@ function ParticipantsTable({ participants }: ParticipantsTableProps) {
             value={participantForm.values.skills}
             onChange={(values) =>
               participantForm.setFieldValue("skills", values)
+            }
+          />
+          <Space h="lg" />
+          <MultiSelect
+            label="Languages"
+            data={languages}
+            placeholder="Select languages"
+            searchable
+            creatable
+            getCreateLabel={(query) => `+ Create ${query}`}
+            onCreate={(query) => setLanguages((current) => [...current, query])}
+            value={participantForm.values.languages}
+            onChange={(values) =>
+              participantForm.setFieldValue("languages", values)
+            }
+          />
+          <Space h="lg" />
+          <MultiSelect
+            label="Availability"
+            data={availabilities}
+            placeholder="Select availability"
+            searchable
+            creatable
+            getCreateLabel={(query) => `+ Create ${query}`}
+            onCreate={(query) =>
+              setAvailabilities((current) => [...current, query])
+            }
+            value={participantForm.values.availability}
+            onChange={(values) =>
+              participantForm.setFieldValue("availability", values)
+            }
+          />
+          <Space h="lg" />
+          <MultiSelect
+            label="Skills to certificate"
+            data={skillsToCertificate}
+            placeholder="Select skills to certificate"
+            searchable
+            creatable
+            getCreateLabel={(query) => `+ Create ${query}`}
+            onCreate={(query) =>
+              setSkillsToCertificate((current) => [...current, query])
+            }
+            value={participantForm.values.skillsToCertificate}
+            onChange={(values) =>
+              participantForm.setFieldValue("skillsToCertificate", values)
             }
           />
           <Space h="lg" />
