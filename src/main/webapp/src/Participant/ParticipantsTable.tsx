@@ -3,6 +3,7 @@ import {
   Button,
   Group,
   Modal,
+  MultiSelect,
   Radio,
   RadioGroup,
   Select,
@@ -32,9 +33,15 @@ function ParticipantsTable({ participants }: ParticipantsTableProps) {
   // Edition modal
   const [opened, setOpened] = useState(false);
   const participantForm = useForm({
-    initialValues: { name: "", type: "professional", location: "" },
+    initialValues: {
+      name: "",
+      type: "professional",
+      location: "",
+      skills: [] as Array<string>,
+    },
   });
   const [locations, setLocations] = useState<Array<string>>([]);
+  const [skills, setSkills] = useState<Array<string>>([]);
   const editParticipant = (participant: Person) => {
     // initialize the locations with the existing ones in participants
     setLocations(
@@ -42,6 +49,17 @@ function ParticipantsTable({ participants }: ParticipantsTableProps) {
         new Set(
           participants
             .map((p) => p.location?.name ?? "")
+            .filter((l) => l && l.length > 0)
+        )
+      ).sort()
+    );
+    // initialize the skills with the existing ones in participants
+    setSkills(
+      Array.from(
+        new Set(
+          participants
+            .flatMap((p) => p.skills)
+            .map((s) => s?.name ?? "")
             .filter((l) => l && l.length > 0)
         )
       ).sort()
@@ -54,6 +72,10 @@ function ParticipantsTable({ participants }: ParticipantsTableProps) {
     participantForm.setFieldValue(
       "location",
       participant?.location?.name ?? ""
+    );
+    participantForm.setFieldValue(
+      "skills",
+      participant?.skills?.map((s) => s.name ?? "") ?? []
     );
     setOpened(true);
   };
@@ -97,6 +119,20 @@ function ParticipantsTable({ participants }: ParticipantsTableProps) {
             value={participantForm.values.location}
             onChange={(value) =>
               participantForm.setFieldValue("location", value ?? "")
+            }
+          />
+          <Space h="lg" />
+          <MultiSelect
+            label="Skills"
+            data={skills}
+            placeholder="Select skills"
+            searchable
+            creatable
+            getCreateLabel={(query) => `+ Create ${query}`}
+            onCreate={(query) => setSkills((current) => [...current, query])}
+            value={participantForm.values.skills}
+            onChange={(values) =>
+              participantForm.setFieldValue("skills", values)
             }
           />
           <Space h="lg" />
