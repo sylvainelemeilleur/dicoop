@@ -1,5 +1,4 @@
 import {
-  Badge,
   Button,
   Group,
   Modal,
@@ -8,10 +7,12 @@ import {
   RadioGroup,
   Select,
   Space,
+  Switch,
   Table,
   TextInput,
 } from "@mantine/core";
 import { useForm } from "@mantine/hooks";
+import { CheckIcon } from "@modulz/radix-icons";
 import React, { useState } from "react";
 import { Person } from "src/api";
 import { NamedEntity } from "src/Model/NamedEntity";
@@ -20,16 +21,20 @@ import "./ParticipantsTable.css";
 type ParticipantsTableProps = {
   participants: Array<Person>;
   updateParticipant: (key: string, participant: Person) => void;
+  deleteParticipant: (key: string) => void;
 };
 
 function ParticipantsTable({
   participants,
   updateParticipant,
+  deleteParticipant,
 }: ParticipantsTableProps) {
   const badgeList = (namedList?: Array<NamedEntity>) => (
     <>
       {namedList?.map((item: any) => (
-        <Badge key={item.name}>{item.name}</Badge>
+        <div className="label">
+          <span key={item.name}>{item.name}</span>
+        </div>
       ))}
     </>
   );
@@ -46,15 +51,16 @@ function ParticipantsTable({
       languages: [] as Array<string>,
       availability: [] as Array<string>,
       skillsToCertificate: [] as Array<string>,
+      needsEvaluation: false,
+    },
+    validationRules: {
+      name: (value) => value.trim().length > 0,
     },
   });
   const [locations, setLocations] = useState<Array<string>>([]);
   const [skills, setSkills] = useState<Array<string>>([]);
   const [languages, setLanguages] = useState<Array<string>>([]);
   const [availabilities, setAvailabilities] = useState<Array<string>>([]);
-  const [skillsToCertificate, setSkillsToCertificate] = useState<Array<string>>(
-    []
-  );
 
   const getValuesInParticipants = (f: (p: Person) => Array<NamedEntity>) =>
     Array.from(
@@ -66,7 +72,11 @@ function ParticipantsTable({
       )
     ).sort();
 
-  const editParticipant = (participant: Person) => {
+  const createParticipant = () => {
+    editParticipant({} as Person);
+  };
+
+  const setDefaultSelectData = () => {
     // initialize the locations with the existing ones in participants
     setLocations(
       Array.from(
@@ -79,7 +89,13 @@ function ParticipantsTable({
     );
     // initialize the skills with the existing ones in participants
     setSkills(
-      getValuesInParticipants((p: Person) => p.skills as Array<NamedEntity>)
+      getValuesInParticipants(
+        (p: Person) =>
+          [
+            ...(p.skills ?? []),
+            ...(p.skillsToCertificate ?? []),
+          ] as Array<NamedEntity>
+      )
     );
     // initialize the languages with the existing ones in participants
     setLanguages(
@@ -91,13 +107,10 @@ function ParticipantsTable({
         (p: Person) => p.availability as Array<NamedEntity>
       )
     );
-    // initialize the skills to certificate with the existing ones in participants
-    setSkillsToCertificate(
-      getValuesInParticipants(
-        (p: Person) => p.skillsToCertificate as Array<NamedEntity>
-      )
-    );
+  };
 
+  const editParticipant = (participant: Person) => {
+    setDefaultSelectData();
     // Setting the form values from the participant
     participantForm.setFieldValue("key", participant?.name ?? "");
     participantForm.setFieldValue("name", participant?.name ?? "");
@@ -125,12 +138,25 @@ function ParticipantsTable({
       "skillsToCertificate",
       participant?.skillsToCertificate?.map((s) => s.name ?? "") ?? []
     );
+    participantForm.setFieldValue(
+      "needsEvaluation",
+      participant?.needsEvaluation ?? false
+    );
     setOpened(true);
+  };
+
+  const multiSelectStyles = {
+    label: { fontSize: "0.9rem", overflow: "visible" },
   };
 
   return (
     <>
-      <Modal opened={opened} onClose={() => setOpened(false)} title="Edit">
+      <Modal
+        opened={opened}
+        onClose={() => setOpened(false)}
+        title="Participant"
+        closeOnClickOutside={false}
+      >
         <form
           onSubmit={participantForm.onSubmit((values) => {
             const participant = {
@@ -143,6 +169,7 @@ function ParticipantsTable({
               skillsToCertificate: values.skillsToCertificate.map((s) => ({
                 name: s,
               })),
+              needsEvaluation: values.needsEvaluation,
             } as Person;
             updateParticipant(values.key, participant);
             setOpened(false);
@@ -157,6 +184,7 @@ function ParticipantsTable({
             onChange={(event) =>
               participantForm.setFieldValue("name", event.currentTarget.value)
             }
+            error={participantForm.errors.name}
           />
           <Space h="lg" />
           <RadioGroup
@@ -196,6 +224,7 @@ function ParticipantsTable({
             onChange={(values) =>
               participantForm.setFieldValue("skills", values)
             }
+            styles={multiSelectStyles}
           />
           <Space h="lg" />
           <MultiSelect
@@ -210,6 +239,7 @@ function ParticipantsTable({
             onChange={(values) =>
               participantForm.setFieldValue("languages", values)
             }
+            styles={multiSelectStyles}
           />
           <Space h="lg" />
           <MultiSelect
@@ -226,32 +256,59 @@ function ParticipantsTable({
             onChange={(values) =>
               participantForm.setFieldValue("availability", values)
             }
+            styles={multiSelectStyles}
           />
           <Space h="lg" />
           <MultiSelect
             label="Skills to certificate"
-            data={skillsToCertificate}
+            data={skills}
             placeholder="Select skills to certificate"
             searchable
             creatable
             getCreateLabel={(query) => `+ Create ${query}`}
-            onCreate={(query) =>
-              setSkillsToCertificate((current) => [...current, query])
-            }
+            onCreate={(query) => setSkills((current) => [...current, query])}
             value={participantForm.values.skillsToCertificate}
             onChange={(values) =>
               participantForm.setFieldValue("skillsToCertificate", values)
             }
+            styles={multiSelectStyles}
+          />
+          <Space h="lg" />
+          <Switch
+            label="Needs evaluation"
+            checked={participantForm.values.needsEvaluation}
+            onChange={(event) =>
+              participantForm.setFieldValue(
+                "needsEvaluation",
+                event.currentTarget.checked
+              )
+            }
           />
           <Space h="lg" />
           <Group>
-            <Button type="submit">Submit</Button>
-            <Button type="button" onClick={() => setOpened(false)}>
-              Cancel
+            <Button type="submit">Save</Button>
+            <Button
+              type="button"
+              color="red"
+              onClick={() => {
+                if (
+                  window.confirm(
+                    "Are you sure you want to delete this participant?"
+                  )
+                ) {
+                  deleteParticipant(participantForm.values.key);
+                  setOpened(false);
+                }
+              }}
+            >
+              Delete
             </Button>
           </Group>
         </form>
       </Modal>
+      <Button type="button" onClick={createParticipant}>
+        Add a participant
+      </Button>
       <Table highlightOnHover aria-label="Participants" id="table-basic">
         <thead>
           <tr role="row">
@@ -276,12 +333,16 @@ function ParticipantsTable({
             <th role="columnheader" scope="col">
               Skills to certificate
             </th>
+            <th role="columnheader" scope="col">
+              Needs evaluation?
+            </th>
           </tr>
         </thead>
         {participants.map((person) => (
           <tbody
             key={person.name}
             onClick={() => editParticipant(person)}
+            title={`Click to edit ${person.name}`}
             className="cursorPointer"
           >
             <tr role="row">
@@ -305,6 +366,9 @@ function ParticipantsTable({
               </td>
               <td role="cell" data-label="Skills to certificate">
                 {badgeList(person.skillsToCertificate as Array<NamedEntity>)}
+              </td>
+              <td role="cell" data-label="Name">
+                {person.needsEvaluation ? <CheckIcon /> : ""}
               </td>
             </tr>
           </tbody>

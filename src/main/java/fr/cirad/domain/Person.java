@@ -26,6 +26,8 @@ public class Person implements Comparable<Person> {
 
     public List<Skill> skillsToCertificate;
 
+    public Boolean needsEvaluation;
+
     public List<String> hasAlreadyInspected;
 
     @InverseRelationShadowVariable(sourceVariableName = "assignedPerson")

@@ -227,6 +227,12 @@ export interface Person {
     skillsToCertificate?: Array<Skill>;
     /**
      * 
+     * @type {boolean}
+     * @memberof Person
+     */
+    needsEvaluation?: boolean;
+    /**
+     * 
      * @type {Array<string>}
      * @memberof Person
      */

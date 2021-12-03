@@ -50,9 +50,19 @@ function App() {
   const [history, setHistory] = useState(NO_HISTORY);
 
   const updateParticipant = (key: string, participant: Person) => {
-    setParticipants(
-      participants.map((p) => (p.name === key ? participant : p))
-    );
+    if (key.length) {
+      setParticipants(
+        participants.map((p) => (p.name === key ? participant : p))
+      );
+    } else {
+      setParticipants([...participants, participant]);
+    }
+  };
+
+  const deleteParticipant = (key: string) => {
+    if (key.length) {
+      setParticipants(participants.filter((p) => p.name !== key));
+    }
   };
 
   // Tabs state
@@ -323,24 +333,21 @@ function App() {
             committeeSolution={committeeSolution}
           />
           <Space h="xl" />
-          {participants.length > 0 ? (
-            <Tabs active={activeTabKey} onTabChange={setActiveTabKey}>
-              <Tab label="Participants">
-                <ParticipantsTable
-                  participants={participants}
-                  updateParticipant={updateParticipant}
-                />
-              </Tab>
-              <Tab label="History">
-                <HistoryTable history={history}></HistoryTable>
-              </Tab>
-              <Tab label="Solution" disabled={solutionTabDisabled}>
-                <SolutionTable committees={committeeSolution.committees} />
-              </Tab>
-            </Tabs>
-          ) : (
-            <div>Please import a valid DICOOP xlsx file.</div>
-          )}
+          <Tabs active={activeTabKey} onTabChange={setActiveTabKey}>
+            <Tab label="Participants">
+              <ParticipantsTable
+                participants={participants}
+                updateParticipant={updateParticipant}
+                deleteParticipant={deleteParticipant}
+              />
+            </Tab>
+            <Tab label="History">
+              <HistoryTable history={history}></HistoryTable>
+            </Tab>
+            <Tab label="Solution" disabled={solutionTabDisabled}>
+              <SolutionTable committees={committeeSolution.committees} />
+            </Tab>
+          </Tabs>
           <ErrorMessage />
         </>
       }

@@ -163,6 +163,8 @@ function parseParticipants(sheetData: Array<any>): Array<Person> {
       skillsToCertificate: parseNamedList(
         rowData[Constants.PARTICIPANT_SKILLS_TO_CERTIFICATE]
       ),
+      needsEvaluation:
+        rowData[Constants.PARTICIPANT_NEEDS_EVALUATION].trim() === "true",
       hasAlreadyInspected: [] as Array<string>,
     } as Person;
     participants.push(person);

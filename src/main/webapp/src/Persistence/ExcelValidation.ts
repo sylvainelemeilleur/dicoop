@@ -18,6 +18,7 @@ export const Constants = {
   PARTICIPANT_LANGUAGES: "Languages",
   PARTICIPANT_AVAILABILITY: "Availability",
   PARTICIPANT_SKILLS_TO_CERTIFICATE: "Skills to Certificate",
+  PARTICIPANT_NEEDS_EVALUATION: "Needs evaluation",
 
   SOLUTION_EVALUATED_PERSON: "Evaluated Person",
   SOLUTION_TIMESLOT: "Timeslot",
@@ -45,6 +46,7 @@ export const participantsColumns = [
   Constants.PARTICIPANT_LANGUAGES,
   Constants.PARTICIPANT_AVAILABILITY,
   Constants.PARTICIPANT_SKILLS_TO_CERTIFICATE,
+  Constants.PARTICIPANT_NEEDS_EVALUATION,
 ];
 
 export interface ValidationResult {

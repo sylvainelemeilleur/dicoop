@@ -1,3 +1,13 @@
 .cursorPointer {
   cursor: pointer;
 }
+
+.label {
+  background-color: #f1f3f5;
+  white-space: nowrap;
+  display: inline-flex;
+  width: auto;
+  padding: 0px 10.6667px;
+  text-overflow: ellipsis;
+  border-radius: 32px;
+}

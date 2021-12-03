@@ -74,6 +74,7 @@ export function excelExport(
       sanitizeNamedArray(p.languages),
       sanitizeNamedArray(p.availability),
       sanitizeNamedArray(p.skillsToCertificate),
+      p.needsEvaluation ? "true" : "false",
     ])
   );
   const participantsWorksheet = XLSX.utils.aoa_to_sheet(participantsData);
