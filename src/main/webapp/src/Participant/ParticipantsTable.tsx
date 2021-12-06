@@ -32,8 +32,8 @@ function ParticipantsTable({
   const badgeList = (namedList?: Array<NamedEntity>) => (
     <>
       {namedList?.map((item: any) => (
-        <div className="label">
-          <span key={item.name}>{item.name}</span>
+        <div key={item.name} className="label">
+          <span>{item.name}</span>
         </div>
       ))}
     </>
