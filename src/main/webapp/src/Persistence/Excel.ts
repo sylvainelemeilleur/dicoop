@@ -44,12 +44,22 @@ export function excelExport(
   // Settings sheet
   const settingsData = [
     [Constants.SETTING_NUMBER_OF_PRO, settings.nbProParticipants],
+    [
+      Constants.SETTING_NUMBER_OF_ASSIGNMENTS_FOR_A_PRO,
+      settings.numberOfAssignmentsForAProfessional?.value?.[0],
+      settings.numberOfAssignmentsForAProfessional?.value?.[1],
+    ],
     [Constants.SETTING_NUMBER_OF_NON_PRO, settings.nbNonProParticipants],
+    [
+      Constants.SETTING_NUMBER_OF_ASSIGNMENTS_FOR_A_NON_PRO,
+      settings.numberOfAssignmentsForANonProfessional?.value?.[0],
+      settings.numberOfAssignmentsForANonProfessional?.value?.[1],
+    ],
     [Constants.SETTING_NUMBER_OF_EXTERNAL, settings.nbExternalParticipants],
     [
-      Constants.SETTING_NUMBER_OF_ASSIGNMENTS,
-      settings.numberOfAssignments?.value?.[0],
-      settings.numberOfAssignments?.value?.[1],
+      Constants.SETTING_NUMBER_OF_ASSIGNMENTS_FOR_AN_EXTERNAL,
+      settings.numberOfAssignmentsForAnExternal?.value?.[0],
+      settings.numberOfAssignmentsForAnExternal?.value?.[1],
     ],
     [
       Constants.SETTING_NUMBER_OF_ROTATIONS_TO_REINSPECT,

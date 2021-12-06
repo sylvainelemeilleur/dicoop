@@ -5,9 +5,14 @@ export const Constants = {
   HISTORY: "History",
 
   SETTING_NUMBER_OF_PRO: "Number of pro participants",
+  SETTING_NUMBER_OF_ASSIGNMENTS_FOR_A_PRO:
+    "Number of assignments per pro participant",
   SETTING_NUMBER_OF_NON_PRO: "Number of non pro participants",
+  SETTING_NUMBER_OF_ASSIGNMENTS_FOR_A_NON_PRO:
+    "Number of assignments per non pro participant",
   SETTING_NUMBER_OF_EXTERNAL: "Number of external participants",
-  SETTING_NUMBER_OF_ASSIGNMENTS: "Number of assignments per participant",
+  SETTING_NUMBER_OF_ASSIGNMENTS_FOR_AN_EXTERNAL:
+    "Number of assignments per external participant",
   SETTING_NUMBER_OF_ROTATIONS_TO_REINSPECT:
     "Number of rotations to re-inspect a participant",
 

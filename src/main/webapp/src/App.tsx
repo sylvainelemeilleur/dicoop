@@ -12,6 +12,7 @@ import {
   Textarea,
   Title,
 } from "@mantine/core";
+import { useSetState } from "@mantine/hooks";
 import React, { useRef, useState } from "react";
 import {
   CommitteeSolutionResourceApi,
@@ -31,6 +32,7 @@ import {
   UNDEFINED_SOLUTION,
 } from "./Model/Defaults";
 import { PersistenceData } from "./Model/PersistenceData";
+import { SettingsState } from "./Model/SettingsState";
 import { Solution } from "./Model/Solution";
 import ParticipantsTable from "./Participant/ParticipantsTable";
 import { excelExport, excelImport } from "./Persistence/Excel";
@@ -70,33 +72,53 @@ function App() {
   const [solutionTabDisabled, setSolutionTabDisabled] = useState(true);
 
   // Settings state
-  const [nbProParticipants, setNbProParticipants] = useState(2);
-  const [nbNonProParticipants, setNbNonProParticipants] = useState(1);
-  const [nbExternalParticipants, setNbExternalParticipants] = useState(0);
-  const [numberOfAssignments, setNumberOfAssignments] = useState([1, 5] as [
-    number,
-    number
-  ]);
-  const [nbRotationsToReinspect, setNbRotationsToReinspect] = useState(0);
+  const [settingsState, setSettingsState] = useSetState({
+    nbProParticipants: 2,
+    numberOfAssignmentsForAProfessional: [0, 5],
+    nbNonProParticipants: 1,
+    numberOfAssignmentsForANonProfessional: [0, 5],
+    nbExternalParticipants: 0,
+    numberOfAssignmentsForAnExternal: [0, 5],
+    nbRotationsToReinspect: 0,
+  } as SettingsState);
 
   const getSettings = () =>
     ({
-      nbProParticipants,
-      nbNonProParticipants,
-      numberOfAssignments: {
-        value: numberOfAssignments,
+      nbProParticipants: settingsState.nbProParticipants,
+      numberOfAssignmentsForAProfessional: {
+        value: settingsState.numberOfAssignmentsForAProfessional,
       } as Range,
-      nbRotationsToReinspect,
+      nbNonProParticipants: settingsState.nbNonProParticipants,
+      numberOfAssignmentsForANonProfessional: {
+        value: settingsState.numberOfAssignmentsForANonProfessional,
+      } as Range,
+      nbExternalParticipants: settingsState.nbExternalParticipants,
+      numberOfAssignmentsForAnExternal: {
+        value: settingsState.numberOfAssignmentsForAnExternal,
+      } as Range,
+      nbRotationsToReinspect: settingsState.nbRotationsToReinspect,
     } as Settings);
 
   const setSettings = (settings: Settings) => {
-    setNbProParticipants(settings?.nbProParticipants ?? 0);
-    setNbNonProParticipants(settings?.nbNonProParticipants ?? 0);
-    setNbExternalParticipants(settings?.nbExternalParticipants ?? 0);
-    setNumberOfAssignments(
-      (settings?.numberOfAssignments?.value as [number, number]) ?? [0, 0]
-    );
-    setNbRotationsToReinspect(settings?.nbRotationsToReinspect ?? 0);
+    setSettingsState({
+      nbProParticipants: settings?.nbProParticipants ?? 0,
+      numberOfAssignmentsForAProfessional: (settings
+        ?.numberOfAssignmentsForAProfessional?.value as [number, number]) ?? [
+        0, 0,
+      ],
+      nbNonProParticipants: settings?.nbNonProParticipants ?? 0,
+      numberOfAssignmentsForANonProfessional: (settings
+        ?.numberOfAssignmentsForANonProfessional?.value as [
+        number,
+        number
+      ]) ?? [0, 0],
+      nbExternalParticipants: settings?.nbExternalParticipants ?? 0,
+      numberOfAssignmentsForAnExternal: (settings
+        ?.numberOfAssignmentsForAnExternal?.value as [number, number]) ?? [
+        0, 0,
+      ],
+      nbRotationsToReinspect: settings?.nbRotationsToReinspect ?? 0,
+    });
   };
 
   // API configuration
@@ -130,7 +152,10 @@ function App() {
   };
 
   const getParticipantsWithHistory = () => {
-    const historyToTake = history.slice(0, nbRotationsToReinspect);
+    const historyToTake = history.slice(
+      0,
+      settingsState.nbRotationsToReinspect
+    );
     participants.forEach((participant) => {
       const hasAlreadyInspected = [] as string[];
       historyToTake.forEach((set) => {
@@ -319,16 +344,8 @@ function App() {
       {
         <>
           <SolutionSettingsForm
-            nbProParticipants={nbProParticipants}
-            setNbProParticipants={setNbProParticipants}
-            nbNonProParticipants={nbNonProParticipants}
-            setNbNonProParticipants={setNbNonProParticipants}
-            nbExternalParticipants={nbExternalParticipants}
-            setNbExternalParticipants={setNbExternalParticipants}
-            numberOfAssignments={numberOfAssignments}
-            setNumberOfAssignments={setNumberOfAssignments}
-            nbRotationsToReinspect={nbRotationsToReinspect}
-            setNbRotationsToReinspect={setNbRotationsToReinspect}
+            settingsState={settingsState}
+            setSettingsState={setSettingsState}
             isSolving={isSolving}
             committeeSolution={committeeSolution}
           />

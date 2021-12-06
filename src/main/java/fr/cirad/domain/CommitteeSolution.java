@@ -59,7 +59,8 @@ public class CommitteeSolution {
 
         // set range option for each participant
         this.persons.stream().forEach(
-                p -> p.numberOfAssignmentsRangeConstraint = options.settings.numberOfAssignments);
+                p -> p.numberOfAssignmentsRangeConstraint =
+                        getNumberOfAssignmentsRange(p, options.settings));
 
         this.skills = this.persons.stream().flatMap(person -> person.skills.stream())
                 .filter(skill -> !Strings.isNullOrEmpty(skill.name)).distinct()
@@ -69,10 +70,9 @@ public class CommitteeSolution {
                 .collect(Collectors.toList());
 
         // Committees based on persons skills to certificate
-        this.committees =
-                this.persons.stream().filter(
-                        person -> !person.skillsToCertificate.isEmpty() && person.needsEvaluation)
-                        .map(Committee::new).collect(Collectors.toList());
+        this.committees = this.persons.stream()
+                .filter(person -> !person.skillsToCertificate.isEmpty() && person.needsEvaluation)
+                .map(Committee::new).collect(Collectors.toList());
         this.committeeAssignments = new ArrayList<>();
 
         // initialization of the Committees assignments needed (professionals, non-professionals and
@@ -91,5 +91,16 @@ public class CommitteeSolution {
                         .add(new CommitteeAssignment(committee, PersonType.EXTERNAL));
             }
         }
+    }
+
+    private Range getNumberOfAssignmentsRange(Person person, Settings settings) {
+        if (person.personType.equals(PersonType.PROFESSIONAL))
+            return settings.numberOfAssignmentsForAProfessional;
+        else if (person.personType.equals(PersonType.NON_PROFESSIONAL))
+            return settings.numberOfAssignmentsForANonProfessional;
+        else if (person.personType.equals(PersonType.EXTERNAL))
+            return settings.numberOfAssignmentsForAnExternal;
+        else
+            return new Range(0, 5);
     }
 }

@@ -278,10 +278,22 @@ export interface Settings {
     nbProParticipants?: number;
     /**
      * 
+     * @type {Range}
+     * @memberof Settings
+     */
+    numberOfAssignmentsForAProfessional?: Range;
+    /**
+     * 
      * @type {number}
      * @memberof Settings
      */
     nbNonProParticipants?: number;
+    /**
+     * 
+     * @type {Range}
+     * @memberof Settings
+     */
+    numberOfAssignmentsForANonProfessional?: Range;
     /**
      * 
      * @type {number}
@@ -293,7 +305,7 @@ export interface Settings {
      * @type {Range}
      * @memberof Settings
      */
-    numberOfAssignments?: Range;
+    numberOfAssignmentsForAnExternal?: Range;
     /**
      * 
      * @type {number}

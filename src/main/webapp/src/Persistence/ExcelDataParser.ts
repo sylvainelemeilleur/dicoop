@@ -123,16 +123,28 @@ function parseSettings(sheetData: Array<any>): Settings {
       case Constants.SETTING_NUMBER_OF_PRO:
         settings.nbProParticipants = +settingValue;
         break;
+      case Constants.SETTING_NUMBER_OF_ASSIGNMENTS_FOR_A_PRO:
+        const settingValue21 = rowData[2];
+        settings.numberOfAssignmentsForAProfessional = {
+          value: [+settingValue, +settingValue21],
+        } as Range;
+        break;
       case Constants.SETTING_NUMBER_OF_NON_PRO:
         settings.nbNonProParticipants = +settingValue;
+        break;
+      case Constants.SETTING_NUMBER_OF_ASSIGNMENTS_FOR_A_NON_PRO:
+        const settingValue22 = rowData[2];
+        settings.numberOfAssignmentsForANonProfessional = {
+          value: [+settingValue, +settingValue22],
+        } as Range;
         break;
       case Constants.SETTING_NUMBER_OF_EXTERNAL:
         settings.nbExternalParticipants = +settingValue;
         break;
-      case Constants.SETTING_NUMBER_OF_ASSIGNMENTS:
-        const settingValue2 = rowData[2];
-        settings.numberOfAssignments = {
-          value: [+settingValue, +settingValue2],
+      case Constants.SETTING_NUMBER_OF_ASSIGNMENTS_FOR_AN_EXTERNAL:
+        const settingValue23 = rowData[2];
+        settings.numberOfAssignmentsForAnExternal = {
+          value: [+settingValue, +settingValue23],
         } as Range;
         break;
       case Constants.SETTING_NUMBER_OF_ROTATIONS_TO_REINSPECT:

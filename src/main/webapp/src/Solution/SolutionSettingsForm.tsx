@@ -9,34 +9,23 @@ import {
   Space,
 } from "@mantine/core";
 import React from "react";
+import { SettingsState } from "src/Model/SettingsState";
 import { Solution } from "src/Model/Solution";
 
 type SolutionSettingsProps = {
-  nbProParticipants: number;
-  setNbProParticipants: (value: number) => void;
-  nbNonProParticipants: number;
-  setNbNonProParticipants: (value: number) => void;
-  nbExternalParticipants: number;
-  setNbExternalParticipants: (value: number) => void;
-  numberOfAssignments: [number, number];
-  setNumberOfAssignments: (value: [number, number]) => void;
-  nbRotationsToReinspect: number;
-  setNbRotationsToReinspect: (value: number) => void;
+  settingsState: SettingsState;
+  setSettingsState: (
+    statePartial:
+      | Partial<SettingsState>
+      | ((currentState: SettingsState) => Partial<SettingsState>)
+  ) => void;
   committeeSolution: Solution;
   isSolving: boolean;
 };
 
 function SolutionSettingsForm({
-  nbProParticipants,
-  setNbProParticipants,
-  nbNonProParticipants,
-  setNbNonProParticipants,
-  nbExternalParticipants,
-  setNbExternalParticipants,
-  numberOfAssignments,
-  setNumberOfAssignments,
-  nbRotationsToReinspect,
-  setNbRotationsToReinspect,
+  settingsState,
+  setSettingsState,
   committeeSolution,
   isSolving,
 }: SolutionSettingsProps) {
@@ -63,69 +52,133 @@ function SolutionSettingsForm({
             >
               <Slider
                 id="nbProParticipants"
-                value={nbProParticipants}
+                value={settingsState.nbProParticipants}
                 min={min}
                 max={max}
                 marks={marks}
-                onChange={setNbProParticipants}
+                onChange={(value) =>
+                  setSettingsState({ nbProParticipants: value })
+                }
               ></Slider>
             </InputWrapper>
+
             <Space h="lg" />
+
+            <InputWrapper
+              id="numberOfAssignmentsPro"
+              label="Number of assignments per professional participant"
+            >
+              <RangeSlider
+                id="numberOfAssignmentsPro"
+                value={settingsState.numberOfAssignmentsForAProfessional}
+                step={1}
+                min={min}
+                max={max}
+                minRange={0}
+                marks={marks}
+                onChange={(values) =>
+                  setSettingsState({
+                    numberOfAssignmentsForAProfessional: values,
+                  })
+                }
+              ></RangeSlider>
+            </InputWrapper>
+
+            <Space h="lg" />
+
             <InputWrapper
               id="nbNonProParticipants"
               label="Number of non-professionals participants"
             >
               <Slider
                 id="nbNonProParticipants"
-                value={nbNonProParticipants}
+                value={settingsState.nbNonProParticipants}
                 min={min}
                 max={max}
                 marks={marks}
-                onChange={setNbNonProParticipants}
+                onChange={(value) =>
+                  setSettingsState({ nbNonProParticipants: value })
+                }
               ></Slider>
             </InputWrapper>
+
             <Space h="lg" />
+
+            <InputWrapper
+              id="numberOfAssignmentsNonPro"
+              label="Number of assignments per non professional participant"
+            >
+              <RangeSlider
+                id="numberOfAssignmentsNonPro"
+                value={settingsState.numberOfAssignmentsForANonProfessional}
+                step={1}
+                min={min}
+                max={max}
+                minRange={0}
+                marks={marks}
+                onChange={(values) =>
+                  setSettingsState({
+                    numberOfAssignmentsForANonProfessional: values,
+                  })
+                }
+              ></RangeSlider>
+            </InputWrapper>
+
+            <Space h="lg" />
+
             <InputWrapper
               id="nbExternalParticipants"
               label="Number of external participants"
             >
               <Slider
                 id="nbExternalParticipants"
-                value={nbExternalParticipants}
+                value={settingsState.nbExternalParticipants}
                 min={min}
                 max={max}
                 marks={marks}
-                onChange={setNbExternalParticipants}
+                onChange={(value) =>
+                  setSettingsState({ nbExternalParticipants: value })
+                }
               ></Slider>
             </InputWrapper>
+
             <Space h="lg" />
+
             <InputWrapper
-              id="numberOfAssignments"
-              label="Number of assignments per participant"
+              id="numberOfAssignmentsExternal"
+              label="Number of assignments per external participant"
             >
               <RangeSlider
-                id="numberOfAssignments"
-                value={numberOfAssignments}
+                id="numberOfAssignmentsExternal"
+                value={settingsState.numberOfAssignmentsForAnExternal}
                 step={1}
                 min={min}
                 max={max}
                 minRange={0}
                 marks={marks}
-                onChange={setNumberOfAssignments}
+                onChange={(values) =>
+                  setSettingsState({
+                    numberOfAssignmentsForAnExternal: values,
+                  })
+                }
               ></RangeSlider>
             </InputWrapper>
+
             <Space h="lg" />
+
             <InputWrapper
               id="nbRotationsToReinspect"
               label="Number of rotations to re-inspect a participant"
             >
               <Slider
                 id="nbRotationsToReinspect"
-                value={nbRotationsToReinspect}
+                value={settingsState.nbRotationsToReinspect}
                 min={min}
                 max={max}
                 marks={marks}
-                onChange={setNbRotationsToReinspect}
+                onChange={(value) =>
+                  setSettingsState({ nbRotationsToReinspect: value })
+                }
               ></Slider>
             </InputWrapper>
             <Space h="lg" />
