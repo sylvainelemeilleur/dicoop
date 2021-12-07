@@ -25,6 +25,17 @@ public class Committee {
                 .anyMatch(p -> p.isAvailable(evaluatedPerson.availability));
     }
 
+    public boolean atLeastOnePersonHasTheRequiredSkills(List<CommitteeAssignment> assignments) {
+        for (Skill skill : evaluatedPerson.skills) {
+            var requiredSkills = List.of(skill);
+            if (assignments.stream().map(CommitteeAssignment::getAssignedPerson)
+                    .noneMatch(p -> p.hasAtListOneSkill(requiredSkills))) {
+                return false;
+            }
+        }
+        return true;
+    }
+
     @Override
     public String toString() {
         return "Committee for: " + this.evaluatedPerson;

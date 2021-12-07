@@ -2,14 +2,12 @@ package fr.cirad.solver;
 
 import static org.optaplanner.core.api.score.stream.ConstraintCollectors.toList;
 import static org.optaplanner.core.api.score.stream.Joiners.equal;
-import java.util.List;
 import org.optaplanner.core.api.score.buildin.hardsoft.HardSoftScore;
 import org.optaplanner.core.api.score.stream.Constraint;
 import org.optaplanner.core.api.score.stream.ConstraintFactory;
 import org.optaplanner.core.api.score.stream.ConstraintProvider;
 import fr.cirad.domain.CommitteeAssignment;
 import fr.cirad.domain.Person;
-import fr.cirad.domain.Skill;
 
 public class CommitteeSchedulingConstraintProvider implements ConstraintProvider {
 
@@ -24,7 +22,7 @@ public class CommitteeSchedulingConstraintProvider implements ConstraintProvider
                                 requiredSkillsToCertificate(constraintFactory),
                                 nonReciprocity(constraintFactory),
                                 oneCommonLanguage(constraintFactory),
-                                inspectionRotation(constraintFactory)};
+                                inspectionRotation(constraintFactory), vetoes(constraintFactory)};
         }
 
         private Constraint timeSlotConflict(ConstraintFactory constraintFactory) {
@@ -59,8 +57,8 @@ public class CommitteeSchedulingConstraintProvider implements ConstraintProvider
                 return constraintFactory.from(Person.class)
                                 .filter(person -> !person.numberOfAssignmentsRangeConstraint
                                                 .contains(person.assignments.size()))
-                                .penalize("Number of committees per person",
-                                                HardSoftScore.ONE_SOFT);
+                                .penalize("Number of assignments  per person",
+                                                HardSoftScore.ONE_HARD);
         }
 
         private Constraint requiredPersonType(ConstraintFactory constraintFactory) {
@@ -73,13 +71,11 @@ public class CommitteeSchedulingConstraintProvider implements ConstraintProvider
 
         private Constraint requiredSkillsToCertificate(ConstraintFactory constraintFactory) {
                 return constraintFactory.from(CommitteeAssignment.class)
-                                .filter(committeeAssignment -> {
-                                        List<Skill> skillsToCertificate =
-                                                        committeeAssignment.committee.evaluatedPerson.skillsToCertificate;
-                                        return !committeeAssignment.assignedPerson
-                                                        .hasAtListOneSkill(skillsToCertificate);
-                                })
-                                .penalize("Required skills to certificate", HardSoftScore.ONE_HARD);
+                                .groupBy(CommitteeAssignment::getCommittee, toList())
+                                .filter((committee, assignments) -> !committee
+                                                .atLeastOnePersonHasTheRequiredSkills(assignments))
+                                .penalize("At least one person in a committee has the skills to certificate",
+                                                HardSoftScore.ONE_HARD);
         }
 
         private Constraint nonReciprocity(ConstraintFactory constraintFactory) {
@@ -97,11 +93,11 @@ public class CommitteeSchedulingConstraintProvider implements ConstraintProvider
                                 .filter((committee, assignments) -> {
                                         for (var lang : committee.evaluatedPerson.languages) {
                                                 if (assignments.stream()
-                                                                .allMatch(a -> a.assignedPerson
+                                                                .anyMatch(a -> a.assignedPerson
                                                                                 .hasLanguage(lang)))
-                                                        return true;
+                                                        return false;
                                         }
-                                        return false;
+                                        return true;
                                 }).penalize("One common language", HardSoftScore.ONE_HARD);
         }
 
@@ -111,6 +107,12 @@ public class CommitteeSchedulingConstraintProvider implements ConstraintProvider
                                                 .anyMatch(name -> ca.committee.evaluatedPerson.name
                                                                 .equalsIgnoreCase(name)))
                                 .penalize("Inspector rotation", HardSoftScore.ONE_HARD);
+        }
+
+        private Constraint vetoes(ConstraintFactory constraintFactory) {
+                return constraintFactory.from(CommitteeAssignment.class).filter(
+                                ca -> ca.assignedPerson.isVetoed(ca.committee.evaluatedPerson))
+                                .penalize("Veto", HardSoftScore.ONE_HARD);
         }
 
 }

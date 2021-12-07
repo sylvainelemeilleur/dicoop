@@ -162,12 +162,12 @@ function parseParticipants(sheetData: Array<any>): Array<Person> {
   const participants = new Array<Person>();
   sheetData.forEach((rowData: any) => {
     const person = {
-      name: rowData[Constants.PARTICIPANT_NAME].trim(),
+      name: (rowData[Constants.PARTICIPANT_NAME] ?? "").trim(),
       personType: {
-        name: rowData[Constants.PARTICIPANT_TYPE].trim(),
+        name: (rowData[Constants.PARTICIPANT_TYPE] ?? "").trim(),
       } as PersonType,
       location: {
-        name: rowData[Constants.PARTICIPANT_LOCATION].trim(),
+        name: (rowData[Constants.PARTICIPANT_LOCATION] ?? "").trim(),
       } as Location,
       skills: parseNamedList(rowData[Constants.PARTICIPANT_SKILLS]),
       languages: parseNamedList(rowData[Constants.PARTICIPANT_LANGUAGES]),
@@ -175,8 +175,10 @@ function parseParticipants(sheetData: Array<any>): Array<Person> {
       skillsToCertificate: parseNamedList(
         rowData[Constants.PARTICIPANT_SKILLS_TO_CERTIFICATE]
       ),
+      vetoes: parseNamedList(rowData[Constants.PARTICIPANT_VETOES]),
       needsEvaluation:
-        rowData[Constants.PARTICIPANT_NEEDS_EVALUATION].trim() === "true",
+        (rowData[Constants.PARTICIPANT_NEEDS_EVALUATION] ?? "").trim() ===
+        "true",
       hasAlreadyInspected: [] as Array<string>,
     } as Person;
     participants.push(person);
@@ -186,13 +188,15 @@ function parseParticipants(sheetData: Array<any>): Array<Person> {
 
 function parseNamedList(s: string): Array<NamedEntity> {
   const list = new Array<NamedEntity>();
-  s.split(",").forEach((item) => {
-    item = item.trim();
-    if (stringNotEmpty(item)) {
-      list.push({
-        name: item,
-      } as NamedEntity);
-    }
-  });
+  if (s) {
+    s.split(",").forEach((item) => {
+      item = (item ?? "").trim();
+      if (stringNotEmpty(item)) {
+        list.push({
+          name: item,
+        } as NamedEntity);
+      }
+    });
+  }
   return list;
 }

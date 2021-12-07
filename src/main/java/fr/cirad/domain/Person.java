@@ -28,6 +28,8 @@ public class Person implements Comparable<Person> {
 
     public Boolean needsEvaluation;
 
+    public List<Person> vetoes;
+
     public List<String> hasAlreadyInspected;
 
     @InverseRelationShadowVariable(sourceVariableName = "assignedPerson")
@@ -84,6 +86,11 @@ public class Person implements Comparable<Person> {
     // Checks if a person is available at given time slots
     public boolean isAvailable(List<TimeSlot> timeSlots) {
         return timeSlots.stream().anyMatch(t -> availability.contains(t));
+    }
+
+    // Checks if two persons are on veto each other
+    public boolean isVetoed(Person other) {
+        return vetoes.contains(other) || other.vetoes.contains(this);
     }
 
     @Override

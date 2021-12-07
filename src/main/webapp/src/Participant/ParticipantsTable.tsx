@@ -51,6 +51,7 @@ function ParticipantsTable({
       languages: [] as Array<string>,
       availability: [] as Array<string>,
       skillsToCertificate: [] as Array<string>,
+      vetoes: [] as Array<string>,
       needsEvaluation: false,
     },
     validationRules: {
@@ -61,6 +62,7 @@ function ParticipantsTable({
   const [skills, setSkills] = useState<Array<string>>([]);
   const [languages, setLanguages] = useState<Array<string>>([]);
   const [availabilities, setAvailabilities] = useState<Array<string>>([]);
+  const [vetoes, setVetoes] = useState<Array<string>>([]);
 
   const getValuesInParticipants = (f: (p: Person) => Array<NamedEntity>) =>
     Array.from(
@@ -107,6 +109,14 @@ function ParticipantsTable({
         (p: Person) => p.availability as Array<NamedEntity>
       )
     );
+    // initialize the vetoes with the existing names in participants
+    setVetoes(
+      Array.from(
+        new Set(
+          participants.map((p) => p.name ?? "").filter((l) => l && l.length > 0)
+        )
+      ).sort()
+    );
   };
 
   const editParticipant = (participant: Person) => {
@@ -142,6 +152,10 @@ function ParticipantsTable({
       "needsEvaluation",
       participant?.needsEvaluation ?? false
     );
+    participantForm.setFieldValue(
+      "vetoes",
+      participant?.vetoes?.map((s) => s.name ?? "") ?? []
+    );
     setOpened(true);
   };
 
@@ -169,6 +183,7 @@ function ParticipantsTable({
               skillsToCertificate: values.skillsToCertificate.map((s) => ({
                 name: s,
               })),
+              vetoes: values.vetoes.map((s) => ({ name: s })),
               needsEvaluation: values.needsEvaluation,
             } as Person;
             updateParticipant(values.key, participant);
@@ -274,6 +289,21 @@ function ParticipantsTable({
             styles={multiSelectStyles}
           />
           <Space h="lg" />
+          <MultiSelect
+            label="Vetoes"
+            data={vetoes}
+            placeholder="Select vetoes"
+            searchable
+            creatable
+            getCreateLabel={(query) => `+ Create ${query}`}
+            onCreate={(query) => setVetoes((current) => [...current, query])}
+            value={participantForm.values.vetoes}
+            onChange={(values) =>
+              participantForm.setFieldValue("vetoes", values)
+            }
+            styles={multiSelectStyles}
+          />
+          <Space h="lg" />
           <Switch
             label="Needs evaluation"
             checked={participantForm.values.needsEvaluation}
@@ -334,6 +364,9 @@ function ParticipantsTable({
               Skills to certificate
             </th>
             <th role="columnheader" scope="col">
+              Vetoes
+            </th>
+            <th role="columnheader" scope="col">
               Needs evaluation?
             </th>
           </tr>
@@ -366,6 +399,9 @@ function ParticipantsTable({
               </td>
               <td role="cell" data-label="Skills to certificate">
                 {badgeList(person.skillsToCertificate as Array<NamedEntity>)}
+              </td>
+              <td role="cell" data-label="Vetoes">
+                {badgeList(person.vetoes as Array<NamedEntity>)}
               </td>
               <td role="cell" data-label="Name">
                 {person.needsEvaluation ? <CheckIcon /> : ""}

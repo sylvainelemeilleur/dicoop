@@ -71,7 +71,7 @@ public class CommitteeSolution {
 
         // Committees based on persons skills to certificate
         this.committees = this.persons.stream()
-                .filter(person -> !person.skillsToCertificate.isEmpty() && person.needsEvaluation)
+                .filter(person -> person.needsEvaluation)
                 .map(Committee::new).collect(Collectors.toList());
         this.committeeAssignments = new ArrayList<>();
 
