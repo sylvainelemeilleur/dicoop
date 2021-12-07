@@ -217,7 +217,6 @@ function ParticipantsTable({
             label="Location"
             placeholder="Pick one"
             data={locations}
-            searchable
             creatable
             getCreateLabel={(query) => `+ Create ${query}`}
             onCreate={(query) => setLocations((current) => [...current, query])}
