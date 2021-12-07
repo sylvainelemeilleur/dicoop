@@ -24,7 +24,7 @@ public class Person implements Comparable<Person> {
 
     public List<TimeSlot> availability;
 
-    public List<Skill> skillsToCertificate;
+    public List<Skill> requiredSkills;
 
     public Boolean needsEvaluation;
 
@@ -57,14 +57,14 @@ public class Person implements Comparable<Person> {
 
     public Person(String name, PersonType personType, List<Skill> skills, Location location,
             List<Language> languages, List<TimeSlot> availability,
-            List<Skill> skillsToCertificate) {
+            List<Skill> requiredSkills) {
         this.name = name;
         this.personType = personType;
         this.skills = skills;
         this.location = location;
         this.languages = languages;
         this.availability = availability;
-        this.skillsToCertificate = skillsToCertificate;
+        this.requiredSkills = requiredSkills;
         this.assignments = new ArrayList<>();
     }
 
@@ -74,8 +74,8 @@ public class Person implements Comparable<Person> {
     }
 
     // Checks if the person has one of the skills
-    public boolean hasAtListOneSkill(List<Skill> skills) {
-        return this.skills.stream().anyMatch(skills::contains);
+    public boolean hasSkill(Skill skill) {
+        return this.skills.contains(skill);
     }
 
     // Checks if a person is evaluated by this person

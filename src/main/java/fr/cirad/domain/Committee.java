@@ -26,10 +26,9 @@ public class Committee {
     }
 
     public boolean atLeastOnePersonHasTheRequiredSkills(List<CommitteeAssignment> assignments) {
-        for (Skill skill : evaluatedPerson.skills) {
-            var requiredSkills = List.of(skill);
+        for (Skill skill : evaluatedPerson.requiredSkills) {
             if (assignments.stream().map(CommitteeAssignment::getAssignedPerson)
-                    .noneMatch(p -> p.hasAtListOneSkill(requiredSkills))) {
+                    .noneMatch(p -> p.hasSkill(skill))) {
                 return false;
             }
         }

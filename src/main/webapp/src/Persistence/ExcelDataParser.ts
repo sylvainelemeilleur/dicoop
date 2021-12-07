@@ -172,8 +172,8 @@ function parseParticipants(sheetData: Array<any>): Array<Person> {
       skills: parseNamedList(rowData[Constants.PARTICIPANT_SKILLS]),
       languages: parseNamedList(rowData[Constants.PARTICIPANT_LANGUAGES]),
       availability: parseNamedList(rowData[Constants.PARTICIPANT_AVAILABILITY]),
-      skillsToCertificate: parseNamedList(
-        rowData[Constants.PARTICIPANT_SKILLS_TO_CERTIFICATE]
+      requiredSkills: parseNamedList(
+        rowData[Constants.PARTICIPANT_REQUIRED_SKILLS]
       ),
       vetoes: parseNamedList(rowData[Constants.PARTICIPANT_VETOES]),
       needsEvaluation:

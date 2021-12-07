@@ -19,7 +19,7 @@ public class CommitteeSchedulingConstraintProvider implements ConstraintProvider
                                 committeeConflict(constraintFactory),
                                 committeeAssignmentsConflict(constraintFactory),
                                 requiredPersonType(constraintFactory),
-                                requiredSkillsToCertificate(constraintFactory),
+                                requiredSkills(constraintFactory),
                                 nonReciprocity(constraintFactory),
                                 oneCommonLanguage(constraintFactory),
                                 inspectionRotation(constraintFactory), vetoes(constraintFactory)};
@@ -69,7 +69,7 @@ public class CommitteeSchedulingConstraintProvider implements ConstraintProvider
                                                 HardSoftScore.ONE_HARD);
         }
 
-        private Constraint requiredSkillsToCertificate(ConstraintFactory constraintFactory) {
+        private Constraint requiredSkills(ConstraintFactory constraintFactory) {
                 return constraintFactory.from(CommitteeAssignment.class)
                                 .groupBy(CommitteeAssignment::getCommittee, toList())
                                 .filter((committee, assignments) -> !committee

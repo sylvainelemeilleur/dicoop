@@ -224,7 +224,7 @@ export interface Person {
      * @type {Array<Skill>}
      * @memberof Person
      */
-    skillsToCertificate?: Array<Skill>;
+    requiredSkills?: Array<Skill>;
     /**
      * 
      * @type {boolean}

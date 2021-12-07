@@ -50,7 +50,7 @@ function ParticipantsTable({
       skills: [] as Array<string>,
       languages: [] as Array<string>,
       availability: [] as Array<string>,
-      skillsToCertificate: [] as Array<string>,
+      requiredSkills: [] as Array<string>,
       vetoes: [] as Array<string>,
       needsEvaluation: false,
     },
@@ -95,7 +95,7 @@ function ParticipantsTable({
         (p: Person) =>
           [
             ...(p.skills ?? []),
-            ...(p.skillsToCertificate ?? []),
+            ...(p.requiredSkills ?? []),
           ] as Array<NamedEntity>
       )
     );
@@ -145,8 +145,8 @@ function ParticipantsTable({
       participant?.availability?.map((s) => s.name ?? "") ?? []
     );
     participantForm.setFieldValue(
-      "skillsToCertificate",
-      participant?.skillsToCertificate?.map((s) => s.name ?? "") ?? []
+      "requiredSkills",
+      participant?.requiredSkills?.map((s) => s.name ?? "") ?? []
     );
     participantForm.setFieldValue(
       "needsEvaluation",
@@ -180,7 +180,7 @@ function ParticipantsTable({
               skills: values.skills.map((s) => ({ name: s })),
               languages: values.languages.map((s) => ({ name: s })),
               availability: values.availability.map((s) => ({ name: s })),
-              skillsToCertificate: values.skillsToCertificate.map((s) => ({
+              requiredSkills: values.requiredSkills.map((s) => ({
                 name: s,
               })),
               vetoes: values.vetoes.map((s) => ({ name: s })),
@@ -282,9 +282,9 @@ function ParticipantsTable({
             creatable
             getCreateLabel={(query) => `+ Create ${query}`}
             onCreate={(query) => setSkills((current) => [...current, query])}
-            value={participantForm.values.skillsToCertificate}
+            value={participantForm.values.requiredSkills}
             onChange={(values) =>
-              participantForm.setFieldValue("skillsToCertificate", values)
+              participantForm.setFieldValue("requiredSkills", values)
             }
             styles={multiSelectStyles}
           />
@@ -361,7 +361,7 @@ function ParticipantsTable({
               Availability
             </th>
             <th role="columnheader" scope="col">
-              Skills to certificate
+              Required skills
             </th>
             <th role="columnheader" scope="col">
               Vetoes
@@ -398,7 +398,7 @@ function ParticipantsTable({
                 {badgeList(person.availability as Array<NamedEntity>)}
               </td>
               <td role="cell" data-label="Skills to certificate">
-                {badgeList(person.skillsToCertificate as Array<NamedEntity>)}
+                {badgeList(person.requiredSkills as Array<NamedEntity>)}
               </td>
               <td role="cell" data-label="Vetoes">
                 {badgeList(person.vetoes as Array<NamedEntity>)}

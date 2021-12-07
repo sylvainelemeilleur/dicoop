@@ -83,7 +83,7 @@ export function excelExport(
       sanitizeNamedArray(p.skills),
       sanitizeNamedArray(p.languages),
       sanitizeNamedArray(p.availability),
-      sanitizeNamedArray(p.skillsToCertificate),
+      sanitizeNamedArray(p.requiredSkills),
       p.needsEvaluation ? "true" : "false",
       sanitizeNamedArray(p.vetoes),
     ])

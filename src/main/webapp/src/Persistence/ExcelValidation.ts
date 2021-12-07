@@ -22,7 +22,7 @@ export const Constants = {
   PARTICIPANT_SKILLS: "Skills",
   PARTICIPANT_LANGUAGES: "Languages",
   PARTICIPANT_AVAILABILITY: "Availability",
-  PARTICIPANT_SKILLS_TO_CERTIFICATE: "Skills to Certificate",
+  PARTICIPANT_REQUIRED_SKILLS: "Required skills",
   PARTICIPANT_NEEDS_EVALUATION: "Needs evaluation",
   PARTICIPANT_VETOES: "Vetoes",
 
@@ -51,7 +51,7 @@ export const participantsColumns = [
   Constants.PARTICIPANT_SKILLS,
   Constants.PARTICIPANT_LANGUAGES,
   Constants.PARTICIPANT_AVAILABILITY,
-  Constants.PARTICIPANT_SKILLS_TO_CERTIFICATE,
+  Constants.PARTICIPANT_REQUIRED_SKILLS,
   Constants.PARTICIPANT_NEEDS_EVALUATION,
   Constants.PARTICIPANT_VETOES,
 ];
