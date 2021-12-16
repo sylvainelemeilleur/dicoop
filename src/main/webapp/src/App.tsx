@@ -39,6 +39,7 @@ import { excelExport, excelImport } from "./Persistence/Excel";
 import { ValidationResult } from "./Persistence/ExcelValidation";
 import SolutionSettingsForm from "./Solution/SolutionSettingsForm";
 import SolutionTable from "./Solution/SolutionTable";
+import DistancesTable from "./Distances/DistancesTable";
 
 function App() {
   // Error modal from the context
@@ -212,7 +213,7 @@ function App() {
 
   const refreshSolution = (id: string) => {
     setSolutionTabDisabled(false);
-    setActiveTabKey(2);
+    setActiveTabKey(3);
     committeeSolutionResourceApi
       .apiCommitteeSolutionIdGet(id)
       .then((res) => {
@@ -357,6 +358,9 @@ function App() {
                 updateParticipant={updateParticipant}
                 deleteParticipant={deleteParticipant}
               />
+            </Tab>
+            <Tab label="Distances">
+              <DistancesTable></DistancesTable>
             </Tab>
             <Tab label="History">
               <HistoryTable history={history}></HistoryTable>

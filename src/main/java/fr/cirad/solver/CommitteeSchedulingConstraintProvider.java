@@ -26,7 +26,7 @@ public class CommitteeSchedulingConstraintProvider implements ConstraintProvider
         }
 
         private Constraint timeSlotConflict(ConstraintFactory constraintFactory) {
-                return constraintFactory.from(CommitteeAssignment.class)
+                return constraintFactory.forEach(CommitteeAssignment.class)
                                 .groupBy(CommitteeAssignment::getCommittee, toList())
                                 .filter((committee,
                                                 assignments) -> !committee
@@ -37,7 +37,7 @@ public class CommitteeSchedulingConstraintProvider implements ConstraintProvider
         }
 
         private Constraint selfConflict(ConstraintFactory constraintFactory) {
-                return constraintFactory.from(CommitteeAssignment.class).filter(
+                return constraintFactory.forEach(CommitteeAssignment.class).filter(
                                 committeeAssignment -> committeeAssignment.assignedPerson.equals(
                                                 committeeAssignment.committee.evaluatedPerson))
                                 .penalize("A person cannot be assigned to its self committee",
@@ -45,7 +45,7 @@ public class CommitteeSchedulingConstraintProvider implements ConstraintProvider
         }
 
         private Constraint committeeConflict(ConstraintFactory constraintFactory) {
-                return constraintFactory.fromUniquePair(CommitteeAssignment.class,
+                return constraintFactory.forEachUniquePair(CommitteeAssignment.class,
 
                                 equal(CommitteeAssignment::getCommittee),
                                 equal(CommitteeAssignment::getAssignedPerson))
@@ -54,7 +54,7 @@ public class CommitteeSchedulingConstraintProvider implements ConstraintProvider
         }
 
         private Constraint committeeAssignmentsConflict(ConstraintFactory constraintFactory) {
-                return constraintFactory.from(Person.class)
+                return constraintFactory.forEach(Person.class)
                                 .filter(person -> !person.numberOfAssignmentsRangeConstraint
                                                 .contains(person.assignments.size()))
                                 .penalize("Number of assignments  per person",
@@ -62,7 +62,7 @@ public class CommitteeSchedulingConstraintProvider implements ConstraintProvider
         }
 
         private Constraint requiredPersonType(ConstraintFactory constraintFactory) {
-                return constraintFactory.from(CommitteeAssignment.class)
+                return constraintFactory.forEach(CommitteeAssignment.class)
                                 .filter(committeeAssignment -> !committeeAssignment
                                                 .isRequiredPersonTypeCorrect())
                                 .penalize("Required person type to certificate",
@@ -70,7 +70,7 @@ public class CommitteeSchedulingConstraintProvider implements ConstraintProvider
         }
 
         private Constraint requiredSkills(ConstraintFactory constraintFactory) {
-                return constraintFactory.from(CommitteeAssignment.class)
+                return constraintFactory.forEach(CommitteeAssignment.class)
                                 .groupBy(CommitteeAssignment::getCommittee, toList())
                                 .filter((committee, assignments) -> !committee
                                                 .atLeastOnePersonHasTheRequiredSkills(assignments))
@@ -79,7 +79,7 @@ public class CommitteeSchedulingConstraintProvider implements ConstraintProvider
         }
 
         private Constraint nonReciprocity(ConstraintFactory constraintFactory) {
-                return constraintFactory.from(CommitteeAssignment.class)
+                return constraintFactory.forEach(CommitteeAssignment.class)
                                 .join(Person.class,
                                                 equal(ca -> ca.committee.evaluatedPerson, p -> p))
                                 .filter((ca, evaluatedPerson) -> evaluatedPerson
@@ -88,7 +88,7 @@ public class CommitteeSchedulingConstraintProvider implements ConstraintProvider
         }
 
         private Constraint oneCommonLanguage(ConstraintFactory constraintFactory) {
-                return constraintFactory.from(CommitteeAssignment.class)
+                return constraintFactory.forEach(CommitteeAssignment.class)
                                 .groupBy(ca -> ca.committee, toList())
                                 .filter((committee, assignments) -> {
                                         for (var lang : committee.evaluatedPerson.languages) {
@@ -102,7 +102,7 @@ public class CommitteeSchedulingConstraintProvider implements ConstraintProvider
         }
 
         private Constraint inspectionRotation(ConstraintFactory constraintFactory) {
-                return constraintFactory.from(CommitteeAssignment.class)
+                return constraintFactory.forEach(CommitteeAssignment.class)
                                 .filter(ca -> ca.assignedPerson.hasAlreadyInspected.stream()
                                                 .anyMatch(name -> ca.committee.evaluatedPerson.name
                                                                 .equalsIgnoreCase(name)))
@@ -110,7 +110,7 @@ public class CommitteeSchedulingConstraintProvider implements ConstraintProvider
         }
 
         private Constraint vetoes(ConstraintFactory constraintFactory) {
-                return constraintFactory.from(CommitteeAssignment.class).filter(
+                return constraintFactory.forEach(CommitteeAssignment.class).filter(
                                 ca -> ca.assignedPerson.isVetoed(ca.committee.evaluatedPerson))
                                 .penalize("Veto", HardSoftScore.ONE_HARD);
         }
