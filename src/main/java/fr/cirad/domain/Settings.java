@@ -12,6 +12,8 @@ public class Settings {
 
     public int nbRotationsToReinspect;
 
+    public DistanceMatrix distanceMatrix;
+
     public Settings() {
         // Empty constructor needed by serialization
     }

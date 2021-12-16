@@ -111,9 +111,34 @@ export interface CommitteeSolution {
 /**
  * 
  * @export
+ * @interface DistanceMatrix
+ */
+export interface DistanceMatrix {
+    /**
+     * 
+     * @type {Array<string>}
+     * @memberof DistanceMatrix
+     */
+    locations?: Array<string>;
+    /**
+     * 
+     * @type {Array<Array<number>>}
+     * @memberof DistanceMatrix
+     */
+    distances?: Array<Array<number>>;
+}
+/**
+ * 
+ * @export
  * @interface HardSoftScore
  */
 export interface HardSoftScore {
+    /**
+     * 
+     * @type {boolean}
+     * @memberof HardSoftScore
+     */
+    zero?: boolean;
     /**
      * 
      * @type {number}
@@ -318,6 +343,12 @@ export interface Settings {
      * @memberof Settings
      */
     nbRotationsToReinspect?: number;
+    /**
+     * 
+     * @type {DistanceMatrix}
+     * @memberof Settings
+     */
+    distanceMatrix?: DistanceMatrix;
 }
 /**
  * 

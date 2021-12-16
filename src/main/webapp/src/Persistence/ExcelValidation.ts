@@ -3,6 +3,7 @@ export const Constants = {
   PARTICIPANTS: "Participants",
   SOLUTION: "Solution",
   HISTORY: "History",
+  DISTANCES: "Distances",
 
   SETTING_NUMBER_OF_PRO: "Number of pro participants",
   SETTING_NUMBER_OF_ASSIGNMENTS_FOR_A_PRO:
@@ -36,6 +37,7 @@ const sheetsNames = [
   Constants.PARTICIPANTS,
   Constants.SOLUTION,
   Constants.HISTORY,
+  Constants.DISTANCES,
 ];
 
 export const solutionHeaders = [

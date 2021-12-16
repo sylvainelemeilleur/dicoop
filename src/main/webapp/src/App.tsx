@@ -17,6 +17,7 @@ import React, { useRef, useState } from "react";
 import {
   CommitteeSolutionResourceApi,
   Configuration,
+  DistanceMatrix,
   Person,
   Range,
   Settings,
@@ -51,6 +52,7 @@ function App() {
   const [committeeSolution, setCommitteeSolution] =
     useState(UNDEFINED_SOLUTION);
   const [history, setHistory] = useState(NO_HISTORY);
+  const [distances, setDistances] = useState({} as DistanceMatrix);
 
   const updateParticipant = (key: string, participant: Person) => {
     if (key.length) {
@@ -140,6 +142,7 @@ function App() {
     setSettings(data.settings);
     setParticipants(data.participants);
     setHistory(data.history);
+    setDistances(data.distances);
     setSolutionTabDisabled(true);
     setActiveTabKey(0);
   };
@@ -360,7 +363,7 @@ function App() {
               />
             </Tab>
             <Tab label="Distances">
-              <DistancesTable></DistancesTable>
+              <DistancesTable distances={distances} />
             </Tab>
             <Tab label="History">
               <HistoryTable history={history}></HistoryTable>

@@ -1,6 +1,7 @@
 import {
   Committee,
   CommitteeAssignment,
+  DistanceMatrix,
   Location,
   Person,
   PersonType,
@@ -43,6 +44,9 @@ export function parseExcelData(workbook: XLSX.WorkBook): PersistenceData {
           data.history.push(parseSolution(solution));
         });
         break;
+      case Constants.DISTANCES:
+        data.distances = parseDistances(sheetData);
+        break;
       case Constants.SOLUTION:
         const currentSolution = parseSolution(sheetData);
         if (currentSolution.size) data.history.unshift(currentSolution);
@@ -54,6 +58,29 @@ export function parseExcelData(workbook: XLSX.WorkBook): PersistenceData {
   });
   console.log("DATA LOADED");
   return data;
+}
+
+function parseDistances(sheetData: Array<any>): DistanceMatrix {
+  const distances = {} as DistanceMatrix;
+  sheetData.forEach((rowData: Array<any>, originIndex: number) => {
+    if (originIndex === 0) {
+      const origins = rowData.map((item) => item.trim()).filter(stringNotEmpty);
+      // initialisation of the distances matrix
+      distances.locations = origins;
+      distances.distances = new Array(origins.length)
+        .fill(0)
+        .map(() => new Array(origins.length).fill(0));
+    } else {
+      const dest = rowData[0];
+      rowData.forEach((cellData, destIndex) => {
+        if (destIndex > 0 && distances.distances) {
+          distances.distances[originIndex - 1][destIndex - 1] = cellData;
+        }
+      });
+    }
+  });
+  console.log("DISTANCES LOADED", distances);
+  return distances;
 }
 
 function parseMultipleSolutions(sheetData: Array<any>): Array<any> {
