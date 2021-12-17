@@ -14,7 +14,7 @@ import {
 import { useForm } from "@mantine/hooks";
 import { CheckIcon } from "@modulz/radix-icons";
 import React, { useState } from "react";
-import { Person } from "src/api";
+import { DistanceMatrix, Person } from "src/api";
 import { NamedEntity } from "src/Model/NamedEntity";
 import "./ParticipantsTable.css";
 
@@ -22,12 +22,14 @@ type ParticipantsTableProps = {
   participants: Array<Person>;
   updateParticipant: (key: string, participant: Person) => void;
   deleteParticipant: (key: string) => void;
+  distances: DistanceMatrix;
 };
 
 function ParticipantsTable({
   participants,
   updateParticipant,
   deleteParticipant,
+  distances,
 }: ParticipantsTableProps) {
   const badgeList = (namedList?: Array<NamedEntity>) => (
     <>
@@ -80,15 +82,16 @@ function ParticipantsTable({
 
   const setDefaultSelectData = () => {
     // initialize the locations with the existing ones in participants
-    setLocations(
-      Array.from(
-        new Set(
-          participants
-            .map((p) => p.location?.name ?? "")
-            .filter((l) => l && l.length > 0)
-        )
-      ).sort()
+    const locationsFromParticipantsAndDistances = new Set(
+      participants
+        .map((p) => p.location?.name ?? "")
+        .filter((l) => l && l.length > 0)
     );
+    // adding the locations from the distances
+    distances.locations?.forEach((l) =>
+      locationsFromParticipantsAndDistances.add(l)
+    );
+    setLocations(Array.from(locationsFromParticipantsAndDistances).sort());
     // initialize the skills with the existing ones in participants
     setSkills(
       getValuesInParticipants(
@@ -218,6 +221,7 @@ function ParticipantsTable({
             placeholder="Pick one"
             data={locations}
             creatable
+            searchable
             getCreateLabel={(query) => `+ Create ${query}`}
             onCreate={(query) => setLocations((current) => [...current, query])}
             value={participantForm.values.location}

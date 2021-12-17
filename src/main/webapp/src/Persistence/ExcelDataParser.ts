@@ -56,7 +56,6 @@ export function parseExcelData(workbook: XLSX.WorkBook): PersistenceData {
         break;
     }
   });
-  console.log("DATA LOADED");
   return data;
 }
 
@@ -83,12 +82,12 @@ function parseDistances(sheetData: Array<any>): DistanceMatrix {
       }
       rowData.forEach((cellData, destIndex) => {
         if (destIndex > 0 && distances.distances) {
-          distances.distances[originIndex - 1][destIndex - 1] = cellData;
+          distances.distances[originIndex - 1][destIndex - 1] =
+            parseInt(cellData);
         }
       });
     }
   });
-  console.log("DISTANCES LOADED", distances);
   return distances;
 }
 
@@ -121,7 +120,6 @@ function parseSolution(sheetData: Array<any>): CommitteeSet {
     const firstCell = rowData[0];
     if (firstCell === Constants.SOLUTION_EVALUATED_PERSON) {
       // ignore headers
-      console.log("Headers ignored in parseSolution");
     } else if (firstCell === Constants.SOLUTION) {
       set.date = rowData[1];
       isWellFormed = true;

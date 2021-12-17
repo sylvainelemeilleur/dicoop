@@ -1,4 +1,4 @@
-import { Person, Settings } from "src/api";
+import { DistanceMatrix, Person, Settings } from "src/api";
 import { CommitteeSet } from "src/Model/CommitteeSet";
 import { PersistenceData } from "src/Model/PersistenceData";
 import { Solution } from "src/Model/Solution";
@@ -44,6 +44,7 @@ export function excelExport(
   settings: Settings,
   participants: Array<Person>,
   history: Array<CommitteeSet>,
+  distances: DistanceMatrix,
   committeeSolution: Solution
 ) {
   // Settings sheet
@@ -109,6 +110,17 @@ export function excelExport(
   });
   const historyWorksheet = XLSX.utils.aoa_to_sheet(historyData);
 
+  // Distances sheet
+  const distancesHeaders = [""];
+  distances.locations?.forEach((l: string) => distancesHeaders.push(l));
+  const distancesData = [distancesHeaders];
+  distances.distances?.forEach((d: Array<number>, index: number) => {
+    const line = [distances.locations?.[index]] as Array<any>;
+    d.forEach((n: number) => line.push(n));
+    distancesData.push(line);
+  });
+  const distancesWorksheet = XLSX.utils.aoa_to_sheet(distancesData);
+
   // Saving the workbook
   const workbook = XLSX.utils.book_new();
   XLSX.utils.book_append_sheet(workbook, settingsWorksheet, Constants.SETTINGS);
@@ -118,6 +130,11 @@ export function excelExport(
     Constants.PARTICIPANTS
   );
   XLSX.utils.book_append_sheet(workbook, historyWorksheet, Constants.HISTORY);
+  XLSX.utils.book_append_sheet(
+    workbook,
+    distancesWorksheet,
+    Constants.DISTANCES
+  );
   XLSX.utils.book_append_sheet(workbook, solutionWorksheet, Constants.SOLUTION);
   XLSX.writeFile(workbook, "pgs-planner-export.xlsx");
 }

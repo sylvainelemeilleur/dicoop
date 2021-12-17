@@ -41,6 +41,7 @@ import { ValidationResult } from "./Persistence/ExcelValidation";
 import SolutionSettingsForm from "./Solution/SolutionSettingsForm";
 import SolutionTable from "./Solution/SolutionTable";
 import DistancesTable from "./Distances/DistancesTable";
+import { stringNotEmpty } from "./Model/ModelUtils";
 
 function App() {
   // Error modal from the context
@@ -52,7 +53,18 @@ function App() {
   const [committeeSolution, setCommitteeSolution] =
     useState(UNDEFINED_SOLUTION);
   const [history, setHistory] = useState(NO_HISTORY);
-  const [distances, setDistances] = useState({} as DistanceMatrix);
+  const [distances, setDistances] = useState({
+    locations: new Array<string>(),
+    distances: new Array<Array<number>>(),
+  } as DistanceMatrix);
+
+  const updateDistance = (i: number, j: number, value: number) => {
+    if (distances.distances) distances.distances[i][j] = value;
+    setDistances({
+      locations: distances.locations,
+      distances: distances.distances,
+    });
+  };
 
   const updateParticipant = (key: string, participant: Person) => {
     if (key.length) {
@@ -61,6 +73,23 @@ function App() {
       );
     } else {
       setParticipants([...participants, participant]);
+    }
+    // Checking if we have a new location to handle in the distance matrix
+    const locationName = participant.location?.name ?? "";
+    if (
+      stringNotEmpty(locationName) &&
+      distances.locations?.indexOf(locationName) === -1
+    ) {
+      distances.distances?.forEach((distanceLocal) => {
+        distanceLocal.push(0);
+      });
+      distances.distances?.push(
+        new Array(distances.locations.length + 1).fill(0)
+      );
+      setDistances({
+        locations: [...distances.locations, locationName],
+        distances: distances.distances,
+      });
     }
   };
 
@@ -134,7 +163,13 @@ function App() {
 
   // data import and export
   const dataExport = () => {
-    excelExport(getSettings(), participants, history, committeeSolution);
+    excelExport(
+      getSettings(),
+      participants,
+      history,
+      distances,
+      committeeSolution
+    );
   };
 
   const onDataImport = (data: PersistenceData) => {
@@ -360,10 +395,14 @@ function App() {
                 participants={participants}
                 updateParticipant={updateParticipant}
                 deleteParticipant={deleteParticipant}
+                distances={distances}
               />
             </Tab>
             <Tab label="Distances">
-              <DistancesTable distances={distances} />
+              <DistancesTable
+                distances={distances}
+                updateDistance={updateDistance}
+              />
             </Tab>
             <Tab label="History">
               <HistoryTable history={history}></HistoryTable>
