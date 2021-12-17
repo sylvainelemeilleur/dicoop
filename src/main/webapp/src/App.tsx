@@ -292,7 +292,7 @@ function App() {
     return (
       <ul>
         {Object.keys(parsedScore).map((i) => (
-          <li>
+          <li key={i}>
             {i} = {parsedScore[i].toString()}
           </li>
         ))}
