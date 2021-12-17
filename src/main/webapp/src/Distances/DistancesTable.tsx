@@ -2,26 +2,26 @@ import { NumberInput, Table } from "@mantine/core";
 import { DistanceMatrix } from "src/api";
 
 type DistancesTableProps = {
-  distances: DistanceMatrix;
+  distanceMatrix: DistanceMatrix;
   updateDistance: (i: number, j: number, value: number) => void;
 };
 
-function Distances({ distances, updateDistance }: DistancesTableProps) {
+function Distances({ distanceMatrix, updateDistance }: DistancesTableProps) {
   return (
     <Table style={{ width: "auto" }}>
       <thead>
         <tr>
           <th />
-          {distances.locations?.map((location) => (
+          {distanceMatrix.locations?.map((location) => (
             <th key={location}>{location}</th>
           ))}
         </tr>
       </thead>
       <tbody>
-        {distances.distances?.map((distanceLocal, i) => (
+        {distanceMatrix.distances?.map((distanceLocal, i) => (
           <tr key={i}>
             <td>
-              <b>{distances.locations?.[i]}</b>
+              <b>{distanceMatrix.locations?.[i]}</b>
             </td>
             {distanceLocal.map((distance, j) => (
               <td key={j}>

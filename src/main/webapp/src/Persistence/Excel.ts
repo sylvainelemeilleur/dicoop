@@ -44,7 +44,7 @@ export function excelExport(
   settings: Settings,
   participants: Array<Person>,
   history: Array<CommitteeSet>,
-  distances: DistanceMatrix,
+  distanceMatrix: DistanceMatrix,
   committeeSolution: Solution
 ) {
   // Settings sheet
@@ -112,10 +112,10 @@ export function excelExport(
 
   // Distances sheet
   const distancesHeaders = [""];
-  distances.locations?.forEach((l: string) => distancesHeaders.push(l));
+  distanceMatrix.locations?.forEach((l: string) => distancesHeaders.push(l));
   const distancesData = [distancesHeaders];
-  distances.distances?.forEach((d: Array<number>, index: number) => {
-    const line = [distances.locations?.[index]] as Array<any>;
+  distanceMatrix.distances?.forEach((d: Array<number>, index: number) => {
+    const line = [distanceMatrix.locations?.[index]] as Array<any>;
     d.forEach((n: number) => line.push(n));
     distancesData.push(line);
   });

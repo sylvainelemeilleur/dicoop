@@ -7,5 +7,5 @@ export class PersistenceData {
   public settings: Settings = DEFAULT_SETTINGS;
   public participants: Array<Person> = NO_PARTICIPANTS;
   public history: Array<CommitteeSet> = NO_HISTORY;
-  public distances: DistanceMatrix = {};
+  public distanceMatrix: DistanceMatrix = {};
 }

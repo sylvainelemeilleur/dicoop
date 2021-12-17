@@ -53,16 +53,16 @@ function App() {
   const [committeeSolution, setCommitteeSolution] =
     useState(UNDEFINED_SOLUTION);
   const [history, setHistory] = useState(NO_HISTORY);
-  const [distances, setDistances] = useState({
+  const [distanceMatrix, setDistanceMatrix] = useState({
     locations: new Array<string>(),
     distances: new Array<Array<number>>(),
   } as DistanceMatrix);
 
   const updateDistance = (i: number, j: number, value: number) => {
-    if (distances.distances) distances.distances[i][j] = value;
-    setDistances({
-      locations: distances.locations,
-      distances: distances.distances,
+    if (distanceMatrix.distances) distanceMatrix.distances[i][j] = value;
+    setDistanceMatrix({
+      locations: distanceMatrix.locations,
+      distances: distanceMatrix.distances,
     });
   };
 
@@ -78,17 +78,17 @@ function App() {
     const locationName = participant.location?.name ?? "";
     if (
       stringNotEmpty(locationName) &&
-      distances.locations?.indexOf(locationName) === -1
+      distanceMatrix.locations?.indexOf(locationName) === -1
     ) {
-      distances.distances?.forEach((distanceLocal) => {
+      distanceMatrix.distances?.forEach((distanceLocal) => {
         distanceLocal.push(0);
       });
-      distances.distances?.push(
-        new Array(distances.locations.length + 1).fill(0)
+      distanceMatrix.distances?.push(
+        new Array(distanceMatrix.locations.length + 1).fill(0)
       );
-      setDistances({
-        locations: [...distances.locations, locationName],
-        distances: distances.distances,
+      setDistanceMatrix({
+        locations: [...distanceMatrix.locations, locationName],
+        distances: distanceMatrix.distances,
       });
     }
   };
@@ -129,6 +129,7 @@ function App() {
         value: settingsState.numberOfAssignmentsForAnExternal,
       } as Range,
       nbRotationsToReinspect: settingsState.nbRotationsToReinspect,
+      distanceMatrix,
     } as Settings);
 
   const setSettings = (settings: Settings) => {
@@ -167,7 +168,7 @@ function App() {
       getSettings(),
       participants,
       history,
-      distances,
+      distanceMatrix,
       committeeSolution
     );
   };
@@ -177,7 +178,7 @@ function App() {
     setSettings(data.settings);
     setParticipants(data.participants);
     setHistory(data.history);
-    setDistances(data.distances);
+    setDistanceMatrix(data.distanceMatrix);
     setSolutionTabDisabled(true);
     setActiveTabKey(0);
   };
@@ -395,17 +396,17 @@ function App() {
                 participants={participants}
                 updateParticipant={updateParticipant}
                 deleteParticipant={deleteParticipant}
-                distances={distances}
+                distances={distanceMatrix}
               />
             </Tab>
             <Tab label="Distances">
               <DistancesTable
-                distances={distances}
+                distanceMatrix={distanceMatrix}
                 updateDistance={updateDistance}
               />
             </Tab>
             <Tab label="History">
-              <HistoryTable history={history}></HistoryTable>
+              <HistoryTable history={history} />
             </Tab>
             <Tab label="Solution" disabled={solutionTabDisabled}>
               <SolutionTable committees={committeeSolution.committees} />

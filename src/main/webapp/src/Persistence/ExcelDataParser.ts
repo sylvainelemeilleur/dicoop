@@ -45,7 +45,7 @@ export function parseExcelData(workbook: XLSX.WorkBook): PersistenceData {
         });
         break;
       case Constants.DISTANCES:
-        data.distances = parseDistances(sheetData);
+        data.distanceMatrix = parseDistances(sheetData);
         break;
       case Constants.SOLUTION:
         const currentSolution = parseSolution(sheetData);
@@ -60,35 +60,35 @@ export function parseExcelData(workbook: XLSX.WorkBook): PersistenceData {
 }
 
 function parseDistances(sheetData: Array<any>): DistanceMatrix {
-  const distances = {} as DistanceMatrix;
+  const distanceMatrix = {} as DistanceMatrix;
   sheetData.forEach((rowData: Array<any>, originIndex: number) => {
     if (originIndex === 0) {
       const origins = rowData.map((item) => item.trim()).filter(stringNotEmpty);
       // initialisation of the distances matrix
-      distances.locations = origins;
-      distances.distances = new Array(origins.length)
+      distanceMatrix.locations = origins;
+      distanceMatrix.distances = new Array(origins.length)
         .fill(0)
         .map(() => new Array(origins.length).fill(0));
     } else {
       const dest = rowData[0];
       // Verify that the destination is a valid location
-      if (dest !== distances.locations?.[originIndex - 1]) {
+      if (dest !== distanceMatrix.locations?.[originIndex - 1]) {
         throw new Error(
           `The destination ${dest} is not a valid location.` +
-            `The valid locations are in this order in the headers of the Distances sheet: ${distances.locations?.join(
+            `The valid locations are in this order in the headers of the Distances sheet: ${distanceMatrix.locations?.join(
               ", "
             )}`
         );
       }
       rowData.forEach((cellData, destIndex) => {
-        if (destIndex > 0 && distances.distances) {
-          distances.distances[originIndex - 1][destIndex - 1] =
+        if (destIndex > 0 && distanceMatrix.distances) {
+          distanceMatrix.distances[originIndex - 1][destIndex - 1] =
             parseInt(cellData);
         }
       });
     }
   });
-  return distances;
+  return distanceMatrix;
 }
 
 function parseMultipleSolutions(sheetData: Array<any>): Array<any> {
@@ -118,31 +118,31 @@ function parseSolution(sheetData: Array<any>): CommitteeSet {
   let isWellFormed = false;
   sheetData.forEach((rowData: Array<any>) => {
     const firstCell = rowData[0];
-    if (firstCell === Constants.SOLUTION_EVALUATED_PERSON) {
-      // ignore headers
-    } else if (firstCell === Constants.SOLUTION) {
-      set.date = rowData[1];
-      isWellFormed = true;
-    } else if (isWellFormed) {
-      const evaluatedPerson = {
-        name: rowData[0],
-      } as Person;
-      const solvedCommittee = new SolvedCommittee(uuid(), evaluatedPerson);
-      const timeSlot = { name: rowData[1] } as TimeSlot;
-      const committee = {
-        id: uuid(),
-        createdDate: ``,
-        evaluatedPerson,
-      } as Committee;
-      for (let i = 2; i < rowData.length; i++) {
-        const assignedPerson = { name: rowData[i] } as Person;
-        solvedCommittee.assignments.push({
-          assignedPerson,
-          timeSlot,
-          committee,
-        } as CommitteeAssignment);
+    if (firstCell !== Constants.SOLUTION_EVALUATED_PERSON) {
+      if (firstCell === Constants.SOLUTION) {
+        set.date = rowData[1];
+        isWellFormed = true;
+      } else if (isWellFormed) {
+        const evaluatedPerson = {
+          name: rowData[0],
+        } as Person;
+        const solvedCommittee = new SolvedCommittee(uuid(), evaluatedPerson);
+        const timeSlot = { name: rowData[1] } as TimeSlot;
+        const committee = {
+          id: uuid(),
+          createdDate: ``,
+          evaluatedPerson,
+        } as Committee;
+        for (let i = 2; i < rowData.length; i++) {
+          const assignedPerson = { name: rowData[i] } as Person;
+          solvedCommittee.assignments.push({
+            assignedPerson,
+            timeSlot,
+            committee,
+          } as CommitteeAssignment);
+        }
+        set.add(solvedCommittee);
       }
-      set.add(solvedCommittee);
     }
   });
   return set;

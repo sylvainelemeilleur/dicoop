@@ -59,7 +59,7 @@ function SolutionSettingsForm({
                 onChange={(value) =>
                   setSettingsState({ nbProParticipants: value })
                 }
-              ></Slider>
+              />
             </InputWrapper>
 
             <Space h="lg" />
@@ -81,7 +81,7 @@ function SolutionSettingsForm({
                     numberOfAssignmentsForAProfessional: values,
                   })
                 }
-              ></RangeSlider>
+              />
             </InputWrapper>
 
             <Space h="lg" />
@@ -99,7 +99,7 @@ function SolutionSettingsForm({
                 onChange={(value) =>
                   setSettingsState({ nbNonProParticipants: value })
                 }
-              ></Slider>
+              />
             </InputWrapper>
 
             <Space h="lg" />
@@ -121,7 +121,7 @@ function SolutionSettingsForm({
                     numberOfAssignmentsForANonProfessional: values,
                   })
                 }
-              ></RangeSlider>
+              />
             </InputWrapper>
 
             <Space h="lg" />
@@ -139,7 +139,7 @@ function SolutionSettingsForm({
                 onChange={(value) =>
                   setSettingsState({ nbExternalParticipants: value })
                 }
-              ></Slider>
+              />
             </InputWrapper>
 
             <Space h="lg" />
@@ -161,7 +161,7 @@ function SolutionSettingsForm({
                     numberOfAssignmentsForAnExternal: values,
                   })
                 }
-              ></RangeSlider>
+              />
             </InputWrapper>
 
             <Space h="lg" />
@@ -179,12 +179,12 @@ function SolutionSettingsForm({
                 onChange={(value) =>
                   setSettingsState({ nbRotationsToReinspect: value })
                 }
-              ></Slider>
+              />
             </InputWrapper>
             <Space h="lg" />
           </Container>
         </Col>
-        <Col span={6}></Col>
+        <Col span={6} />
       </Grid>
     </div>
   );
