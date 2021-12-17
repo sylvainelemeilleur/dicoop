@@ -72,6 +72,15 @@ function parseDistances(sheetData: Array<any>): DistanceMatrix {
         .map(() => new Array(origins.length).fill(0));
     } else {
       const dest = rowData[0];
+      // Verify that the destination is a valid location
+      if (dest !== distances.locations?.[originIndex - 1]) {
+        throw new Error(
+          `The destination ${dest} is not a valid location.` +
+            `The valid locations are in this order in the headers of the Distances sheet: ${distances.locations?.join(
+              ", "
+            )}`
+        );
+      }
       rowData.forEach((cellData, destIndex) => {
         if (destIndex > 0 && distances.distances) {
           distances.distances[originIndex - 1][destIndex - 1] = cellData;

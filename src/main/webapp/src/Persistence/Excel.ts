@@ -29,7 +29,12 @@ export function excelImport(
     if (sheetsValidationError.hasError()) {
       error(sheetsValidationError);
     }
-    callback(parseExcelData(workbook));
+    try {
+      callback(parseExcelData(workbook));
+    } catch (parseError: any) {
+      console.log(parseError);
+      error({ hasError: () => true, getMessage: () => parseError.message });
+    }
   };
 
   reader.readAsBinaryString(file);
