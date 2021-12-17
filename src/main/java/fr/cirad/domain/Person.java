@@ -39,6 +39,9 @@ public class Person implements Comparable<Person> {
     @JsonIgnore
     public Range numberOfAssignmentsRangeConstraint = new Range(0, 5);
 
+    @JsonIgnore
+    public Range travellingDistanceRangeConstraint = new Range(0, 100);
+
     private static final Comparator<Person> COMPARATOR = Comparator.comparing(p -> p.name);
 
     public Person() {

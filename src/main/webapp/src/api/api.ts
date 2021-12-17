@@ -349,6 +349,12 @@ export interface Settings {
      * @memberof Settings
      */
     distanceMatrix?: DistanceMatrix;
+    /**
+     * 
+     * @type {Range}
+     * @memberof Settings
+     */
+    travellingDistanceRange?: Range;
 }
 /**
  * 

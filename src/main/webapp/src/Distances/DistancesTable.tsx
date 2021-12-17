@@ -28,7 +28,6 @@ function Distances({ distanceMatrix, updateDistance }: DistancesTableProps) {
                 <NumberInput
                   value={distance}
                   required
-                  hideControls={false}
                   size="xs"
                   style={{ width: "60px" }}
                   onChange={(value) => updateDistance(i, j, value ?? 0)}

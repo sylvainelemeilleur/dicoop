@@ -4,6 +4,7 @@ import {
   Grid,
   InputWrapper,
   LoadingOverlay,
+  NumberInput,
   RangeSlider,
   Slider,
   Space,
@@ -165,26 +166,70 @@ function SolutionSettingsForm({
             </InputWrapper>
 
             <Space h="lg" />
-
-            <InputWrapper
-              id="nbRotationsToReinspect"
-              label="Number of rotations to re-inspect a participant"
-            >
-              <Slider
-                id="nbRotationsToReinspect"
-                value={settingsState.nbRotationsToReinspect}
-                min={min}
-                max={max}
-                marks={marks}
-                onChange={(value) =>
-                  setSettingsState({ nbRotationsToReinspect: value })
-                }
-              />
-            </InputWrapper>
-            <Space h="lg" />
           </Container>
         </Col>
-        <Col span={6} />
+        <Col span={6}>
+          <InputWrapper
+            id="nbRotationsToReinspect"
+            label="Number of rotations to re-inspect a participant"
+          >
+            <Slider
+              id="nbRotationsToReinspect"
+              value={settingsState.nbRotationsToReinspect}
+              min={min}
+              max={max}
+              marks={marks}
+              onChange={(value) =>
+                setSettingsState({ nbRotationsToReinspect: value })
+              }
+            />
+          </InputWrapper>
+
+          <Space h="lg" />
+
+          <InputWrapper
+            id="travellingDistanceRange"
+            label="Travelling distance range"
+          >
+            <br />
+            <NumberInput
+              label="Min"
+              value={settingsState.travellingDistanceRange[0]}
+              required
+              size="xs"
+              style={{ width: "60px", display: "inline-block" }}
+              onChange={(value) =>
+                setSettingsState({
+                  travellingDistanceRange: [
+                    value ?? 0,
+                    settingsState.travellingDistanceRange[1],
+                  ],
+                })
+              }
+            />
+            <NumberInput
+              label="Max"
+              value={settingsState.travellingDistanceRange[1]}
+              required
+              size="xs"
+              style={{
+                width: "60px",
+                display: "inline-block",
+                marginLeft: "10px",
+              }}
+              onChange={(value) =>
+                setSettingsState({
+                  travellingDistanceRange: [
+                    settingsState.travellingDistanceRange[0],
+                    value ?? 0,
+                  ],
+                })
+              }
+            />
+          </InputWrapper>
+
+          <Space h="lg" />
+        </Col>
       </Grid>
     </div>
   );

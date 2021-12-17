@@ -13,6 +13,7 @@ public class Settings {
     public int nbRotationsToReinspect;
 
     public DistanceMatrix distanceMatrix;
+    public Range travellingDistanceRange;
 
     public Settings() {
         // Empty constructor needed by serialization

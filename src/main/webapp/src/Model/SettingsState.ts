@@ -6,4 +6,5 @@ export interface SettingsState {
   nbExternalParticipants: number;
   numberOfAssignmentsForAnExternal: [number, number];
   nbRotationsToReinspect: number;
+  travellingDistanceRange: [number, number];
 }

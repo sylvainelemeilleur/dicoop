@@ -16,6 +16,7 @@ export const Constants = {
     "Number of assignments per external participant",
   SETTING_NUMBER_OF_ROTATIONS_TO_REINSPECT:
     "Number of rotations to re-inspect a participant",
+  SETTING_TRAVELLING_DISTANCE_RANGE: "Travelling distance range",
 
   PARTICIPANT_NAME: "Name",
   PARTICIPANT_TYPE: "Type",

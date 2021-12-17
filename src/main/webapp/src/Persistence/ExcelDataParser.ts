@@ -184,6 +184,12 @@ function parseSettings(sheetData: Array<any>): Settings {
       case Constants.SETTING_NUMBER_OF_ROTATIONS_TO_REINSPECT:
         settings.nbRotationsToReinspect = +settingValue;
         break;
+      case Constants.SETTING_TRAVELLING_DISTANCE_RANGE:
+        const settingValue24 = rowData[2];
+        settings.travellingDistanceRange = {
+          value: [+settingValue, +settingValue24],
+        } as Range;
+        break;
       default:
         console.log(`Unknown setting name ${settingName}`);
         break;

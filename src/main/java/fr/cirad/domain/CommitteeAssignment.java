@@ -20,20 +20,26 @@ public class CommitteeAssignment {
 
     public PersonType requiredPersonType;
 
+    @JsonIgnore
+    public DistanceMatrix distanceMatrix;
+
     public CommitteeAssignment() {
         // must have a no-args constructor so it can be constructed by OptaPlanner
     }
 
     public CommitteeAssignment(Person assignedPerson, Committee committee,
-            PersonType requiredPersonType) {
+            PersonType requiredPersonType, DistanceMatrix distanceMatrix) {
         this.assignedPerson = assignedPerson;
         this.committee = committee;
         this.requiredPersonType = requiredPersonType;
+        this.distanceMatrix = distanceMatrix;
     }
 
-    public CommitteeAssignment(Committee committee, PersonType requiredPersonType) {
+    public CommitteeAssignment(Committee committee, PersonType requiredPersonType,
+            DistanceMatrix distanceMatrix) {
         this.committee = committee;
         this.requiredPersonType = requiredPersonType;
+        this.distanceMatrix = distanceMatrix;
     }
 
     public Person getAssignedPerson() {
@@ -42,6 +48,12 @@ public class CommitteeAssignment {
 
     public Committee getCommittee() {
         return committee;
+    }
+
+    @JsonIgnore
+    public Integer getDistance() {
+        return distanceMatrix.getDistance(assignedPerson.location.name,
+                committee.evaluatedPerson.location.name);
     }
 
     @JsonIgnore

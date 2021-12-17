@@ -1,6 +1,7 @@
 package fr.cirad.solver;
 
 import static org.optaplanner.core.api.score.stream.ConstraintCollectors.toList;
+import static org.optaplanner.core.api.score.stream.ConstraintCollectors.sum;
 import static org.optaplanner.core.api.score.stream.Joiners.equal;
 import org.optaplanner.core.api.score.buildin.hardsoft.HardSoftScore;
 import org.optaplanner.core.api.score.stream.Constraint;
@@ -22,7 +23,8 @@ public class CommitteeSchedulingConstraintProvider implements ConstraintProvider
                                 requiredSkills(constraintFactory),
                                 nonReciprocity(constraintFactory),
                                 oneCommonLanguage(constraintFactory),
-                                inspectionRotation(constraintFactory), vetoes(constraintFactory)};
+                                inspectionRotation(constraintFactory), vetoes(constraintFactory),
+                                travelling(constraintFactory)};
         }
 
         private Constraint timeSlotConflict(ConstraintFactory constraintFactory) {
@@ -113,6 +115,15 @@ public class CommitteeSchedulingConstraintProvider implements ConstraintProvider
                 return constraintFactory.forEach(CommitteeAssignment.class).filter(
                                 ca -> ca.assignedPerson.isVetoed(ca.committee.evaluatedPerson))
                                 .penalize("Veto", HardSoftScore.ONE_HARD);
+        }
+
+        private Constraint travelling(ConstraintFactory constraintFactory) {
+                return constraintFactory.forEach(CommitteeAssignment.class)
+                                .groupBy(ca -> ca.assignedPerson,
+                                                sum(CommitteeAssignment::getDistance))
+                                .filter((person, distance) -> !person.travellingDistanceRangeConstraint
+                                                .contains(distance))
+                                .penalize("Travelling distance range", HardSoftScore.ONE_HARD);
         }
 
 }

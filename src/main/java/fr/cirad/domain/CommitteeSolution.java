@@ -57,10 +57,13 @@ public class CommitteeSolution {
         this.id = UUID.randomUUID();
         this.persons = options.participants;
 
-        // set range option for each participant
+        // set range option for each participant and also travelling distance constraint
         this.persons.stream().forEach(
-                p -> p.numberOfAssignmentsRangeConstraint =
-                        getNumberOfAssignmentsRange(p, options.settings));
+                p -> {
+                    p.numberOfAssignmentsRangeConstraint =
+                            getNumberOfAssignmentsRange(p, options.settings);
+                    p.travellingDistanceRangeConstraint = options.settings.travellingDistanceRange;
+                });
 
         this.skills = this.persons.stream().flatMap(person -> person.skills.stream())
                 .filter(skill -> !Strings.isNullOrEmpty(skill.name)).distinct()
@@ -80,15 +83,18 @@ public class CommitteeSolution {
         for (var committee : this.committees) {
             for (int i = 1; i <= options.settings.nbProParticipants; i++) {
                 this.committeeAssignments
-                        .add(new CommitteeAssignment(committee, PersonType.PROFESSIONAL));
+                        .add(new CommitteeAssignment(committee, PersonType.PROFESSIONAL,
+                                options.settings.distanceMatrix));
             }
             for (int i = 1; i <= options.settings.nbNonProParticipants; i++) {
                 this.committeeAssignments
-                        .add(new CommitteeAssignment(committee, PersonType.NON_PROFESSIONAL));
+                        .add(new CommitteeAssignment(committee, PersonType.NON_PROFESSIONAL,
+                                options.settings.distanceMatrix));
             }
             for (int i = 1; i <= options.settings.nbExternalParticipants; i++) {
                 this.committeeAssignments
-                        .add(new CommitteeAssignment(committee, PersonType.EXTERNAL));
+                        .add(new CommitteeAssignment(committee, PersonType.EXTERNAL,
+                                options.settings.distanceMatrix));
             }
         }
     }

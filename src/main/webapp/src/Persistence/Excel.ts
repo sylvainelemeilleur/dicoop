@@ -71,6 +71,11 @@ export function excelExport(
       Constants.SETTING_NUMBER_OF_ROTATIONS_TO_REINSPECT,
       settings.nbRotationsToReinspect,
     ],
+    [
+      Constants.SETTING_TRAVELLING_DISTANCE_RANGE,
+      settings.travellingDistanceRange?.value?.[0],
+      settings.travellingDistanceRange?.value?.[1],
+    ],
   ];
   const settingsWorksheet = XLSX.utils.aoa_to_sheet(settingsData);
 

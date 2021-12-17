@@ -112,6 +112,7 @@ function App() {
     nbExternalParticipants: 0,
     numberOfAssignmentsForAnExternal: [0, 5],
     nbRotationsToReinspect: 0,
+    travellingDistanceRange: [0, 100],
   } as SettingsState);
 
   const getSettings = () =>
@@ -130,6 +131,9 @@ function App() {
       } as Range,
       nbRotationsToReinspect: settingsState.nbRotationsToReinspect,
       distanceMatrix,
+      travellingDistanceRange: {
+        value: settingsState.travellingDistanceRange,
+      } as Range,
     } as Settings);
 
   const setSettings = (settings: Settings) => {
@@ -151,6 +155,10 @@ function App() {
         0, 0,
       ],
       nbRotationsToReinspect: settings?.nbRotationsToReinspect ?? 0,
+      travellingDistanceRange: (settings?.travellingDistanceRange?.value as [
+        number,
+        number
+      ]) ?? [0, 0],
     });
   };
 
