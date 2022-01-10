@@ -9,4 +9,4 @@ pluginManagement {
         id 'org.siouan.frontend-jdk11' version '5.2.0'
     }
 }
-rootProject.name='pgs-planner'
+rootProject.name='dicoop'

@@ -8,7 +8,7 @@
    version="1.1"
    id="SVGRoot"
    sodipodi:docname="favicon.svg"
-   inkscape:version="1.1 (c68e22c387, 2021-05-23)"
+   inkscape:version="1.1.1 (3bf5ae0d25, 2021-09-20)"
    xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
    xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
    xmlns="http://www.w3.org/2000/svg"
@@ -24,7 +24,7 @@
      inkscape:document-units="px"
      showgrid="true"
      inkscape:zoom="24.886869"
-     inkscape:cx="33.290649"
+     inkscape:cx="33.290648"
      inkscape:cy="16.87637"
      inkscape:window-width="3440"
      inkscape:window-height="1387"
@@ -44,15 +44,15 @@
      id="layer1">
     <text
        xml:space="preserve"
-       style="font-style:normal;font-weight:normal;font-size:14.0993px;line-height:1.25;font-family:sans-serif;fill:#000000;fill-opacity:1;stroke:none;stroke-width:0.35248"
-       x="-0.99757004"
-       y="10.195469"
+       style="font-style:normal;font-weight:normal;font-size:9.47761px;line-height:1.25;font-family:sans-serif;fill:#000000;fill-opacity:1;stroke:none;stroke-width:0.236939"
+       x="-0.59637016"
+       y="6.8561306"
        id="text5975"
-       transform="scale(0.65102096,1.5360488)"><tspan
+       transform="scale(0.46967897,2.1291139)"><tspan
          sodipodi:role="line"
          id="tspan5973"
-         x="-0.99757004"
-         y="10.195469"
-         style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-family:'SF Mono';-inkscape-font-specification:'SF Mono';stroke-width:0.35248">PGS</tspan></text>
+         x="-0.59637016"
+         y="6.8561306"
+         style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-family:'SF Mono';-inkscape-font-specification:'SF Mono';stroke-width:0.236939">DICOOP</tspan></text>
   </g>
 </svg>

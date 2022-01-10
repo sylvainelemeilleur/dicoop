@@ -141,7 +141,7 @@ export function excelExport(
     Constants.DISTANCES
   );
   XLSX.utils.book_append_sheet(workbook, solutionWorksheet, Constants.SOLUTION);
-  XLSX.writeFile(workbook, "pgs-planner-export.xlsx");
+  XLSX.writeFile(workbook, "dicoop-export.xlsx");
 }
 
 const exportCommittees = (
