@@ -42,7 +42,8 @@ compileTestJava {
 
 frontend {
     nodeVersion = '14.17.6'
-    assembleScript = '--prefix ./src/main/webapp run prod'
+    packageJsonDirectory = file('./src/main/webapp')
+    assembleScript = 'run prod'
 }
 
 /*
