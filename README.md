@@ -95,3 +95,29 @@ You don’t have to ever use `eject`. The curated feature set is suitable for sm
 To refresh the API client while the server is running in dev mode "npm run api" that runs:
 rm -rf src/api
 npx openapi-generator-cli generate -i http://localhost:8080/q/openapi -g typescript-axios -o src/api --skip-validate-spec
+
+## npm maintenance
+
+To discover dependencies that are out of date:
+```console
+npm outdated
+```
+
+To perform safe dependency upgrades:
+```console
+npm update
+```
+
+To upgrade to the latest major version of a package:
+```console
+npm install <packagename>@latest
+```
+
+To upgrade all dependencies to their latest major versions:
+```console
+npx npm-check-updates -u
+```
+and
+```console
+npm install
+```
