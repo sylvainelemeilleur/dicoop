@@ -24,7 +24,7 @@ dependencies {
 }
 
 group 'fr.cirad'
-version '1.4.0'
+version '1.5.0'
 
 java {
     sourceCompatibility = JavaVersion.VERSION_11
@@ -45,10 +45,3 @@ frontend {
     packageJsonDirectory = file('./src/main/webapp')
     assembleScript = 'run prod'
 }
-
-/*
-quarkusBuild {
-    nativeArgs {
-        additionalBuildArgs = "--initialize-at-run-time=org.drools.core.common.CompositeDefaultAgenda"
-    }
-}*/
