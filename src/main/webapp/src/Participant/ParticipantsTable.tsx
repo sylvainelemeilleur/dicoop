@@ -276,21 +276,27 @@ function ParticipantsTable({
             }
             styles={multiSelectStyles}
           />
-          <Space h="lg" />
-          <MultiSelect
-            label="Required skills"
-            data={skills}
-            placeholder="Required skills"
-            searchable
-            creatable
-            getCreateLabel={(query) => `+ Create ${query}`}
-            onCreate={(query) => setSkills((current) => [...current, query])}
-            value={participantForm.values.requiredSkills}
-            onChange={(values) =>
-              participantForm.setFieldValue("requiredSkills", values)
-            }
-            styles={multiSelectStyles}
-          />
+          {participantForm.values.type === "professional" && (
+            <>
+              <Space h="lg" />
+              <MultiSelect
+                label="Required skills"
+                data={skills}
+                placeholder="Required skills"
+                searchable
+                creatable
+                getCreateLabel={(query) => `+ Create ${query}`}
+                onCreate={(query) =>
+                  setSkills((current) => [...current, query])
+                }
+                value={participantForm.values.requiredSkills}
+                onChange={(values) =>
+                  participantForm.setFieldValue("requiredSkills", values)
+                }
+                styles={multiSelectStyles}
+              />
+            </>
+          )}
           <Space h="lg" />
           <MultiSelect
             label="Vetoes"
@@ -306,17 +312,21 @@ function ParticipantsTable({
             }
             styles={multiSelectStyles}
           />
-          <Space h="lg" />
-          <Switch
-            label="Needs evaluation"
-            checked={participantForm.values.needsEvaluation}
-            onChange={(event) =>
-              participantForm.setFieldValue(
-                "needsEvaluation",
-                event.currentTarget.checked
-              )
-            }
-          />
+          {participantForm.values.type === "professional" && (
+            <>
+              <Space h="lg" />
+              <Switch
+                label="Needs evaluation"
+                checked={participantForm.values.needsEvaluation}
+                onChange={(event) =>
+                  participantForm.setFieldValue(
+                    "needsEvaluation",
+                    event.currentTarget.checked
+                  )
+                }
+              />
+            </>
+          )}
           <Space h="lg" />
           <Group position="apart">
             <Group>
