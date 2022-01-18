@@ -76,7 +76,7 @@ public class CommitteeSchedulingConstraintProvider implements ConstraintProvider
                                 .groupBy(CommitteeAssignment::getCommittee, toList())
                                 .filter((committee, assignments) -> !committee
                                                 .atLeastOnePersonHasTheRequiredSkills(assignments))
-                                .penalize("At least one person in a committee has the skills to certificate",
+                                .penalize("At least one person in a committee has the required skills",
                                                 HardSoftScore.ONE_HARD);
         }
 

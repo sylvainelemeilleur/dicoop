@@ -278,9 +278,9 @@ function ParticipantsTable({
           />
           <Space h="lg" />
           <MultiSelect
-            label="Skills to certificate"
+            label="Required skills"
             data={skills}
-            placeholder="Select skills to certificate"
+            placeholder="Required skills"
             searchable
             creatable
             getCreateLabel={(query) => `+ Create ${query}`}
@@ -400,7 +400,7 @@ function ParticipantsTable({
               <td role="cell" data-label="Availability">
                 {badgeList(person.availability as Array<NamedEntity>)}
               </td>
-              <td role="cell" data-label="Skills to certificate">
+              <td role="cell" data-label="Required skills">
                 {badgeList(person.requiredSkills as Array<NamedEntity>)}
               </td>
               <td role="cell" data-label="Vetoes">

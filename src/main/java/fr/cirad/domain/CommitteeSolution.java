@@ -72,7 +72,7 @@ public class CommitteeSolution {
                 .filter(timeSlot -> !Strings.isNullOrEmpty(timeSlot.name)).distinct()
                 .collect(Collectors.toList());
 
-        // Committees based on persons skills to certificate
+        // Committees based on persons required skills
         this.committees = this.persons.stream()
                 .filter(person -> person.needsEvaluation)
                 .map(Committee::new).collect(Collectors.toList());
