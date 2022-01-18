@@ -111,7 +111,7 @@ function App() {
     numberOfAssignmentsForANonProfessional: [0, 5],
     nbExternalParticipants: 0,
     numberOfAssignmentsForAnExternal: [0, 5],
-    nbRotationsToReinspect: 0,
+    nbRotationsToReinspect: 10,
     travellingDistanceRange: [0, 100],
   } as SettingsState);
 

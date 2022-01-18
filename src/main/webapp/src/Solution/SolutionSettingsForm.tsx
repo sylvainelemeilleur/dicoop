@@ -173,12 +173,12 @@ function SolutionSettingsForm({
             id="nbRotationsToReinspect"
             label="Number of rotations to re-inspect a participant"
           >
-            <Slider
-              id="nbRotationsToReinspect"
+            <br />
+            <NumberInput
               value={settingsState.nbRotationsToReinspect}
-              min={min}
-              max={max}
-              marks={marks}
+              required
+              size="xs"
+              style={{ width: "60px", display: "inline-block" }}
               onChange={(value) =>
                 setSettingsState({ nbRotationsToReinspect: value })
               }
