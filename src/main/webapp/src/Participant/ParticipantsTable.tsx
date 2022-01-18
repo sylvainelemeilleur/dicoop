@@ -318,8 +318,17 @@ function ParticipantsTable({
             }
           />
           <Space h="lg" />
-          <Group>
-            <Button type="submit">Save</Button>
+          <Group position="apart">
+            <Group>
+              <Button type="submit">Save</Button>
+              <Button
+                type="button"
+                color="gray"
+                onClick={() => setOpened(false)}
+              >
+                Cancel
+              </Button>
+            </Group>
             <Button
               type="button"
               color="red"
