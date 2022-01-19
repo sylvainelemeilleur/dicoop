@@ -3,7 +3,8 @@
     "controls": {
         "import": "Importer",
         "export": "Exporter",
-        "solve": "Résoudre"
+        "solve": "Résoudre",
+        "stop": "Arrêter"
     },
     "tabs": {
         "participants": "Participants",
@@ -18,9 +19,19 @@
         "NOT_SOLVING": "Résolution terminée",
         "INITIALIZING": "Initialisation en cours",
         "id": "ID",
-        "score": "Score",
+        "scoreLabel": "Score",
         "openScoreExplanation": "Ouvrir l'explication du score",
-        "scoreExplanation": "Explication du score"
+        "scoreExplanation": "Explication du score",
+        "score": {
+            "initScore": "Score initial",
+            "hardScore": "Score hard",
+            "softScore": "Score soft",
+            "feasible": "Faisable",
+            "solutionInitialized": "Solution initialisée",
+            "zero": "Zéro",
+            "true": "Oui",
+            "false": "Non"
+        }
     },
     "settings": {
         "nbProParticipants": "Nombre de participants professionnels",

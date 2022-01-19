@@ -310,7 +310,10 @@ function App() {
       <ul>
         {Object.keys(parsedScore).map((i) => (
           <li key={i}>
-            {i} = {parsedScore[i].toString()}
+            {t(`status.score.${i}`)} ={" "}
+            {typeof parsedScore[i] === "number"
+              ? parsedScore[i].toString()
+              : t(`status.score.${parsedScore[i]}`)}
           </li>
         ))}
       </ul>
@@ -333,7 +336,7 @@ function App() {
                   type="file"
                 />
                 {isSolving ? (
-                  <Button onClick={stopSolving}>Stop</Button>
+                  <Button onClick={stopSolving}>{t("controls.stop")}</Button>
                 ) : (
                   <Group position="left" direction="row">
                     <Button onClick={openFileDialog}>
@@ -358,7 +361,7 @@ function App() {
                 )}
                 {committeeSolution.score && (
                   <div>
-                    <b>{t("status.score")}:</b>{" "}
+                    <b>{t("status.scoreLabel")}:</b>{" "}
                     {showScore(committeeSolution.score)}
                   </div>
                 )}
