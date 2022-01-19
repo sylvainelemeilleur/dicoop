@@ -42,8 +42,17 @@ import SolutionSettingsForm from "./Solution/SolutionSettingsForm";
 import SolutionTable from "./Solution/SolutionTable";
 import DistancesTable from "./Distances/DistancesTable";
 import { stringNotEmpty } from "./Model/ModelUtils";
+import { useTranslation } from "react-i18next";
 
 function App() {
+  const debug = false;
+  // Translation
+  const { t, i18n } = useTranslation();
+  const languages = {
+    en: { nativeName: "English" },
+    fr: { nativeName: "Français" },
+  };
+
   // Error modal from the context
   const showErrorMessage = useErrorMessage().showErrorMessage;
 
@@ -327,24 +336,30 @@ function App() {
                   <Button onClick={stopSolving}>Stop</Button>
                 ) : (
                   <Group position="left" direction="row">
-                    <Button onClick={openFileDialog}>Import</Button>
-                    <Button onClick={dataExport}>Export</Button>
-                    <Button onClick={startSolving}>Solve</Button>
+                    <Button onClick={openFileDialog}>
+                      {t("controls.import")}
+                    </Button>
+                    <Button onClick={dataExport}>{t("controls.export")}</Button>
+                    <Button onClick={startSolving}>
+                      {t("controls.solve")}
+                    </Button>
                   </Group>
                 )}
               </div>
               <Divider my="sm" />
               <div>
-                <b>Status</b>: {committeeSolution.solverStatus}
+                <b>{t("status.label")}:</b>{" "}
+                {t(`status.${committeeSolution.solverStatus}`)}
                 <br />
-                {committeeSolution.id && (
+                {debug && committeeSolution.id && (
                   <div>
-                    <b>ID</b>: {committeeSolution.id}
+                    <b>{t("status.id")}:</b> {committeeSolution.id}
                   </div>
                 )}
                 {committeeSolution.score && (
                   <div>
-                    <b>Score:</b> {showScore(committeeSolution.score)}
+                    <b>{t("status.score")}:</b>{" "}
+                    {showScore(committeeSolution.score)}
                   </div>
                 )}
                 {committeeSolution.scoreExplanation && (
@@ -352,7 +367,7 @@ function App() {
                     <Drawer
                       opened={showMore}
                       onClose={() => setShowMore(false)}
-                      title="Score explanation"
+                      title={t("status.scoreExplanation")}
                       padding="xl"
                       size="xl"
                       position="right"
@@ -365,7 +380,7 @@ function App() {
                     <Space h="md" />
                     <Group position="left">
                       <Button onClick={() => setShowMore(true)}>
-                        Open score explanation
+                        {t("status.openScoreExplanation")}
                       </Button>
                     </Group>
                   </>
@@ -377,7 +392,24 @@ function App() {
       }
       header={
         <Header height={50} padding="xs">
-          {<Title order={3}>DICOOP</Title>}
+          <div
+            style={{ display: "flex", alignItems: "center", height: "100%" }}
+          >
+            {<Title order={3}>{t("appName")}</Title>}
+
+            {Object.keys(languages).map((lng) => (
+              <button
+                key={lng}
+                style={{
+                  fontWeight: i18n.resolvedLanguage === lng ? "bold" : "normal",
+                }}
+                type="submit"
+                onClick={() => i18n.changeLanguage(lng)}
+              >
+                {languages[lng].nativeName}
+              </button>
+            ))}
+          </div>
         </Header>
       }
       styles={(theme) => ({
@@ -399,7 +431,7 @@ function App() {
           />
           <Space h="xl" />
           <Tabs active={activeTabKey} onTabChange={setActiveTabKey}>
-            <Tab label="Participants">
+            <Tab label={t("tabs.participants")}>
               <ParticipantsTable
                 participants={participants}
                 updateParticipant={updateParticipant}
@@ -407,16 +439,16 @@ function App() {
                 distances={distanceMatrix}
               />
             </Tab>
-            <Tab label="Distances">
+            <Tab label={t("tabs.distances")}>
               <DistancesTable
                 distanceMatrix={distanceMatrix}
                 updateDistance={updateDistance}
               />
             </Tab>
-            <Tab label="History">
+            <Tab label={t("tabs.history")}>
               <HistoryTable history={history} />
             </Tab>
-            <Tab label="Solution" disabled={solutionTabDisabled}>
+            <Tab label={t("tabs.solution")} disabled={solutionTabDisabled}>
               <SolutionTable committees={committeeSolution.committees} />
             </Tab>
           </Tabs>

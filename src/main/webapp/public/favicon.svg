@@ -25,7 +25,7 @@
      showgrid="true"
      inkscape:zoom="24.886869"
      inkscape:cx="33.290648"
-     inkscape:cy="16.87637"
+     inkscape:cy="21.49728"
      inkscape:window-width="3440"
      inkscape:window-height="1387"
      inkscape:window-x="-8"
@@ -44,15 +44,20 @@
      id="layer1">
     <text
        xml:space="preserve"
-       style="font-style:normal;font-weight:normal;font-size:9.47761px;line-height:1.25;font-family:sans-serif;fill:#000000;fill-opacity:1;stroke:none;stroke-width:0.236939"
-       x="-0.59637016"
-       y="6.8561306"
+       style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:7.53927px;line-height:0.85;font-family:'SF Pro Display';-inkscape-font-specification:'SF Pro Display';text-align:center;text-anchor:middle;fill:#000000;fill-opacity:1;stroke:none;stroke-width:0.334941"
+       x="10.344392"
+       y="5.629302"
        id="text5975"
-       transform="scale(0.46967897,2.1291139)"><tspan
+       transform="scale(0.7761714,1.2883752)"><tspan
          sodipodi:role="line"
          id="tspan5973"
-         x="-0.59637016"
-         y="6.8561306"
-         style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-family:'SF Mono';-inkscape-font-specification:'SF Mono';stroke-width:0.236939">DICOOP</tspan></text>
+         x="10.344392"
+         y="5.629302"
+         style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:7.53927px;font-family:'SF Pro Display';-inkscape-font-specification:'SF Pro Display';text-align:center;text-anchor:middle;stroke-width:0.334941">DI</tspan><tspan
+         sodipodi:role="line"
+         x="10.344391"
+         y="12.037682"
+         style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:7.53927px;font-family:'SF Pro Display';-inkscape-font-specification:'SF Pro Display';text-align:center;text-anchor:middle;stroke-width:0.334941"
+         id="tspan5733">COOP</tspan></text>
   </g>
 </svg>

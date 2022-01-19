@@ -14,6 +14,7 @@ import {
 import { useForm } from "@mantine/hooks";
 import { CheckIcon } from "@modulz/radix-icons";
 import React, { useState } from "react";
+import { useTranslation } from "react-i18next";
 import { DistanceMatrix, Person } from "src/api";
 import { NamedEntity } from "src/Model/NamedEntity";
 import "./ParticipantsTable.css";
@@ -31,6 +32,7 @@ function ParticipantsTable({
   deleteParticipant,
   distances,
 }: ParticipantsTableProps) {
+  const { t } = useTranslation();
   const badgeList = (namedList?: Array<NamedEntity>) => (
     <>
       {namedList?.map((item: any) => (
@@ -171,7 +173,7 @@ function ParticipantsTable({
       <Modal
         opened={opened}
         onClose={() => setOpened(false)}
-        title="Participant"
+        title={t("participant.label")}
         closeOnClickOutside={false}
       >
         <form
@@ -196,8 +198,8 @@ function ParticipantsTable({
           <TextInput
             data-autofocus
             required
-            placeholder="Participant name"
-            label="Name"
+            placeholder={t("participant.namePlaceholder")}
+            label={t("participant.name")}
             value={participantForm.values.name}
             onChange={(event) =>
               participantForm.setFieldValue("name", event.currentTarget.value)
@@ -206,22 +208,26 @@ function ParticipantsTable({
           />
           <Space h="lg" />
           <RadioGroup
-            label="Type"
+            label={t("participant.type")}
             required
             value={participantForm.values.type}
             onChange={(value) => participantForm.setFieldValue("type", value)}
           >
-            <Radio value="professional">professional</Radio>
-            <Radio value="non-professional">non-professional</Radio>
-            <Radio value="external">external</Radio>
+            <Radio value="professional">{t("participant.professional")}</Radio>
+            <Radio value="non-professional">
+              {t("participant.non-professional")}
+            </Radio>
+            <Radio value="external">{t("participant.external")}</Radio>
           </RadioGroup>
           <Space h="lg" />
           <Select
-            label="Location"
-            placeholder="Pick one"
+            label={t("participant.location")}
+            placeholder={t("participant.locationPlaceholder")}
             data={locations}
             creatable
             searchable
+            clearable
+            clearButtonLabel={t("participant.clearButtonLabel")}
             getCreateLabel={(query) => `+ Create ${query}`}
             onCreate={(query) => setLocations((current) => [...current, query])}
             value={participantForm.values.location}
@@ -231,11 +237,13 @@ function ParticipantsTable({
           />
           <Space h="lg" />
           <MultiSelect
-            label="Skills"
+            label={t("participant.skills")}
             data={skills}
-            placeholder="Select skills"
+            placeholder={t("participant.skillsPlaceholder")}
             searchable
             creatable
+            clearable
+            clearButtonLabel={t("participant.clearButtonLabel")}
             getCreateLabel={(query) => `+ Create ${query}`}
             onCreate={(query) => setSkills((current) => [...current, query])}
             value={participantForm.values.skills}
@@ -246,11 +254,13 @@ function ParticipantsTable({
           />
           <Space h="lg" />
           <MultiSelect
-            label="Languages"
+            label={t("participant.languages")}
             data={languages}
-            placeholder="Select languages"
+            placeholder={t("participant.languagesPlaceholder")}
             searchable
             creatable
+            clearable
+            clearButtonLabel={t("participant.clearButtonLabel")}
             getCreateLabel={(query) => `+ Create ${query}`}
             onCreate={(query) => setLanguages((current) => [...current, query])}
             value={participantForm.values.languages}
@@ -261,11 +271,13 @@ function ParticipantsTable({
           />
           <Space h="lg" />
           <MultiSelect
-            label="Availability"
+            label={t("participant.availability")}
             data={availabilities}
-            placeholder="Select availability"
+            placeholder={t("participant.availabilityPlaceholder")}
             searchable
             creatable
+            clearable
+            clearButtonLabel={t("participant.clearButtonLabel")}
             getCreateLabel={(query) => `+ Create ${query}`}
             onCreate={(query) =>
               setAvailabilities((current) => [...current, query])
@@ -280,11 +292,13 @@ function ParticipantsTable({
             <>
               <Space h="lg" />
               <MultiSelect
-                label="Required skills"
+                label={t("participant.requiredSkills")}
                 data={skills}
-                placeholder="Required skills"
+                placeholder={t("participant.requiredSkillsPlaceholder")}
                 searchable
                 creatable
+                clearable
+                clearButtonLabel={t("participant.clearButtonLabel")}
                 getCreateLabel={(query) => `+ Create ${query}`}
                 onCreate={(query) =>
                   setSkills((current) => [...current, query])
@@ -299,11 +313,13 @@ function ParticipantsTable({
           )}
           <Space h="lg" />
           <MultiSelect
-            label="Vetoes"
+            label={t("participant.vetoes")}
             data={vetoes}
-            placeholder="Select vetoes"
+            placeholder={t("participant.vetoesPlaceholder")}
             searchable
             creatable
+            clearable
+            clearButtonLabel={t("participant.clearButtonLabel")}
             getCreateLabel={(query) => `+ Create ${query}`}
             onCreate={(query) => setVetoes((current) => [...current, query])}
             value={participantForm.values.vetoes}
@@ -316,7 +332,7 @@ function ParticipantsTable({
             <>
               <Space h="lg" />
               <Switch
-                label="Needs evaluation"
+                label={t("participant.needsEvaluation")}
                 checked={participantForm.values.needsEvaluation}
                 onChange={(event) =>
                   participantForm.setFieldValue(
@@ -330,66 +346,62 @@ function ParticipantsTable({
           <Space h="lg" />
           <Group position="apart">
             <Group>
-              <Button type="submit">Save</Button>
+              <Button type="submit">{t("participant.save")}</Button>
               <Button
                 type="button"
                 color="gray"
                 onClick={() => setOpened(false)}
               >
-                Cancel
+                {t("participant.cancel")}
               </Button>
             </Group>
             <Button
               type="button"
               color="red"
               onClick={() => {
-                if (
-                  window.confirm(
-                    "Are you sure you want to delete this participant?"
-                  )
-                ) {
+                if (window.confirm(t("participant.deleteConfirm"))) {
                   deleteParticipant(participantForm.values.key);
                   setOpened(false);
                 }
               }}
             >
-              Delete
+              {t("participant.delete")}
             </Button>
           </Group>
         </form>
       </Modal>
       <Button type="button" onClick={createParticipant}>
-        Add a participant
+        {t("participant.addAParticipant")}
       </Button>
       <Table highlightOnHover aria-label="Participants" id="table-basic">
         <thead>
           <tr role="row">
             <th role="columnheader" scope="col">
-              Name
+              {t("participant.name")}
             </th>
             <th role="columnheader" scope="col">
-              Type
+              {t("participant.type")}
             </th>
             <th role="columnheader" scope="col">
-              Location
+              {t("participant.location")}
             </th>
             <th role="columnheader" scope="col">
-              Skills
+              {t("participant.skills")}
             </th>
             <th role="columnheader" scope="col">
-              Languages
+              {t("participant.languages")}
             </th>
             <th role="columnheader" scope="col">
-              Availability
+              {t("participant.availability")}
             </th>
             <th role="columnheader" scope="col">
-              Required skills
+              {t("participant.requiredSkills")}
             </th>
             <th role="columnheader" scope="col">
-              Vetoes
+              {t("participant.vetoes")}
             </th>
             <th role="columnheader" scope="col">
-              Needs evaluation?
+              {t("participant.needsEvaluation")}
             </th>
           </tr>
         </thead>
@@ -397,7 +409,7 @@ function ParticipantsTable({
           <tbody
             key={person.name}
             onClick={() => editParticipant(person)}
-            title={`Click to edit ${person.name}`}
+            title={`${t("participant.clickToEdit")} ${person.name}`}
             className="cursorPointer"
           >
             <tr role="row">
@@ -405,7 +417,7 @@ function ParticipantsTable({
                 {person.name}
               </td>
               <td role="cell" data-label="Type">
-                {person.personType?.name}
+                {t(`participant.${person.personType?.name}`)}
               </td>
               <td role="cell" data-label="Location">
                 {person.location?.name}

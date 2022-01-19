@@ -1,5 +1,6 @@
 import { Table } from "@mantine/core";
 import React from "react";
+import { useTranslation } from "react-i18next";
 import { CommitteeSet } from "src/Model/CommitteeSet";
 import { SolvedCommittee } from "src/Model/SolvedCommittee";
 
@@ -8,6 +9,8 @@ type SolutionTableProps = {
 };
 
 function SolutionTable({ committees }: SolutionTableProps) {
+  const { t } = useTranslation();
+
   const assignmentsList = (assignments: any) => (
     <React.Fragment>
       {assignments
@@ -29,13 +32,13 @@ function SolutionTable({ committees }: SolutionTableProps) {
       <thead>
         <tr role="row">
           <th role="columnheader" scope="col">
-            Evaluated Person
+            {t("solution.evaluatedPerson")}
           </th>
           <th role="columnheader" scope="col">
-            Timeslot
+            {t("solution.timeslot")}
           </th>
           <th role="columnheader" scope="col">
-            Assignments
+            {t("solution.assignments")}
           </th>
         </tr>
       </thead>

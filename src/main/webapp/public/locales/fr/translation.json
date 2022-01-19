@@ -1,0 +1,69 @@
+{
+    "appName": "dicoop",
+    "controls": {
+        "import": "Importer",
+        "export": "Exporter",
+        "solve": "Résoudre"
+    },
+    "tabs": {
+        "participants": "Participants",
+        "distances": "Distances",
+        "history": "Historique",
+        "solutions": "Solutions"
+    },
+    "status": {
+        "label": "État",
+        "NOT_STARTED": "Non démarré",
+        "SOLVING_ACTIVE": "Résolution en cours",
+        "NOT_SOLVING": "Résolution terminée",
+        "INITIALIZING": "Initialisation en cours",
+        "id": "ID",
+        "score": "Score",
+        "openScoreExplanation": "Ouvrir l'explication du score",
+        "scoreExplanation": "Explication du score"
+    },
+    "settings": {
+        "nbProParticipants": "Nombre de participants professionnels",
+        "nbAssignmentsPerPro": "Nombre d'affectations par participant professionnel",
+        "nbNonProParticipants": "Nombre de participants non professionnels",
+        "nbAssignmentsPerNonPro": "Nombre d'affectations par participant non professionnel",
+        "nbExternalParticipants": "Nombre de participants externes",
+        "nbAssignmentsPerExternal": "Nombre d'affectations par participant externe",
+        "nbRotations": "Nombre de rotations pour réinspecter un participant",
+        "travellingDistanceRange": "Distance de déplacement"
+    },
+    "participant": {
+        "label": "Participant",
+        "addAParticipant": "Ajouter un participant",
+        "name": "Nom",
+        "namePlaceholder": "Nom du participant",
+        "type": "Type",
+        "professional": "professionel",
+        "non-professional": "non professionel",
+        "external": "externe",
+        "location": "Lieu",
+        "locationPlaceholder": "Lieu du participant",
+        "skills": "Compétences",
+        "skillsPlaceholder": "Compétences du participant",
+        "languages": "Langues",
+        "languagesPlaceholder": "Langues du participant",
+        "availability": "Disponibilité",
+        "availabilityPlaceholder": "Disponibilité du participant",
+        "requiredSkills": "Compétences requises",
+        "requiredSkillsPlaceholder": "Compétences requises du participant",
+        "vetoes": "Vétos",
+        "vetoesPlaceholder": "Vétos du participant",
+        "needsEvaluation": "Besoin d'évaluation ?",
+        "save": "Enregistrer",
+        "cancel": "Annuler",
+        "delete": "Supprimer",
+        "deleteConfirm": "Voulez-vous vraiment supprimer ce participant ?",
+        "clickToEdit": "Cliquer pour éditer",
+        "clearButtonLabel": "Effacer la sélection"
+    },
+    "solution": {
+        "evaluatedPerson": "Personne évaluée",
+        "timeslot": "Créneau",
+        "assignments": "Affectations"
+    }
+}

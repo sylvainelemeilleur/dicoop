@@ -1,0 +1,69 @@
+{
+    "appName": "dicoop",
+    "controls": {
+        "import": "Import",
+        "export": "Export",
+        "solve": "Solve"
+    },
+    "tabs": {
+        "participants": "Participants",
+        "distances": "Distances",
+        "history": "History",
+        "solution": "Solution"
+    },
+    "status": {
+        "label": "Status",
+        "NOT_STARTED": "Not started",
+        "SOLVING_ACTIVE": "Solving in progress",
+        "NOT_SOLVING": "Not solving",
+        "INITIALIZING": "Initializing",
+        "id": "ID",
+        "score": "Score",
+        "openScoreExplanation": "Open score explanation",
+        "scoreExplanation": "Score explanation"
+    },
+    "settings": {
+        "nbProParticipants": "Number of professionals participants",
+        "nbAssignmentsPerPro": "Number of assignments per professional participant",
+        "nbNonProParticipants": "Number of non-professionals participants",
+        "nbAssignmentsPerNonPro": "Number of assignments per non-professional participant",
+        "nbExternalParticipants": "Number of external participants",
+        "nbAssignmentsPerExternal": "Number of assignments per external participant",
+        "nbRotations": "Number of rotations to re-inspect a participant",
+        "travellingDistanceRange": "Travelling distance range"
+    },
+    "participant": {
+        "label": "Participant",
+        "addAParticipant": "Add a participant",
+        "name": "Name",
+        "namePlaceholder": "Participant name",
+        "type": "Type",
+        "professional": "professional",
+        "non-professional": "non-professional",
+        "external": "external",
+        "location": "Location",
+        "locationPlaceholder": "Pick one location",
+        "skills": "Skills",
+        "skillsPlaceholder": "Pick one or more skills",
+        "languages": "Languages",
+        "languagesPlaceholder": "Pick one or more languages",
+        "availability": "Availability",
+        "availabilityPlaceholder": "Pick one or more availability",
+        "requiredSkills": "Required skills",
+        "requiredSkillsPlaceholder": "Pick one or more required skills",
+        "vetoes": "Vetoes",
+        "vetoesPlaceholder": "Pick one or more vetoes",
+        "needsEvaluation": "Needs evaluation?",
+        "save": "Save",
+        "cancel": "Cancel",
+        "delete": "Delete",
+        "deleteConfirm": "Are you sure you want to delete this participant?",
+        "clickToEdit": "Click to edit",
+        "clearButtonLabel": "Clear selection"
+    },
+    "solution": {
+        "evaluatedPerson": "Evaluated person",
+        "timeslot": "Timeslot",
+        "assignments": "Assignments"
+    }
+}

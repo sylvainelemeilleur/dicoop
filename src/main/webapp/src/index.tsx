@@ -1,15 +1,20 @@
-import React from "react";
+import React, { Suspense } from "react";
 import ReactDOM from "react-dom";
 import App from "./App";
 import { ErrorMessageProvider } from "./ErrorMessage/ErrorMessageContext";
 import "./index.css";
 import reportWebVitals from "./reportWebVitals";
 
+// import i18n (needs to be bundled ;))
+import "./i18n";
+
 ReactDOM.render(
   <React.StrictMode>
-    <ErrorMessageProvider>
-      <App />
-    </ErrorMessageProvider>
+    <Suspense fallback={<div>dicoop is loading...</div>}>
+      <ErrorMessageProvider>
+        <App />
+      </ErrorMessageProvider>
+    </Suspense>
   </React.StrictMode>,
   document.getElementById("root")
 );

@@ -10,6 +10,7 @@ import {
   Space,
 } from "@mantine/core";
 import React from "react";
+import { useTranslation } from "react-i18next";
 import { SettingsState } from "src/Model/SettingsState";
 import { Solution } from "src/Model/Solution";
 
@@ -41,6 +42,8 @@ function SolutionSettingsForm({
     { value: 5, label: "5" },
   ];
 
+  const { t } = useTranslation();
+
   return (
     <div style={{ position: "relative", width: "100%" }}>
       <LoadingOverlay visible={isSolving} />
@@ -49,7 +52,7 @@ function SolutionSettingsForm({
           <Container>
             <InputWrapper
               id="nbProParticipants"
-              label="Number of professionals participants"
+              label={t("settings.nbProParticipants")}
             >
               <Slider
                 id="nbProParticipants"
@@ -67,7 +70,7 @@ function SolutionSettingsForm({
 
             <InputWrapper
               id="numberOfAssignmentsPro"
-              label="Number of assignments per professional participant"
+              label={t("settings.nbAssignmentsPerPro")}
             >
               <RangeSlider
                 id="numberOfAssignmentsPro"
@@ -89,7 +92,7 @@ function SolutionSettingsForm({
 
             <InputWrapper
               id="nbNonProParticipants"
-              label="Number of non-professionals participants"
+              label={t("settings.nbNonProParticipants")}
             >
               <Slider
                 id="nbNonProParticipants"
@@ -107,7 +110,7 @@ function SolutionSettingsForm({
 
             <InputWrapper
               id="numberOfAssignmentsNonPro"
-              label="Number of assignments per non professional participant"
+              label={t("settings.nbAssignmentsPerNonPro")}
             >
               <RangeSlider
                 id="numberOfAssignmentsNonPro"
@@ -129,7 +132,7 @@ function SolutionSettingsForm({
 
             <InputWrapper
               id="nbExternalParticipants"
-              label="Number of external participants"
+              label={t("settings.nbExternalParticipants")}
             >
               <Slider
                 id="nbExternalParticipants"
@@ -147,7 +150,7 @@ function SolutionSettingsForm({
 
             <InputWrapper
               id="numberOfAssignmentsExternal"
-              label="Number of assignments per external participant"
+              label={t("settings.nbAssignmentsPerExternal")}
             >
               <RangeSlider
                 id="numberOfAssignmentsExternal"
@@ -171,7 +174,7 @@ function SolutionSettingsForm({
         <Col span={6}>
           <InputWrapper
             id="nbRotationsToReinspect"
-            label="Number of rotations to re-inspect a participant"
+            label={t("settings.nbRotations")}
           >
             <br />
             <NumberInput
@@ -189,7 +192,7 @@ function SolutionSettingsForm({
 
           <InputWrapper
             id="travellingDistanceRange"
-            label="Travelling distance range"
+            label={t("settings.travellingDistanceRange")}
           >
             <br />
             <NumberInput
