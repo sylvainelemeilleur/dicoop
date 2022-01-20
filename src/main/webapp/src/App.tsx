@@ -1,10 +1,12 @@
 import {
+  ActionIcon,
   AppShell,
   Button,
   Divider,
   Drawer,
   Group,
   Header,
+  Menu,
   Navbar,
   Space,
   Tab,
@@ -13,7 +15,9 @@ import {
   Title,
 } from "@mantine/core";
 import { useSetState } from "@mantine/hooks";
+import { GearIcon } from "@modulz/radix-icons";
 import React, { useRef, useState } from "react";
+import { useTranslation } from "react-i18next";
 import {
   CommitteeSolutionResourceApi,
   Configuration,
@@ -24,6 +28,7 @@ import {
   SolverOptions,
 } from "./api";
 import "./App.css";
+import DistancesTable from "./Distances/DistancesTable";
 import ErrorMessage from "./ErrorMessage/ErrorMessage";
 import { useErrorMessage } from "./ErrorMessage/ErrorMessageContext";
 import HistoryTable from "./History/HistoryTable";
@@ -32,6 +37,7 @@ import {
   NO_PARTICIPANTS,
   UNDEFINED_SOLUTION,
 } from "./Model/Defaults";
+import { stringNotEmpty } from "./Model/ModelUtils";
 import { PersistenceData } from "./Model/PersistenceData";
 import { SettingsState } from "./Model/SettingsState";
 import { Solution } from "./Model/Solution";
@@ -40,9 +46,6 @@ import { excelExport, excelImport } from "./Persistence/Excel";
 import { ValidationResult } from "./Persistence/ExcelValidation";
 import SolutionSettingsForm from "./Solution/SolutionSettingsForm";
 import SolutionTable from "./Solution/SolutionTable";
-import DistancesTable from "./Distances/DistancesTable";
-import { stringNotEmpty } from "./Model/ModelUtils";
-import { useTranslation } from "react-i18next";
 
 function App() {
   const debug = false;
@@ -399,19 +402,34 @@ function App() {
             style={{ display: "flex", alignItems: "center", height: "100%" }}
           >
             {<Title order={3}>{t("appName")}</Title>}
-
-            {Object.keys(languages).map((lng) => (
-              <button
-                key={lng}
-                style={{
-                  fontWeight: i18n.resolvedLanguage === lng ? "bold" : "normal",
-                }}
-                type="submit"
-                onClick={() => i18n.changeLanguage(lng)}
+            <div style={{ marginLeft: "auto" }}>
+              <Menu
+                trigger="hover"
+                delay={500}
+                control={
+                  <ActionIcon
+                    variant="filled"
+                    color="blue"
+                    title={t("settingsMenu.title")}
+                  >
+                    <GearIcon />
+                  </ActionIcon>
+                }
               >
-                {languages[lng].nativeName}
-              </button>
-            ))}
+                <Menu.Label>{t("settingsMenu.language")}</Menu.Label>
+                {Object.keys(languages).map((lng) => (
+                  <Menu.Item
+                    onClick={() => i18n.changeLanguage(lng)}
+                    style={{
+                      fontWeight:
+                        i18n.resolvedLanguage === lng ? "bold" : "normal",
+                    }}
+                  >
+                    {languages[lng].nativeName}
+                  </Menu.Item>
+                ))}
+              </Menu>
+            </div>
           </div>
         </Header>
       }

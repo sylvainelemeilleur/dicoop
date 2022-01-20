@@ -6,6 +6,10 @@
         "solverStoppingError": "Error while stopping the solver",
         "solverRefreshingError": "Error while refreshing the solution"
     },
+    "settingsMenu": {
+        "title": "Settings",
+        "language": "Language"
+    },
     "controls": {
         "import": "Import",
         "export": "Export",
