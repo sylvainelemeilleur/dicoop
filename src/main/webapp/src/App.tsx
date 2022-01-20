@@ -1,12 +1,10 @@
 import {
-  ActionIcon,
   AppShell,
   Button,
   Divider,
   Drawer,
   Group,
   Header,
-  Menu,
   Navbar,
   Space,
   Tab,
@@ -15,7 +13,6 @@ import {
   Title,
 } from "@mantine/core";
 import { useSetState } from "@mantine/hooks";
-import { GearIcon } from "@modulz/radix-icons";
 import React, { useRef, useState } from "react";
 import { useTranslation } from "react-i18next";
 import {
@@ -31,6 +28,7 @@ import "./App.css";
 import DistancesTable from "./Distances/DistancesTable";
 import ErrorMessage from "./ErrorMessage/ErrorMessage";
 import { useErrorMessage } from "./ErrorMessage/ErrorMessageContext";
+import HeaderMenu from "./HeaderMenu/HeaderMenu";
 import HistoryTable from "./History/HistoryTable";
 import {
   NO_HISTORY,
@@ -50,11 +48,7 @@ import SolutionTable from "./Solution/SolutionTable";
 function App() {
   const debug = false;
   // Translation
-  const { t, i18n } = useTranslation();
-  const languages = {
-    en: { nativeName: "English" },
-    fr: { nativeName: "Français" },
-  };
+  const { t } = useTranslation();
 
   // Error modal from the context
   const showErrorMessage = useErrorMessage().showErrorMessage;
@@ -402,34 +396,7 @@ function App() {
             style={{ display: "flex", alignItems: "center", height: "100%" }}
           >
             {<Title order={3}>{t("appName")}</Title>}
-            <div style={{ marginLeft: "auto" }}>
-              <Menu
-                trigger="hover"
-                delay={500}
-                control={
-                  <ActionIcon
-                    variant="filled"
-                    color="blue"
-                    title={t("settingsMenu.title")}
-                  >
-                    <GearIcon />
-                  </ActionIcon>
-                }
-              >
-                <Menu.Label>{t("settingsMenu.language")}</Menu.Label>
-                {Object.keys(languages).map((lng) => (
-                  <Menu.Item
-                    onClick={() => i18n.changeLanguage(lng)}
-                    style={{
-                      fontWeight:
-                        i18n.resolvedLanguage === lng ? "bold" : "normal",
-                    }}
-                  >
-                    {languages[lng].nativeName}
-                  </Menu.Item>
-                ))}
-              </Menu>
-            </div>
+            <HeaderMenu />
           </div>
         </Header>
       }

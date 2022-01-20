@@ -10,7 +10,7 @@ import "./i18n";
 
 ReactDOM.render(
   <React.StrictMode>
-    <Suspense fallback={<div>dicoop is loading...</div>}>
+    <Suspense fallback={<div>DICOOP is loading...</div>}>
       <ErrorMessageProvider>
         <App />
       </ErrorMessageProvider>
