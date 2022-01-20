@@ -1,5 +1,11 @@
 {
     "appName": "dicoop",
+    "errors": {
+        "excelImportError": "Erreur lors de l'importation du fichier Excel",
+        "solverStartingError": "Erreur lors du démarrage du solveur",
+        "solverStoppingError": "Erreur lors de l'arrêt du solveur",
+        "solverRefreshingError": "Erreur lors du rafraîchissement du solveur"
+    },
     "controls": {
         "import": "Importer",
         "export": "Exporter",

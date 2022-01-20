@@ -1,5 +1,11 @@
 {
     "appName": "dicoop",
+    "errors": {
+        "excelImportError": "Error during import of Excel file",
+        "solverStartingError": "Error while starting the solver",
+        "solverStoppingError": "Error while stopping the solver",
+        "solverRefreshingError": "Error while refreshing the solution"
+    },
     "controls": {
         "import": "Import",
         "export": "Export",

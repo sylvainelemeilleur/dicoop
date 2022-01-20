@@ -201,7 +201,7 @@ function App() {
   };
 
   const onDataImportError = (result: ValidationResult) => {
-    showErrorMessage("Excel import error", result.getMessage());
+    showErrorMessage(t("excelImportError"), result.getMessage());
   };
 
   const dataImport = (file: any) => {
@@ -251,7 +251,7 @@ function App() {
       })
       .catch((error) => {
         setIsSolving(false);
-        showErrorMessage("Error while starting the solver", error.message);
+        showErrorMessage(t("solverStartingError"), error.message);
       });
   };
 
@@ -263,7 +263,7 @@ function App() {
       })
       .catch((error) => {
         setIsSolving(false);
-        showErrorMessage("Error while stopping the solver", error.message);
+        showErrorMessage(t("solverStoppingError"), error.message);
       });
   };
 
@@ -284,7 +284,7 @@ function App() {
       })
       .catch((error) => {
         setIsSolving(false);
-        showErrorMessage("Error while refreshing the solution", error.message);
+        showErrorMessage(t("solverRefreshingError"), error.message);
       });
   };
 
