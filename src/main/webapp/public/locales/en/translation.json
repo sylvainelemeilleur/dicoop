@@ -59,7 +59,8 @@
         "nbExternalParticipants": "Number of external participants",
         "nbAssignmentsPerExternal": "Number of assignments per external participant",
         "nbRotations": "Number of rotations to re-inspect a participant",
-        "travellingDistanceRange": "Travelling distance range"
+        "travellingDistanceRange": "Travelling distance range",
+        "useAvailability": "Use availability"
     },
     "participant": {
         "label": "Participant",

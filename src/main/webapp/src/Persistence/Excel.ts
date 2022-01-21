@@ -76,6 +76,10 @@ export function excelExport(
       settings.travellingDistanceRange?.value?.[0],
       settings.travellingDistanceRange?.value?.[1],
     ],
+    [
+      Constants.SETTING_USE_AVAILABILITY,
+      settings.useAvailability ? "true" : "false",
+    ],
   ];
   const settingsWorksheet = XLSX.utils.aoa_to_sheet(settingsData);
 

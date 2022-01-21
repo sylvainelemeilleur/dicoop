@@ -15,6 +15,8 @@ public class Settings {
     public DistanceMatrix distanceMatrix;
     public Range travellingDistanceRange;
 
+    public Boolean useAvailability;
+
     public Settings() {
         // Empty constructor needed by serialization
     }

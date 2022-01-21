@@ -190,6 +190,9 @@ function parseSettings(sheetData: Array<any>): Settings {
           value: [+settingValue, +settingValue24],
         } as Range;
         break;
+      case Constants.SETTING_USE_AVAILABILITY:
+        settings.useAvailability = settingValue === "true";
+        break;
       default:
         console.log(`Unknown setting name ${settingName}`);
         break;

@@ -12,15 +12,21 @@ public class Committee {
 
     public Instant createdDate = Instant.now();
 
+    public Boolean useAvailability = true;
+
     public Committee() {
         // No-arg constructor required for Hibernate and OptaPlanner
     }
 
-    public Committee(Person evaluatedPerson) {
+    public Committee(Person evaluatedPerson, Boolean useAvailability) {
         this.evaluatedPerson = evaluatedPerson;
+        this.useAvailability = useAvailability;
     }
 
     public boolean atLeastOnePersonIsAvailable(List<CommitteeAssignment> assignments) {
+        if (Boolean.FALSE.equals(useAvailability)) {
+            return true;
+        }
         return assignments.stream().map(CommitteeAssignment::getAssignedPerson)
                 .anyMatch(p -> p.isAvailable(evaluatedPerson.availability));
     }

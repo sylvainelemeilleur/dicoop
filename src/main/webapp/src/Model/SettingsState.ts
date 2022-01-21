@@ -7,4 +7,5 @@ export interface SettingsState {
   numberOfAssignmentsForAnExternal: [number, number];
   nbRotationsToReinspect: number;
   travellingDistanceRange: [number, number];
+  useAvailability: boolean;
 }

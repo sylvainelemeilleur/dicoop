@@ -119,6 +119,7 @@ function App() {
     numberOfAssignmentsForAnExternal: [0, 5],
     nbRotationsToReinspect: 10,
     travellingDistanceRange: [0, 100],
+    useAvailability: true,
   } as SettingsState);
 
   const getSettings = () =>
@@ -140,6 +141,7 @@ function App() {
       travellingDistanceRange: {
         value: settingsState.travellingDistanceRange,
       } as Range,
+      useAvailability: settingsState.useAvailability,
     } as Settings);
 
   const setSettings = (settings: Settings) => {
@@ -165,6 +167,7 @@ function App() {
         number,
         number
       ]) ?? [0, 0],
+      useAvailability: settings?.useAvailability ?? false,
     });
   };
 

@@ -75,7 +75,8 @@ public class CommitteeSolution {
         // Committees based on persons required skills
         this.committees = this.persons.stream()
                 .filter(person -> person.needsEvaluation)
-                .map(Committee::new).collect(Collectors.toList());
+                .map(person -> new Committee(person, options.settings.useAvailability))
+                .collect(Collectors.toList());
         this.committeeAssignments = new ArrayList<>();
 
         // initialization of the Committees assignments needed (professionals, non-professionals and

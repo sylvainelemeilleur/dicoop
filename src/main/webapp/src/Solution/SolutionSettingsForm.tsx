@@ -1,4 +1,5 @@
 import {
+  Checkbox,
   Col,
   Container,
   Grid,
@@ -230,6 +231,16 @@ function SolutionSettingsForm({
               }
             />
           </InputWrapper>
+
+          <Space h="lg" />
+
+          <Checkbox
+            label={t("settings.useAvailability")}
+            checked={settingsState.useAvailability}
+            onChange={(e) =>
+              setSettingsState({ useAvailability: e.target.checked })
+            }
+          />
 
           <Space h="lg" />
         </Col>
