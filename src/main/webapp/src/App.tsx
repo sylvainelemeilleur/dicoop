@@ -10,7 +10,6 @@ import {
   Tab,
   Tabs,
   Textarea,
-  Title,
 } from "@mantine/core";
 import { useSetState } from "@mantine/hooks";
 import React, { useRef, useState } from "react";
@@ -30,6 +29,7 @@ import ErrorMessage from "./ErrorMessage/ErrorMessage";
 import { useErrorMessage } from "./ErrorMessage/ErrorMessageContext";
 import HeaderMenu from "./HeaderMenu/HeaderMenu";
 import HistoryTable from "./History/HistoryTable";
+import logo from "./images/logo.png";
 import {
   NO_HISTORY,
   NO_PARTICIPANTS,
@@ -394,11 +394,11 @@ function App() {
         </Navbar>
       }
       header={
-        <Header height={50} padding="xs">
+        <Header height={240} padding="xs">
           <div
             style={{ display: "flex", alignItems: "center", height: "100%" }}
           >
-            {<Title order={3}>{t("appName")}</Title>}
+            <img src={logo} alt={t("appName")} />
             <HeaderMenu />
           </div>
         </Header>

@@ -7,13 +7,32 @@ import reportWebVitals from "./reportWebVitals";
 
 // import i18n (needs to be bundled ;))
 import "./i18n";
+import { MantineProvider } from "@mantine/core";
 
 ReactDOM.render(
   <React.StrictMode>
     <Suspense fallback={<div>DICOOP is loading...</div>}>
-      <ErrorMessageProvider>
-        <App />
-      </ErrorMessageProvider>
+      <MantineProvider
+        theme={{
+          primaryColor: "dark",
+        }}
+        styles={{
+          Button: (theme) => ({
+            // Shared button styles are applied to all buttons
+            root: {
+              padding: "0 10px",
+              // backgroundColor: theme.colors.dark,
+              "&:hover": {
+                backgroundColor: theme.colors.dark[2],
+              },
+            },
+          }),
+        }}
+      >
+        <ErrorMessageProvider>
+          <App />
+        </ErrorMessageProvider>
+      </MantineProvider>
     </Suspense>
   </React.StrictMode>,
   document.getElementById("root")
