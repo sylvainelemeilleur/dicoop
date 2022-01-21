@@ -12,8 +12,8 @@ class PersonTest {
         var person1 = new Person("person1");
         var person2 = new Person("person2");
         var person3 = new Person("person3");
-        var committee1 = new Committee(person1);
-        var committee2 = new Committee(person2);
+        var committee1 = new Committee(person1, true);
+        var committee2 = new Committee(person2, true);
         var assignment1 = new CommitteeAssignment(person2, committee1, PersonType.PROFESSIONAL,
                 distanceMatrix);
         var assignment2 = new CommitteeAssignment(person3, committee1, PersonType.PROFESSIONAL,
