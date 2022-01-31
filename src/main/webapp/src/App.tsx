@@ -13,7 +13,7 @@ import {
 } from "@mantine/core";
 import { useSetState } from "@mantine/hooks";
 import React, { useRef, useState } from "react";
-import { useTranslation } from "react-i18next";
+import { Trans, useTranslation } from "react-i18next";
 import {
   CommitteeSolutionResourceApi,
   Configuration,
@@ -29,7 +29,7 @@ import ErrorMessage from "./ErrorMessage/ErrorMessage";
 import { useErrorMessage } from "./ErrorMessage/ErrorMessageContext";
 import HeaderMenu from "./HeaderMenu/HeaderMenu";
 import HistoryTable from "./History/HistoryTable";
-import logo from "./images/logo.png";
+import { ReactComponent as DicoopLogo } from "./images/logo.svg";
 import {
   NO_HISTORY,
   NO_PARTICIPANTS,
@@ -394,11 +394,17 @@ function App() {
         </Navbar>
       }
       header={
-        <Header height={240} padding="xs">
+        <Header height={120} padding="xs">
           <div
             style={{ display: "flex", alignItems: "center", height: "100%" }}
           >
-            <img src={logo} alt={t("appName")} />
+            <DicoopLogo className="dicoop-logo" />
+            <div className="dicoop-title">
+              <h1>{t("appName")}</h1>
+              <span>
+                <Trans i18nKey={"appSubTitle"}></Trans>
+              </span>
+            </div>
             <HeaderMenu />
           </div>
         </Header>

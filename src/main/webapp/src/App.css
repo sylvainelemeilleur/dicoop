@@ -1,0 +1,17 @@
+.dicoop-logo {
+    height: 100%;
+    width: auto;
+}
+
+.dicoop-title {
+    margin: 0;
+    padding: 10px;
+    font-family: Georgia, 'Times New Roman', Times, serif;
+}
+
+.dicoop-title h1 {
+    font-size: 2.5em;
+    font-weight: bold;
+    margin: 0;
+    padding: 0;
+}

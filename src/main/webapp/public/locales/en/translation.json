@@ -1,5 +1,6 @@
 {
     "appName": "DICOOP",
+    "appSubTitle": "<strong>DI</strong>stributing evaluators in <strong>C</strong>ertificati<strong>O</strong>n <strong>O</strong>rganized by <strong>P</strong>eers",
     "errors": {
         "excelImportError": "Error during import of Excel file",
         "solverStartingError": "Error while starting the solver",
