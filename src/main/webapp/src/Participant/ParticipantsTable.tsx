@@ -377,6 +377,9 @@ function ParticipantsTable({
         <thead>
           <tr role="row">
             <th role="columnheader" scope="col">
+              #
+            </th>
+            <th role="columnheader" scope="col">
               {t("participant.name")}
             </th>
             <th role="columnheader" scope="col">
@@ -405,7 +408,7 @@ function ParticipantsTable({
             </th>
           </tr>
         </thead>
-        {participants.map((person) => (
+        {participants.map((person, index) => (
           <tbody
             key={person.name}
             onClick={() => editParticipant(person)}
@@ -413,6 +416,9 @@ function ParticipantsTable({
             className="cursorPointer"
           >
             <tr role="row">
+              <td role="cell" data-label="Index">
+                {index + 1}
+              </td>
               <td role="cell" data-label="Name">
                 {person.name}
               </td>
