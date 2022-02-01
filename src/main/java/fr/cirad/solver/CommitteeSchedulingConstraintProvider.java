@@ -93,6 +93,11 @@ public class CommitteeSchedulingConstraintProvider implements ConstraintProvider
                 return constraintFactory.forEach(CommitteeAssignment.class)
                                 .groupBy(ca -> ca.committee, toList())
                                 .filter((committee, assignments) -> {
+                                        // if the laguage of the assigned person is undefined,
+                                        // return false
+                                        if (committee.evaluatedPerson.languages.isEmpty()) {
+                                                return false;
+                                        }
                                         for (var lang : committee.evaluatedPerson.languages) {
                                                 if (assignments.stream()
                                                                 .anyMatch(a -> a.assignedPerson
@@ -121,8 +126,15 @@ public class CommitteeSchedulingConstraintProvider implements ConstraintProvider
                 return constraintFactory.forEach(CommitteeAssignment.class)
                                 .groupBy(ca -> ca.assignedPerson,
                                                 sum(CommitteeAssignment::getDistance))
-                                .filter((person, distance) -> !person.travellingDistanceRangeConstraint
-                                                .contains(distance))
+                                .filter((person, distance) -> {
+                                        // if the assigned person does not have a location defined,
+                                        // return false
+                                        if (person.location == null) {
+                                                return false;
+                                        }
+                                        return !person.travellingDistanceRangeConstraint
+                                                        .contains(distance);
+                                })
                                 .penalize("Travelling distance range", HardSoftScore.ONE_HARD);
         }
 
