@@ -32,6 +32,8 @@ public class Person implements Comparable<Person> {
 
     public List<String> hasAlreadyInspected;
 
+    public Long maxNumberOfInspections;
+
     @InverseRelationShadowVariable(sourceVariableName = "assignedPerson")
     @JsonIgnore
     public List<CommitteeAssignment> assignments;
@@ -69,6 +71,15 @@ public class Person implements Comparable<Person> {
         this.availability = availability;
         this.requiredSkills = requiredSkills;
         this.assignments = new ArrayList<>();
+    }
+
+    // Checks if a person has more assignments than the maximum number of assignments
+    public boolean hasMoreAssignmentsThanMaxNumberOfAssignments() {
+        // checks if maxNumberOfInspections is null
+        if (maxNumberOfInspections == null) {
+            return false;
+        }
+        return assignments.size() > maxNumberOfInspections;
     }
 
     // Checks if the person has the language

@@ -3,6 +3,7 @@ import {
   Group,
   Modal,
   MultiSelect,
+  NumberInput,
   Radio,
   RadioGroup,
   Select,
@@ -57,6 +58,7 @@ function ParticipantsTable({
       requiredSkills: [] as Array<string>,
       vetoes: [] as Array<string>,
       needsEvaluation: false,
+      maxNumberOfInspections: undefined as number | undefined,
     },
     validationRules: {
       name: (value) => value.trim().length > 0,
@@ -158,6 +160,10 @@ function ParticipantsTable({
       participant?.needsEvaluation ?? false
     );
     participantForm.setFieldValue(
+      "maxNumberOfInspections",
+      participant?.maxNumberOfInspections
+    );
+    participantForm.setFieldValue(
       "vetoes",
       participant?.vetoes?.map((s) => s.name ?? "") ?? []
     );
@@ -190,6 +196,7 @@ function ParticipantsTable({
               })),
               vetoes: values.vetoes.map((s) => ({ name: s })),
               needsEvaluation: values.needsEvaluation,
+              maxNumberOfInspections: values.maxNumberOfInspections,
             } as Person;
             updateParticipant(values.key, participant);
             setOpened(false);
@@ -344,6 +351,17 @@ function ParticipantsTable({
             </>
           )}
           <Space h="lg" />
+          <NumberInput
+            type="number"
+            label={t("participant.maxNumberOfInspections")}
+            description={t("participant.maxNumberOfInspectionsDescription")}
+            value={participantForm.values.maxNumberOfInspections}
+            min={0}
+            onChange={(val) =>
+              participantForm.setFieldValue("maxNumberOfInspections", val)
+            }
+          />
+          <Space h="lg" />
           <Group position="apart">
             <Group>
               <Button type="submit">{t("participant.save")}</Button>
@@ -406,6 +424,9 @@ function ParticipantsTable({
             <th role="columnheader" scope="col">
               {t("participant.needsEvaluation")}
             </th>
+            <th role="columnheader" scope="col">
+              {t("participant.maxNumberOfInspections")}
+            </th>
           </tr>
         </thead>
         {participants.map((person, index) => (
@@ -445,6 +466,9 @@ function ParticipantsTable({
               </td>
               <td role="cell" data-label="Name">
                 {person.needsEvaluation ? <CheckIcon /> : ""}
+              </td>
+              <td role="cell" data-label="Name">
+                {person.maxNumberOfInspections}
               </td>
             </tr>
           </tbody>

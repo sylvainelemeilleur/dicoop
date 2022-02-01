@@ -101,6 +101,7 @@ export function excelExport(
       sanitizeNamedArray(p.requiredSkills),
       p.needsEvaluation ? "true" : "false",
       sanitizeNamedArray(p.vetoes),
+      sanitizeString(p.maxNumberOfInspections?.toString()),
     ])
   );
   const participantsWorksheet = XLSX.utils.aoa_to_sheet(participantsData);

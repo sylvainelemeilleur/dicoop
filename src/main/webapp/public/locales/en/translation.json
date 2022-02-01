@@ -85,6 +85,8 @@
         "vetoes": "Vetoes",
         "vetoesPlaceholder": "Pick one or more vetoes",
         "needsEvaluation": "Needs evaluation?",
+        "maxNumberOfInspections": "Max number of inspections",
+        "maxNumberOfInspectionsDescription": "Leave empty for no limit",
         "save": "Save",
         "cancel": "Cancel",
         "delete": "Delete",

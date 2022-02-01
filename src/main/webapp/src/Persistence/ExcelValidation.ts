@@ -28,6 +28,7 @@ export const Constants = {
   PARTICIPANT_REQUIRED_SKILLS: "Required skills",
   PARTICIPANT_NEEDS_EVALUATION: "Needs evaluation",
   PARTICIPANT_VETOES: "Vetoes",
+  PARTICIPANT_MAX_NUMBER_OF_INSPECTIONS: "Max number of inspections",
 
   SOLUTION_EVALUATED_PERSON: "Evaluated Person",
   SOLUTION_TIMESLOT: "Timeslot",
@@ -58,6 +59,7 @@ export const participantsColumns = [
   Constants.PARTICIPANT_REQUIRED_SKILLS,
   Constants.PARTICIPANT_NEEDS_EVALUATION,
   Constants.PARTICIPANT_VETOES,
+  Constants.PARTICIPANT_MAX_NUMBER_OF_INSPECTIONS,
 ];
 
 export interface ValidationResult {

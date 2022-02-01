@@ -222,11 +222,25 @@ function parseParticipants(sheetData: Array<any>): Array<Person> {
       needsEvaluation:
         (rowData[Constants.PARTICIPANT_NEEDS_EVALUATION] ?? "").trim() ===
         "true",
+      maxNumberOfInspections: parseNumber(
+        rowData[Constants.PARTICIPANT_MAX_NUMBER_OF_INSPECTIONS]
+      ),
       hasAlreadyInspected: [] as Array<string>,
     } as Person;
     participants.push(person);
   });
   return participants;
+}
+
+function parseNumber(s: string): number | undefined {
+  if (s === undefined || s.length === 0) {
+    return undefined;
+  }
+  const n = +s;
+  if (isNaN(n)) {
+    return undefined;
+  }
+  return n;
 }
 
 function parseNamedList(s: string): Array<NamedEntity> {

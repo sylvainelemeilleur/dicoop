@@ -45,6 +45,12 @@ export interface Committee {
      * @memberof Committee
      */
     createdDate?: string;
+    /**
+     * 
+     * @type {boolean}
+     * @memberof Committee
+     */
+    useAvailability?: boolean;
 }
 /**
  * 
@@ -268,6 +274,12 @@ export interface Person {
      * @memberof Person
      */
     hasAlreadyInspected?: Array<string>;
+    /**
+     * 
+     * @type {number}
+     * @memberof Person
+     */
+    maxNumberOfInspections?: number;
 }
 /**
  * 

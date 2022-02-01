@@ -85,6 +85,8 @@
         "vetoes": "Vétos",
         "vetoesPlaceholder": "Vétos du participant",
         "needsEvaluation": "Besoin d'évaluation ?",
+        "maxNumberOfInspections": "Nombre maximum d'inspections",
+        "maxNumberOfInspectionsDescription": "Laisser vide pour ne pas définir de limite",
         "save": "Enregistrer",
         "cancel": "Annuler",
         "delete": "Supprimer",

@@ -19,6 +19,7 @@ public class CommitteeSchedulingConstraintProvider implements ConstraintProvider
                                 selfConflict(constraintFactory),
                                 committeeConflict(constraintFactory),
                                 committeeAssignmentsConflict(constraintFactory),
+                                maxNumberOfInspections(constraintFactory),
                                 requiredPersonType(constraintFactory),
                                 requiredSkills(constraintFactory),
                                 nonReciprocity(constraintFactory),
@@ -63,6 +64,12 @@ public class CommitteeSchedulingConstraintProvider implements ConstraintProvider
                                                 HardSoftScore.ONE_HARD);
         }
 
+        private Constraint maxNumberOfInspections(ConstraintFactory constraintFactory) {
+                return constraintFactory.forEach(Person.class)
+                                .filter(Person::hasMoreAssignmentsThanMaxNumberOfAssignments)
+                                .penalize("Maximum number of inspection", HardSoftScore.ONE_HARD);
+        }
+
         private Constraint requiredPersonType(ConstraintFactory constraintFactory) {
                 return constraintFactory.forEach(CommitteeAssignment.class)
                                 .filter(committeeAssignment -> !committeeAssignment
@@ -93,7 +100,7 @@ public class CommitteeSchedulingConstraintProvider implements ConstraintProvider
                 return constraintFactory.forEach(CommitteeAssignment.class)
                                 .groupBy(ca -> ca.committee, toList())
                                 .filter((committee, assignments) -> {
-                                        // if the laguage of the assigned person is undefined,
+                                        // if the language of the assigned person is undefined,
                                         // return false
                                         if (committee.evaluatedPerson.languages.isEmpty()) {
                                                 return false;
