@@ -11,6 +11,7 @@ public class PersonType implements Comparable<PersonType> {
     public static final PersonType PROFESSIONAL = new PersonType("professional");
     public static final PersonType NON_PROFESSIONAL = new PersonType("non-professional");
     public static final PersonType EXTERNAL = new PersonType("external");
+    public static final PersonType UNDEFINED = new PersonType("undefined");
 
     private static final Comparator<PersonType> COMPARATOR = Comparator.comparing(pt -> pt.name);
 

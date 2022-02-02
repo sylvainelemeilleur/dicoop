@@ -18,6 +18,10 @@ public class DistanceMatrix {
     public Integer getDistance(String location1, String location2) {
         int index1 = locations.indexOf(location1);
         int index2 = locations.indexOf(location2);
-        return distances[index1][index2];
+        if (index1 > -1 && index2 > -1) {
+            return distances[index1][index2];
+        } else {
+            return 0;
+        }
     }
 }

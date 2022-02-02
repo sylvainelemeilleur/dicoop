@@ -7,7 +7,6 @@ import {
   LoadingOverlay,
   NumberInput,
   RangeSlider,
-  Slider,
   Space,
 } from "@mantine/core";
 import React from "react";
@@ -55,14 +54,16 @@ function SolutionSettingsForm({
               id="nbProParticipants"
               label={t("settings.nbProParticipants")}
             >
-              <Slider
+              <RangeSlider
                 id="nbProParticipants"
                 value={settingsState.nbProParticipants}
+                step={1}
                 min={min}
                 max={max}
+                minRange={0}
                 marks={marks}
-                onChange={(value) =>
-                  setSettingsState({ nbProParticipants: value })
+                onChange={(values) =>
+                  setSettingsState({ nbProParticipants: values })
                 }
               />
             </InputWrapper>
@@ -95,14 +96,16 @@ function SolutionSettingsForm({
               id="nbNonProParticipants"
               label={t("settings.nbNonProParticipants")}
             >
-              <Slider
+              <RangeSlider
                 id="nbNonProParticipants"
                 value={settingsState.nbNonProParticipants}
+                step={1}
                 min={min}
                 max={max}
+                minRange={0}
                 marks={marks}
-                onChange={(value) =>
-                  setSettingsState({ nbNonProParticipants: value })
+                onChange={(values) =>
+                  setSettingsState({ nbNonProParticipants: values })
                 }
               />
             </InputWrapper>
@@ -135,14 +138,16 @@ function SolutionSettingsForm({
               id="nbExternalParticipants"
               label={t("settings.nbExternalParticipants")}
             >
-              <Slider
+              <RangeSlider
                 id="nbExternalParticipants"
                 value={settingsState.nbExternalParticipants}
+                step={1}
                 min={min}
                 max={max}
+                minRange={0}
                 marks={marks}
-                onChange={(value) =>
-                  setSettingsState({ nbExternalParticipants: value })
+                onChange={(values) =>
+                  setSettingsState({ nbExternalParticipants: values })
                 }
               />
             </InputWrapper>

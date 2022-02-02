@@ -1,13 +1,13 @@
 package fr.cirad.domain;
 
 public class Settings {
-    public int nbProParticipants;
+    public Range nbProParticipants;
     public Range numberOfAssignmentsForAProfessional;
 
-    public int nbNonProParticipants;
+    public Range nbNonProParticipants;
     public Range numberOfAssignmentsForANonProfessional;
 
-    public int nbExternalParticipants;
+    public Range nbExternalParticipants;
     public Range numberOfAssignmentsForAnExternal;
 
     public int nbRotationsToReinspect;

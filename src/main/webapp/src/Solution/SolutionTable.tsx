@@ -1,4 +1,4 @@
-import { Table } from "@mantine/core";
+import { Table, Text } from "@mantine/core";
 import React from "react";
 import { useTranslation } from "react-i18next";
 import { CommitteeSet } from "src/Model/CommitteeSet";
@@ -22,6 +22,16 @@ function SolutionTable({ committees }: SolutionTableProps) {
             key={assignment.assignedPerson.name}
           >
             {assignment.assignedPerson.name}
+            {assignment.assignedPerson.personType && (
+              <>
+                <br />
+                <Text size="xs" color="dimmed">
+                  {t(
+                    `participant.${assignment.assignedPerson.personType?.name}`
+                  )}
+                </Text>
+              </>
+            )}
           </td>
         ))}
     </React.Fragment>

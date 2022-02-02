@@ -75,29 +75,30 @@ public class CommitteeSolution {
         // Committees based on persons required skills
         this.committees = this.persons.stream()
                 .filter(person -> person.needsEvaluation)
-                .map(person -> new Committee(person, options.settings.useAvailability))
+                .map(person -> new Committee(person, options.settings))
                 .collect(Collectors.toList());
         this.committeeAssignments = new ArrayList<>();
 
         // initialization of the Committees assignments needed (professionals, non-professionals and
         // externals)
         for (var committee : this.committees) {
-            for (int i = 1; i <= options.settings.nbProParticipants; i++) {
-                this.committeeAssignments
-                        .add(new CommitteeAssignment(committee, PersonType.PROFESSIONAL,
-                                options.settings.distanceMatrix));
+            for (int i = 1; i <= options.settings.nbProParticipants.getMax(); i++) {
+                this.committeeAssignments.add(new CommitteeAssignment(committee,
+                        PersonType.PROFESSIONAL, options.settings.distanceMatrix));
             }
-            for (int i = 1; i <= options.settings.nbNonProParticipants; i++) {
-                this.committeeAssignments
-                        .add(new CommitteeAssignment(committee, PersonType.NON_PROFESSIONAL,
-                                options.settings.distanceMatrix));
+            for (int i = 1; i <= options.settings.nbNonProParticipants.getMax(); i++) {
+                this.committeeAssignments.add(new CommitteeAssignment(committee,
+                        PersonType.NON_PROFESSIONAL, options.settings.distanceMatrix));
             }
-            for (int i = 1; i <= options.settings.nbExternalParticipants; i++) {
-                this.committeeAssignments
-                        .add(new CommitteeAssignment(committee, PersonType.EXTERNAL,
-                                options.settings.distanceMatrix));
+            for (int i = 1; i <= options.settings.nbExternalParticipants.getMax(); i++) {
+                this.committeeAssignments.add(new CommitteeAssignment(committee,
+                        PersonType.EXTERNAL, options.settings.distanceMatrix));
             }
         }
+
+        // Adding the null person to be able to occupy assignments without criteria to handle
+        // persons ranges
+        this.persons.add(Person.NULL_PERSON);
     }
 
     private Range getNumberOfAssignmentsRange(Person person, Settings settings) {

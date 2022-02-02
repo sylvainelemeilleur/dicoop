@@ -12,6 +12,14 @@ public class Range {
         this.value[1] = max;
     }
 
+    public int getMin() {
+        return value[0];
+    }
+
+    public int getMax() {
+        return value[1];
+    }
+
     public boolean contains(int value) {
         return value >= this.value[0] && value <= this.value[1];
     }

@@ -148,50 +148,43 @@ function parseSolution(sheetData: Array<any>): CommitteeSet {
   return set;
 }
 
+function rowToRange(rowData: any[]): Range {
+  return {
+    value: [+rowData[1], +rowData[2]],
+  } as Range;
+}
+
 function parseSettings(sheetData: Array<any>): Settings {
   const settings = DEFAULT_SETTINGS;
   sheetData.forEach((rowData: Array<any>) => {
     const settingName = rowData[0];
-    const settingValue = rowData[1];
     switch (settingName) {
       case Constants.SETTING_NUMBER_OF_PRO:
-        settings.nbProParticipants = +settingValue;
+        settings.nbProParticipants = rowToRange(rowData);
         break;
       case Constants.SETTING_NUMBER_OF_ASSIGNMENTS_FOR_A_PRO:
-        const settingValue21 = rowData[2];
-        settings.numberOfAssignmentsForAProfessional = {
-          value: [+settingValue, +settingValue21],
-        } as Range;
+        settings.numberOfAssignmentsForAProfessional = rowToRange(rowData);
         break;
       case Constants.SETTING_NUMBER_OF_NON_PRO:
-        settings.nbNonProParticipants = +settingValue;
+        settings.nbNonProParticipants = rowToRange(rowData);
         break;
       case Constants.SETTING_NUMBER_OF_ASSIGNMENTS_FOR_A_NON_PRO:
-        const settingValue22 = rowData[2];
-        settings.numberOfAssignmentsForANonProfessional = {
-          value: [+settingValue, +settingValue22],
-        } as Range;
+        settings.numberOfAssignmentsForANonProfessional = rowToRange(rowData);
         break;
       case Constants.SETTING_NUMBER_OF_EXTERNAL:
-        settings.nbExternalParticipants = +settingValue;
+        settings.nbExternalParticipants = rowToRange(rowData);
         break;
       case Constants.SETTING_NUMBER_OF_ASSIGNMENTS_FOR_AN_EXTERNAL:
-        const settingValue23 = rowData[2];
-        settings.numberOfAssignmentsForAnExternal = {
-          value: [+settingValue, +settingValue23],
-        } as Range;
+        settings.numberOfAssignmentsForAnExternal = rowToRange(rowData);
         break;
       case Constants.SETTING_NUMBER_OF_ROTATIONS_TO_REINSPECT:
-        settings.nbRotationsToReinspect = +settingValue;
+        settings.nbRotationsToReinspect = +rowData[1];
         break;
       case Constants.SETTING_TRAVELLING_DISTANCE_RANGE:
-        const settingValue24 = rowData[2];
-        settings.travellingDistanceRange = {
-          value: [+settingValue, +settingValue24],
-        } as Range;
+        settings.travellingDistanceRange = rowToRange(rowData);
         break;
       case Constants.SETTING_USE_AVAILABILITY:
-        settings.useAvailability = settingValue === "true";
+        settings.useAvailability = rowData[1] === "true";
         break;
       default:
         console.log(`Unknown setting name ${settingName}`);

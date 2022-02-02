@@ -11,6 +11,10 @@ import org.optaplanner.core.api.domain.variable.InverseRelationShadowVariable;
 @PlanningEntity
 public class Person implements Comparable<Person> {
 
+    @JsonIgnore
+    public static final Person NULL_PERSON = new Person("INTERNAL_NULL_PERSON",
+            PersonType.UNDEFINED, List.of(), null, List.of(), List.of(), List.of());
+
     @PlanningId
     public String name;
 
@@ -71,12 +75,18 @@ public class Person implements Comparable<Person> {
         this.availability = availability;
         this.requiredSkills = requiredSkills;
         this.assignments = new ArrayList<>();
+        this.vetoes = new ArrayList<>();
+        this.hasAlreadyInspected = new ArrayList<>();
+    }
+
+    public boolean isInternalNullPerson() {
+        return this.equals(NULL_PERSON);
     }
 
     // Checks if a person has more assignments than the maximum number of assignments
     public boolean hasMoreAssignmentsThanMaxNumberOfAssignments() {
         // checks if maxNumberOfInspections is null
-        if (maxNumberOfInspections == null) {
+        if (maxNumberOfInspections == null || isInternalNullPerson()) {
             return false;
         }
         return assignments.size() > maxNumberOfInspections;

@@ -111,11 +111,11 @@ function App() {
 
   // Settings state
   const [settingsState, setSettingsState] = useSetState({
-    nbProParticipants: 2,
+    nbProParticipants: [2, 2],
     numberOfAssignmentsForAProfessional: [0, 5],
-    nbNonProParticipants: 1,
+    nbNonProParticipants: [1, 1],
     numberOfAssignmentsForANonProfessional: [0, 5],
-    nbExternalParticipants: 0,
+    nbExternalParticipants: [0, 0],
     numberOfAssignmentsForAnExternal: [0, 5],
     nbRotationsToReinspect: 10,
     travellingDistanceRange: [0, 100],
@@ -124,15 +124,21 @@ function App() {
 
   const getSettings = () =>
     ({
-      nbProParticipants: settingsState.nbProParticipants,
+      nbProParticipants: {
+        value: settingsState.nbProParticipants,
+      } as Range,
       numberOfAssignmentsForAProfessional: {
         value: settingsState.numberOfAssignmentsForAProfessional,
       } as Range,
-      nbNonProParticipants: settingsState.nbNonProParticipants,
+      nbNonProParticipants: {
+        value: settingsState.nbNonProParticipants,
+      } as Range,
       numberOfAssignmentsForANonProfessional: {
         value: settingsState.numberOfAssignmentsForANonProfessional,
       } as Range,
-      nbExternalParticipants: settingsState.nbExternalParticipants,
+      nbExternalParticipants: {
+        value: settingsState.nbExternalParticipants,
+      } as Range,
       numberOfAssignmentsForAnExternal: {
         value: settingsState.numberOfAssignmentsForAnExternal,
       } as Range,
@@ -144,24 +150,26 @@ function App() {
       useAvailability: settingsState.useAvailability,
     } as Settings);
 
+  function setFromRange(
+    rangeValue: Range | undefined
+  ): [number, number] | undefined {
+    return (rangeValue?.value as [number, number]) ?? [0, 0];
+  }
+
   const setSettings = (settings: Settings) => {
     setSettingsState({
-      nbProParticipants: settings?.nbProParticipants ?? 0,
-      numberOfAssignmentsForAProfessional: (settings
-        ?.numberOfAssignmentsForAProfessional?.value as [number, number]) ?? [
-        0, 0,
-      ],
-      nbNonProParticipants: settings?.nbNonProParticipants ?? 0,
-      numberOfAssignmentsForANonProfessional: (settings
-        ?.numberOfAssignmentsForANonProfessional?.value as [
-        number,
-        number
-      ]) ?? [0, 0],
-      nbExternalParticipants: settings?.nbExternalParticipants ?? 0,
-      numberOfAssignmentsForAnExternal: (settings
-        ?.numberOfAssignmentsForAnExternal?.value as [number, number]) ?? [
-        0, 0,
-      ],
+      nbProParticipants: setFromRange(settings?.nbProParticipants),
+      numberOfAssignmentsForAProfessional: setFromRange(
+        settings?.numberOfAssignmentsForAProfessional
+      ),
+      nbNonProParticipants: setFromRange(settings?.nbNonProParticipants),
+      numberOfAssignmentsForANonProfessional: setFromRange(
+        settings?.numberOfAssignmentsForANonProfessional
+      ),
+      nbExternalParticipants: setFromRange(settings?.nbExternalParticipants),
+      numberOfAssignmentsForAnExternal: setFromRange(
+        settings?.numberOfAssignmentsForAnExternal
+      ),
       nbRotationsToReinspect: settings?.nbRotationsToReinspect ?? 0,
       travellingDistanceRange: (settings?.travellingDistanceRange?.value as [
         number,
@@ -454,6 +462,7 @@ function App() {
       }
     </AppShell>
   );
+
 }
 
 export default App;

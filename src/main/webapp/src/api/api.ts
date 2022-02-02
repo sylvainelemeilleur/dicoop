@@ -306,6 +306,18 @@ export interface Range {
      * @memberof Range
      */
     value?: Array<number>;
+    /**
+     * 
+     * @type {number}
+     * @memberof Range
+     */
+    min?: number;
+    /**
+     * 
+     * @type {number}
+     * @memberof Range
+     */
+    max?: number;
 }
 /**
  * 
@@ -315,10 +327,10 @@ export interface Range {
 export interface Settings {
     /**
      * 
-     * @type {number}
+     * @type {Range}
      * @memberof Settings
      */
-    nbProParticipants?: number;
+    nbProParticipants?: Range;
     /**
      * 
      * @type {Range}
@@ -327,10 +339,10 @@ export interface Settings {
     numberOfAssignmentsForAProfessional?: Range;
     /**
      * 
-     * @type {number}
+     * @type {Range}
      * @memberof Settings
      */
-    nbNonProParticipants?: number;
+    nbNonProParticipants?: Range;
     /**
      * 
      * @type {Range}
@@ -339,10 +351,10 @@ export interface Settings {
     numberOfAssignmentsForANonProfessional?: Range;
     /**
      * 
-     * @type {number}
+     * @type {Range}
      * @memberof Settings
      */
-    nbExternalParticipants?: number;
+    nbExternalParticipants?: Range;
     /**
      * 
      * @type {Range}

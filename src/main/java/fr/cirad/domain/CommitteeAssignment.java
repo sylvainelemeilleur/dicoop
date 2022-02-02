@@ -52,14 +52,18 @@ public class CommitteeAssignment {
 
     @JsonIgnore
     public Integer getDistance() {
+        if (assignedPerson.isInternalNullPerson()) {
+            return 0;
+        }
         return distanceMatrix.getDistance(assignedPerson.location.name,
                 committee.evaluatedPerson.location.name);
     }
 
     @JsonIgnore
     public boolean isRequiredPersonTypeCorrect() {
-        if (assignedPerson == null || requiredPersonType == null)
-            return false;
+        if (assignedPerson.isInternalNullPerson()) {
+            return true;
+        }
         return assignedPerson.personType.equals(requiredPersonType);
     }
 

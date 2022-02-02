@@ -12,15 +12,18 @@ public class Committee {
 
     public Instant createdDate = Instant.now();
 
-    public Boolean useAvailability = true;
+    private Boolean useAvailability = true;
+
+    private Settings settings;
 
     public Committee() {
         // No-arg constructor required for Hibernate and OptaPlanner
     }
 
-    public Committee(Person evaluatedPerson, Boolean useAvailability) {
+    public Committee(Person evaluatedPerson, Settings settings) {
         this.evaluatedPerson = evaluatedPerson;
-        this.useAvailability = useAvailability;
+        this.settings = settings;
+        this.useAvailability = settings.useAvailability;
     }
 
     public boolean atLeastOnePersonIsAvailable(List<CommitteeAssignment> assignments) {
@@ -39,6 +42,22 @@ public class Committee {
             }
         }
         return true;
+    }
+
+    private boolean metMinimumAssignmentsByPersonType(List<CommitteeAssignment> assignments,
+            PersonType personType, int minimum) {
+        long numberOfPersonsOfThisType = assignments.stream()
+                .filter(a -> a.getAssignedPerson().personType.equals(personType)).count();
+        return (numberOfPersonsOfThisType >= minimum);
+    }
+
+    public boolean metMinimumAssignments(List<CommitteeAssignment> assignments) {
+        return metMinimumAssignmentsByPersonType(assignments, PersonType.PROFESSIONAL,
+                settings.nbProParticipants.getMin())
+                && metMinimumAssignmentsByPersonType(assignments, PersonType.NON_PROFESSIONAL,
+                        settings.nbNonProParticipants.getMin())
+                && metMinimumAssignmentsByPersonType(assignments, PersonType.EXTERNAL,
+                        settings.nbExternalParticipants.getMin());
     }
 
     @Override

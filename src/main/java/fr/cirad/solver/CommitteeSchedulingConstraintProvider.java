@@ -24,6 +24,7 @@ public class CommitteeSchedulingConstraintProvider implements ConstraintProvider
                                 requiredSkills(constraintFactory),
                                 nonReciprocity(constraintFactory),
                                 oneCommonLanguage(constraintFactory),
+                                minAssignmentsByCommittee(constraintFactory),
                                 inspectionRotation(constraintFactory), vetoes(constraintFactory),
                                 travelling(constraintFactory)};
         }
@@ -52,15 +53,19 @@ public class CommitteeSchedulingConstraintProvider implements ConstraintProvider
 
                                 equal(CommitteeAssignment::getCommittee),
                                 equal(CommitteeAssignment::getAssignedPerson))
+                                .filter((assignment1,
+                                                assignment2) -> !assignment1.assignedPerson
+                                                                .isInternalNullPerson())
                                 .penalize("A person cannot be assigned multiple times to the same committee",
                                                 HardSoftScore.ONE_HARD);
         }
 
         private Constraint committeeAssignmentsConflict(ConstraintFactory constraintFactory) {
                 return constraintFactory.forEach(Person.class)
-                                .filter(person -> !person.numberOfAssignmentsRangeConstraint
+                                .filter(person -> !person.isInternalNullPerson()
+                                                && !person.numberOfAssignmentsRangeConstraint
                                                 .contains(person.assignments.size()))
-                                .penalize("Number of assignments  per person",
+                                .penalize("Number of assignments per person",
                                                 HardSoftScore.ONE_HARD);
         }
 
@@ -113,6 +118,16 @@ public class CommitteeSchedulingConstraintProvider implements ConstraintProvider
                                         }
                                         return true;
                                 }).penalize("One common language", HardSoftScore.ONE_HARD);
+        }
+
+        private Constraint minAssignmentsByCommittee(ConstraintFactory constraintFactory) {
+                return constraintFactory.forEach(CommitteeAssignment.class)
+                                .groupBy(CommitteeAssignment::getCommittee, toList())
+                                .filter((committee,
+                                                assignments) -> !committee
+                                                                .metMinimumAssignments(assignments))
+                                .penalize("Minimum number of assignments per committee not met",
+                                                HardSoftScore.ONE_HARD);
         }
 
         private Constraint inspectionRotation(ConstraintFactory constraintFactory) {
