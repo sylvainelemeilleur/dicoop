@@ -92,6 +92,10 @@ public class Person implements Comparable<Person> {
         return assignments.size() > maxNumberOfInspections;
     }
 
+    public int getNumberOfAssignments() {
+        return assignments.size();
+    }
+
     // Checks if the person has the language
     public boolean hasLanguage(Language language) {
         return languages.contains(language);
@@ -115,6 +119,13 @@ public class Person implements Comparable<Person> {
     // Checks if two persons are on veto each other
     public boolean isVetoed(Person other) {
         return vetoes.contains(other) || other.vetoes.contains(this);
+    }
+
+    // Checks if the number of assignments is in the range
+    public boolean assignmentsAreInRange() {
+        if (isInternalNullPerson())
+            return true;
+        return numberOfAssignmentsRangeConstraint.contains(assignments.size());
     }
 
     @Override

@@ -41,3 +41,5 @@ node/
 # Generated frontend
 src/main/resources/META-INF/resources/*
 !src/main/resources/META-INF/resources/.gitkeep
+
+target/benchmarks

@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<solver xmlns="https://www.optaplanner.org/xsd/solver">
+  <termination>
+    <spentLimit>PT5M</spentLimit>
+    <unimprovedSpentLimit>PT30S</unimprovedSpentLimit>
+    <bestScoreLimit>0hard/*soft</bestScoreLimit>
+  </termination>
+  <constructionHeuristic>
+    <constructionHeuristicType>FIRST_FIT</constructionHeuristicType>
+  </constructionHeuristic>
+  <localSearch>
+    <localSearchType>HILL_CLIMBING</localSearchType>
+  </localSearch>
+</solver>

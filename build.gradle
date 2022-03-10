@@ -21,10 +21,12 @@ dependencies {
 
     testImplementation 'io.quarkus:quarkus-junit5'
     testImplementation 'io.rest-assured:rest-assured'
+    testImplementation 'org.optaplanner:optaplanner-test'
+    testImplementation 'org.optaplanner:optaplanner-quarkus-benchmark'
 }
 
 group 'fr.cirad'
-version '1.5.0'
+version '1.6.0'
 
 java {
     sourceCompatibility = JavaVersion.VERSION_11

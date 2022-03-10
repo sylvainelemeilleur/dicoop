@@ -2,6 +2,7 @@ package fr.cirad.domain;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 import java.util.UUID;
 import java.util.stream.Collectors;
 import com.fasterxml.jackson.annotation.JsonIgnore;
@@ -19,7 +20,6 @@ public class CommitteeSolution {
 
     public UUID id;
 
-    @ProblemFactCollectionProperty
     @JsonIgnore
     public List<Committee> committees;
 
@@ -27,10 +27,6 @@ public class CommitteeSolution {
     @JsonIgnore
     @ValueRangeProvider(id = "personRange")
     public List<Person> persons;
-
-    @ProblemFactCollectionProperty
-    @JsonIgnore
-    public List<Skill> skills;
 
     @ProblemFactCollectionProperty
     @JsonIgnore
@@ -58,23 +54,17 @@ public class CommitteeSolution {
         this.persons = options.participants;
 
         // set range option for each participant and also travelling distance constraint
-        this.persons.stream().forEach(
-                p -> {
-                    p.numberOfAssignmentsRangeConstraint =
-                            getNumberOfAssignmentsRange(p, options.settings);
-                    p.travellingDistanceRangeConstraint = options.settings.travellingDistanceRange;
-                });
+        this.persons.stream().forEach(p -> {
+            p.numberOfAssignmentsRangeConstraint = getNumberOfAssignmentsRange(p, options.settings);
+            p.travellingDistanceRangeConstraint = options.settings.travellingDistanceRange;
+        });
 
-        this.skills = this.persons.stream().flatMap(person -> person.skills.stream())
-                .filter(skill -> !Strings.isNullOrEmpty(skill.name)).distinct()
-                .collect(Collectors.toList());
         this.timeSlots = this.persons.stream().flatMap(person -> person.availability.stream())
                 .filter(timeSlot -> !Strings.isNullOrEmpty(timeSlot.name)).distinct()
                 .collect(Collectors.toList());
 
         // Committees based on persons required skills
-        this.committees = this.persons.stream()
-                .filter(person -> person.needsEvaluation)
+        this.committees = this.persons.stream().filter(person -> person.needsEvaluation)
                 .map(person -> new Committee(person, options.settings))
                 .collect(Collectors.toList());
         this.committeeAssignments = new ArrayList<>();
@@ -99,6 +89,15 @@ public class CommitteeSolution {
         // Adding the null person to be able to occupy assignments without criteria to handle
         // persons ranges
         this.persons.add(Person.NULL_PERSON);
+    }
+
+    public Optional<Committee> getCommitteeByEvaluatedPersonName(String personName) {
+        return this.committees.stream()
+                .filter(committee -> committee.evaluatedPerson.name.equals(personName)).findFirst();
+    }
+
+    public Optional<Person> getPersonByName(String personName) {
+        return this.persons.stream().filter(person -> person.name.equals(personName)).findFirst();
     }
 
     private Range getNumberOfAssignmentsRange(Person person, Settings settings) {
