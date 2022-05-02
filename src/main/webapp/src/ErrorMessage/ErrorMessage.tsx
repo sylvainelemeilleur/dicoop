@@ -1,6 +1,6 @@
 import { Modal, ThemeIcon } from "@mantine/core";
-import { ExclamationTriangleIcon } from "@modulz/radix-icons";
 import { useErrorMessage } from "./ErrorMessageContext";
+import { AlertIcon } from "@primer/octicons-react";
 
 export default function ErrorMessage() {
   const { state, closeErrorMessage } = useErrorMessage();
@@ -11,7 +11,7 @@ export default function ErrorMessage() {
       title={
         <>
           <ThemeIcon color="red">
-            <ExclamationTriangleIcon />
+            <AlertIcon />
           </ThemeIcon>
           &nbsp;
           <b>{state.title}</b>

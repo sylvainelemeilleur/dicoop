@@ -13,7 +13,7 @@ import {
   TextInput,
 } from "@mantine/core";
 import { useForm } from "@mantine/hooks";
-import { CheckIcon } from "@modulz/radix-icons";
+import { CheckIcon } from "@primer/octicons-react";
 import React, { useState } from "react";
 import { useTranslation } from "react-i18next";
 import { DistanceMatrix, Person } from "src/api";

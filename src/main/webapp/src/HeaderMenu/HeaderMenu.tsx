@@ -15,7 +15,7 @@ export default function HeaderMenu() {
   const [aboutOpened, setAboutOpened] = useState(false);
   return (
     <>
-      <Group mr={-8} style={{ marginLeft: "auto" }}>
+      <Group mr={8} style={{ marginLeft: "auto" }}>
         <button
           title={t("settingsMenu.about")}
           style={{
