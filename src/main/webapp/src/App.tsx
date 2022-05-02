@@ -431,7 +431,6 @@ function App() {
             settingsState={settingsState}
             setSettingsState={setSettingsState}
             isSolving={isSolving}
-            committeeSolution={committeeSolution}
           />
           <Space h="xl" />
           <Tabs active={activeTabKey} onTabChange={setActiveTabKey}>

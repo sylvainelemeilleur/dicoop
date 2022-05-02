@@ -12,7 +12,6 @@ import {
 import React from "react";
 import { useTranslation } from "react-i18next";
 import { SettingsState } from "src/Model/SettingsState";
-import { Solution } from "src/Model/Solution";
 
 type SolutionSettingsProps = {
   settingsState: SettingsState;
@@ -21,14 +20,12 @@ type SolutionSettingsProps = {
       | Partial<SettingsState>
       | ((currentState: SettingsState) => Partial<SettingsState>)
   ) => void;
-  committeeSolution: Solution;
   isSolving: boolean;
 };
 
 function SolutionSettingsForm({
   settingsState,
   setSettingsState,
-  committeeSolution,
   isSolving,
 }: SolutionSettingsProps) {
   const min = 0;
