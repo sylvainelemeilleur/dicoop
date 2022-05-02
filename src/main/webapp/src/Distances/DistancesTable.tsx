@@ -6,7 +6,10 @@ type DistancesTableProps = {
   updateDistance: (i: number, j: number, value: number) => void;
 };
 
-function Distances({ distanceMatrix, updateDistance }: DistancesTableProps) {
+function DistancesTable({
+  distanceMatrix,
+  updateDistance,
+}: DistancesTableProps) {
   return (
     <Table style={{ width: "auto" }}>
       <thead>
@@ -41,4 +44,4 @@ function Distances({ distanceMatrix, updateDistance }: DistancesTableProps) {
   );
 }
 
-export default Distances;
+export default DistancesTable;

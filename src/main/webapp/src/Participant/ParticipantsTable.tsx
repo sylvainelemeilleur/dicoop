@@ -220,11 +220,12 @@ function ParticipantsTable({
             value={participantForm.values.type}
             onChange={(value) => participantForm.setFieldValue("type", value)}
           >
-            <Radio value="professional">{t("participant.professional")}</Radio>
-            <Radio value="non-professional">
-              {t("participant.non-professional")}
-            </Radio>
-            <Radio value="external">{t("participant.external")}</Radio>
+            <Radio value="professional" label={t("participant.professional")} />
+            <Radio
+              value="non-professional"
+              label={t("participant.non-professional")}
+            />
+            <Radio value="external" label={t("participant.external")} />
           </RadioGroup>
           <Space h="lg" />
           <Select

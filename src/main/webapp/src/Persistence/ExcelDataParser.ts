@@ -15,11 +15,11 @@ import { stringNotEmpty } from "src/Model/ModelUtils";
 import { NamedEntity } from "src/Model/NamedEntity";
 import { PersistenceData } from "src/Model/PersistenceData";
 import { SolvedCommittee } from "src/Model/SolvedCommittee";
-import XLSX from "xlsx";
+import { utils, WorkBook } from "xlsx";
 import { Constants } from "./ExcelValidation";
 import { v4 as uuid } from "uuid";
 
-export function parseExcelData(workbook: XLSX.WorkBook): PersistenceData {
+export function parseExcelData(workbook: WorkBook): PersistenceData {
   const data = new PersistenceData();
   workbook.SheetNames.forEach((name) => {
     const sheet = workbook.Sheets[name];
@@ -30,7 +30,7 @@ export function parseExcelData(workbook: XLSX.WorkBook): PersistenceData {
             header: 1,
             raw: false,
           };
-    const sheetData = XLSX.utils.sheet_to_json(sheet, options);
+    const sheetData = utils.sheet_to_json(sheet, options);
     switch (name) {
       case Constants.SETTINGS:
         data.settings = parseSettings(sheetData);

@@ -1,5 +1,5 @@
 import React, { Suspense } from "react";
-import ReactDOM from "react-dom";
+import ReactDOM from "react-dom/client";
 import App from "./App";
 import { ErrorMessageProvider } from "./ErrorMessage/ErrorMessageContext";
 import "./index.css";
@@ -9,7 +9,11 @@ import reportWebVitals from "./reportWebVitals";
 import "./i18n";
 import { MantineProvider } from "@mantine/core";
 
-ReactDOM.render(
+const root = ReactDOM.createRoot(
+  document.getElementById("root") as HTMLElement
+);
+
+root.render(
   <React.StrictMode>
     <Suspense fallback={<div>DICOOP is loading...</div>}>
       <MantineProvider
@@ -34,8 +38,7 @@ ReactDOM.render(
         </ErrorMessageProvider>
       </MantineProvider>
     </Suspense>
-  </React.StrictMode>,
-  document.getElementById("root")
+  </React.StrictMode>
 );
 
 // If you want to start measuring performance in your app, pass a function

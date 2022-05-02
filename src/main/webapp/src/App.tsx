@@ -312,7 +312,7 @@ function App() {
 
   // Sore explanation
   const [showMore, setShowMore] = useState(false);
-  const showScore = (score: any) => {
+  const showScore = () => {
     const parsedScore = JSON.parse(committeeSolution.score);
     return (
       <ul>
@@ -332,7 +332,7 @@ function App() {
     <AppShell
       padding="md"
       navbar={
-        <Navbar width={{ base: 300 }} height={500} padding="xs">
+        <Navbar width={{ base: 300 }} height={500}>
           {
             <>
               <div>
@@ -369,8 +369,7 @@ function App() {
                 )}
                 {committeeSolution.score && (
                   <div>
-                    <b>{t("status.scoreLabel")}:</b>{" "}
-                    {showScore(committeeSolution.score)}
+                    <b>{t("status.scoreLabel")}:</b> {showScore()}
                   </div>
                 )}
                 {committeeSolution.scoreExplanation && (
@@ -402,7 +401,7 @@ function App() {
         </Navbar>
       }
       header={
-        <Header height={120} padding="xs">
+        <Header height={120}>
           <div
             style={{ display: "flex", alignItems: "center", height: "100%" }}
           >

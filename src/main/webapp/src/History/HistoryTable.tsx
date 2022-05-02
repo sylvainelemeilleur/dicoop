@@ -11,7 +11,9 @@ function HistoryTable({ history }: HistoryTableProps) {
     <>
       {history.map((committees) => (
         <div key={committees.id}>
-          <Title order={3}>Solution {committees.date}</Title>
+          <Title order={3}>
+            <>Solution {committees.date}</>
+          </Title>
           <SolutionTable committees={committees} />
           <Space h="xl" />
           <Divider />

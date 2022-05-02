@@ -3,7 +3,7 @@ import { CommitteeSet } from "src/Model/CommitteeSet";
 import { PersistenceData } from "src/Model/PersistenceData";
 import { Solution } from "src/Model/Solution";
 import { SolvedCommittee } from "src/Model/SolvedCommittee";
-import XLSX from "xlsx";
+import { read, utils, writeFile } from "xlsx";
 import { parseExcelData } from "./ExcelDataParser";
 import {
   Constants,
@@ -22,7 +22,7 @@ export function excelImport(
 
   reader.onload = (e) => {
     const ab = e?.target?.result;
-    const workbook = XLSX.read(ab, { type: "binary" });
+    const workbook = read(ab, { type: "binary" });
     const sheetsValidationError = Validators.validateSheetsNames(
       workbook.SheetNames
     );
@@ -93,7 +93,7 @@ export function excelExport(
       settings.useAvailability ? "true" : "false",
     ],
   ];
-  const settingsWorksheet = XLSX.utils.aoa_to_sheet(settingsData);
+  const settingsWorksheet = utils.aoa_to_sheet(settingsData);
 
   const sanitizeString = (s?: string) => s ?? "";
 
@@ -116,12 +116,12 @@ export function excelExport(
       sanitizeString(p.maxNumberOfInspections?.toString()),
     ])
   );
-  const participantsWorksheet = XLSX.utils.aoa_to_sheet(participantsData);
+  const participantsWorksheet = utils.aoa_to_sheet(participantsData);
 
   // Solution sheet
   const solutionsData = [[Constants.SOLUTION, new Date()], solutionHeaders];
   exportCommittees(committeeSolution.committees, solutionsData);
-  const solutionWorksheet = XLSX.utils.aoa_to_sheet(solutionsData);
+  const solutionWorksheet = utils.aoa_to_sheet(solutionsData);
 
   // History sheet
   const historyData = new Array<any>();
@@ -130,7 +130,7 @@ export function excelExport(
     historyData.push(solutionHeaders);
     exportCommittees(committees, historyData);
   });
-  const historyWorksheet = XLSX.utils.aoa_to_sheet(historyData);
+  const historyWorksheet = utils.aoa_to_sheet(historyData);
 
   // Distances sheet
   const distancesHeaders = [""];
@@ -141,24 +141,20 @@ export function excelExport(
     d.forEach((n: number) => line.push(n));
     distancesData.push(line);
   });
-  const distancesWorksheet = XLSX.utils.aoa_to_sheet(distancesData);
+  const distancesWorksheet = utils.aoa_to_sheet(distancesData);
 
   // Saving the workbook
-  const workbook = XLSX.utils.book_new();
-  XLSX.utils.book_append_sheet(workbook, settingsWorksheet, Constants.SETTINGS);
-  XLSX.utils.book_append_sheet(
+  const workbook = utils.book_new();
+  utils.book_append_sheet(workbook, settingsWorksheet, Constants.SETTINGS);
+  utils.book_append_sheet(
     workbook,
     participantsWorksheet,
     Constants.PARTICIPANTS
   );
-  XLSX.utils.book_append_sheet(workbook, historyWorksheet, Constants.HISTORY);
-  XLSX.utils.book_append_sheet(
-    workbook,
-    distancesWorksheet,
-    Constants.DISTANCES
-  );
-  XLSX.utils.book_append_sheet(workbook, solutionWorksheet, Constants.SOLUTION);
-  XLSX.writeFile(workbook, "dicoop-export.xlsx");
+  utils.book_append_sheet(workbook, historyWorksheet, Constants.HISTORY);
+  utils.book_append_sheet(workbook, distancesWorksheet, Constants.DISTANCES);
+  utils.book_append_sheet(workbook, solutionWorksheet, Constants.SOLUTION);
+  writeFile(workbook, "dicoop-export.xlsx");
 }
 
 const exportCommittees = (
