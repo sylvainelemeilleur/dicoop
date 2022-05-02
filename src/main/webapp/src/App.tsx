@@ -332,7 +332,7 @@ function App() {
     <AppShell
       padding="md"
       navbar={
-        <Navbar width={{ base: 300 }} height={500}>
+        <Navbar width={{ base: 300 }} height={500} p="xs">
           {
             <>
               <div>
@@ -401,7 +401,7 @@ function App() {
         </Navbar>
       }
       header={
-        <Header height={120}>
+        <Header height={120} p="xs">
           <div
             style={{ display: "flex", alignItems: "center", height: "100%" }}
           >
