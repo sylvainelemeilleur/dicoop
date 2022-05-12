@@ -61,7 +61,8 @@
         "nbAssignmentsPerExternal": "Nombre d'affectations par participant externe",
         "nbRotations": "Nombre de rotations pour réinspecter un participant",
         "travellingDistanceRange": "Distance de déplacement",
-        "useAvailability": "Utiliser les disponibilités"
+        "useAvailability": "Utiliser les disponibilités",
+        "shuffleParticipants": "Mélanger les participants aléatoirement"
     },
     "participant": {
         "label": "Participant",

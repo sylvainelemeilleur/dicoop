@@ -31,7 +31,8 @@
         "travellingDistanceRange": {
             "value": [0, 4]
         },
-        "useAvailability": true
+        "useAvailability": true,
+        "shuffleParticipants": false
     },
     "participants": [{
         "name": "Léo",

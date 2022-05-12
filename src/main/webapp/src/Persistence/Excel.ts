@@ -91,6 +91,7 @@ export function excelExport(
     [
       Constants.SETTING_USE_AVAILABILITY,
       settings.useAvailability ? "true" : "false",
+      settings.shuffleParticipants ? "true" : "false",
     ],
   ];
   const settingsWorksheet = utils.aoa_to_sheet(settingsData);

@@ -8,4 +8,5 @@ export interface SettingsState {
   nbRotationsToReinspect: number;
   travellingDistanceRange: [number, number];
   useAvailability: boolean;
+  shuffleParticipants: boolean;
 }

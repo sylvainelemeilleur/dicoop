@@ -16,6 +16,7 @@ public class Settings {
     public Range travellingDistanceRange;
 
     public Boolean useAvailability;
+    public Boolean shuffleParticipants;
 
     public Settings() {
         // Empty constructor needed by serialization

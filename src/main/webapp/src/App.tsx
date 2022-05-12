@@ -120,6 +120,7 @@ function App() {
     nbRotationsToReinspect: 10,
     travellingDistanceRange: [0, 100],
     useAvailability: true,
+    shuffleParticipants: false,
   } as SettingsState);
 
   const getSettings = () =>
@@ -148,6 +149,7 @@ function App() {
         value: settingsState.travellingDistanceRange,
       } as Range,
       useAvailability: settingsState.useAvailability,
+      shuffleParticipants: settingsState.shuffleParticipants,
     } as Settings);
 
   function setFromRange(
@@ -176,6 +178,7 @@ function App() {
         number
       ]) ?? [0, 0],
       useAvailability: settings?.useAvailability ?? false,
+      shuffleParticipants: settings?.shuffleParticipants ?? false,
     });
   };
 

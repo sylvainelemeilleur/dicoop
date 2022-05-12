@@ -1,6 +1,7 @@
 package fr.cirad.domain;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
@@ -89,6 +90,13 @@ public class CommitteeSolution {
         // Adding the null person to be able to occupy assignments without criteria to handle
         // persons ranges
         this.persons.add(Person.NULL_PERSON);
+
+        // Optional shuffling of the participants
+        if (Boolean.TRUE.equals(options.settings.shuffleParticipants)) {
+            // No need to use strong randomness, as the shuffling is only done once
+            // Devskim: ignore DS148264
+            Collections.shuffle(this.persons);
+        }
     }
 
     public Optional<Committee> getCommitteeByEvaluatedPersonName(String personName) {

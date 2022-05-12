@@ -245,6 +245,16 @@ function SolutionSettingsForm({
           />
 
           <Space h="lg" />
+
+          <Checkbox
+            label={t("settings.shuffleParticipants")}
+            checked={settingsState.shuffleParticipants}
+            onChange={(e) =>
+              setSettingsState({ shuffleParticipants: e.target.checked })
+            }
+          />
+
+          <Space h="lg" />
         </Col>
       </Grid>
     </div>
