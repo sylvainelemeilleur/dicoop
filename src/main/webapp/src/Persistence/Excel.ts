@@ -91,6 +91,9 @@ export function excelExport(
     [
       Constants.SETTING_USE_AVAILABILITY,
       settings.useAvailability ? "true" : "false",
+    ],
+    [
+      Constants.SETTINGS_SHUFFLE_PARTICIPANTS,
       settings.shuffleParticipants ? "true" : "false",
     ],
   ];
