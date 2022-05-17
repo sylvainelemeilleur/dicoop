@@ -1,10 +1,11 @@
 package fr.cirad.domain;
 
 import java.time.Instant;
+import java.util.Comparator;
 import java.util.List;
 import java.util.UUID;
 
-public class Committee {
+public class Committee implements Comparable<Committee> {
 
     public UUID id = UUID.randomUUID();
 
@@ -15,6 +16,8 @@ public class Committee {
     private Boolean useAvailability = true;
 
     private Settings settings;
+
+    private static final Comparator<Committee> COMPARATOR = Comparator.comparing(c -> c.id);
 
     public Committee() {
         // No-arg constructor required for Hibernate and OptaPlanner
@@ -63,6 +66,25 @@ public class Committee {
     @Override
     public String toString() {
         return "Committee for: " + this.evaluatedPerson;
+    }
+
+    @Override
+    public int compareTo(Committee o) {
+        return COMPARATOR.compare(this, o);
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (!(o instanceof Committee)) {
+            return false;
+        }
+        Committee other = (Committee) o;
+        return this.id.equals(other.id);
+    }
+
+    @Override
+    public int hashCode() {
+        return this.id.hashCode();
     }
 
 }
