@@ -1,5 +1,6 @@
 package fr.cirad.domain;
 
+import java.util.Comparator;
 import java.util.List;
 import java.util.UUID;
 import com.fasterxml.jackson.annotation.JsonIgnore;
@@ -10,7 +11,7 @@ import fr.cirad.solver.CommitteeAssignmentDifficultyComparator;
 import fr.cirad.solver.PersonStrengthComparator;
 
 @PlanningEntity(difficultyComparatorClass = CommitteeAssignmentDifficultyComparator.class)
-public class CommitteeAssignment {
+public class CommitteeAssignment implements Comparable<CommitteeAssignment> {
 
     @PlanningId
     @JsonIgnore
@@ -26,6 +27,9 @@ public class CommitteeAssignment {
 
     @JsonIgnore
     public DistanceMatrix distanceMatrix;
+
+    private static final Comparator<CommitteeAssignment> COMPARATOR =
+            Comparator.comparing(c -> c.id);
 
     public CommitteeAssignment() {
         // must have a no-args constructor so it can be constructed by OptaPlanner
@@ -89,6 +93,25 @@ public class CommitteeAssignment {
     @Override
     public String toString() {
         return " CommitteeAssignment: " + assignedPerson + " for " + committee;
+    }
+
+    @Override
+    public int compareTo(CommitteeAssignment o) {
+        return COMPARATOR.compare(this, o);
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (!(o instanceof CommitteeAssignment)) {
+            return false;
+        }
+        CommitteeAssignment other = (CommitteeAssignment) o;
+        return this.id.equals(other.id);
+    }
+
+    @Override
+    public int hashCode() {
+        return this.id.hashCode();
     }
 
 }
