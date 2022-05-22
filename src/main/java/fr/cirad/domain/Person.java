@@ -11,36 +11,32 @@ import org.optaplanner.core.api.domain.variable.InverseRelationShadowVariable;
 @PlanningEntity
 public class Person implements Comparable<Person> {
 
-    @JsonIgnore
-    public static final Person NULL_PERSON = new Person("INTERNAL_NULL_PERSON",
-            PersonType.UNDEFINED, List.of(), null, List.of(), List.of(), List.of());
-
     @PlanningId
     public String name;
 
     public PersonType personType;
 
-    public List<Skill> skills;
+    public List<Skill> skills = new ArrayList<>();
 
     public Location location;
 
-    public List<Language> languages;
+    public List<Language> languages = new ArrayList<>();
 
-    public List<TimeSlot> availability;
+    public List<TimeSlot> availability = new ArrayList<>();
 
-    public List<Skill> requiredSkills;
+    public List<Skill> requiredSkills = new ArrayList<>();
 
     public Boolean needsEvaluation;
 
-    public List<Person> vetoes;
+    public List<Person> vetoes = new ArrayList<>();
 
-    public List<String> hasAlreadyInspected;
+    public List<String> hasAlreadyInspected = new ArrayList<>();
 
     public Long maxNumberOfInspections;
 
     @InverseRelationShadowVariable(sourceVariableName = "assignedPerson")
     @JsonIgnore
-    public List<CommitteeAssignment> assignments;
+    public List<CommitteeAssignment> assignments = new ArrayList<>();
 
     @JsonIgnore
     public Range numberOfAssignmentsRangeConstraint = new Range(0, 5);
@@ -51,12 +47,11 @@ public class Person implements Comparable<Person> {
     private static final Comparator<Person> COMPARATOR = Comparator.comparing(p -> p.name);
 
     public Person() {
-        assignments = new ArrayList<>();
+        // must have a no-args constructor so it can be constructed by OptaPlanner
     }
 
     public Person(String name) {
         this.name = name;
-        assignments = new ArrayList<>();
     }
 
     public Person(String name, PersonType personType, List<Skill> skills, Location location,
@@ -74,19 +69,12 @@ public class Person implements Comparable<Person> {
         this.languages = languages;
         this.availability = availability;
         this.requiredSkills = requiredSkills;
-        this.assignments = new ArrayList<>();
-        this.vetoes = new ArrayList<>();
-        this.hasAlreadyInspected = new ArrayList<>();
-    }
-
-    public boolean isInternalNullPerson() {
-        return this.equals(NULL_PERSON);
     }
 
     // Checks if a person has more assignments than the maximum number of assignments
     public boolean hasMoreAssignmentsThanMaxNumberOfAssignments() {
         // checks if maxNumberOfInspections is null
-        if (maxNumberOfInspections == null || isInternalNullPerson()) {
+        if (maxNumberOfInspections == null) {
             return false;
         }
         return assignments.size() > maxNumberOfInspections;
@@ -123,9 +111,11 @@ public class Person implements Comparable<Person> {
 
     // Checks if the number of assignments is in the range
     public boolean assignmentsAreInRange() {
-        if (isInternalNullPerson())
-            return true;
         return numberOfAssignmentsRangeConstraint.contains(assignments.size());
+    }
+
+    public boolean isProfessional() {
+        return personType == PersonType.PROFESSIONAL;
     }
 
     @Override

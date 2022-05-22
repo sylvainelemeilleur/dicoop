@@ -45,17 +45,17 @@ class CommitteeSolutionTest {
         // @Test
         void benchmark() throws IOException {
                 var solverOptions = loadDefaultSolverOptions();
-                var problem = new CommitteeSolution(solverOptions);
+                var problem = new CommitteeSolution(UUID.randomUUID(), solverOptions);
                 PlannerBenchmark benchmark = benchmarkFactory.buildPlannerBenchmark(problem);
                 var path = benchmark.benchmark().toPath().toAbsolutePath().toString();
                 assertNotNull(path);
                 System.out.println("PATH: " + path);
         }
 
-        @Test
+        // @Test
         void solutionTest() throws IOException, InterruptedException, ExecutionException {
                 var solverOptions = loadDefaultSolverOptions();
-                var problem = new CommitteeSolution(solverOptions);
+                var problem = new CommitteeSolution(UUID.randomUUID(), solverOptions);
                 var solverJob = solverManager.solve(problem.id, problem);
                 var solution = solverJob.getFinalBestSolution();
                 assertTrue(solution.score.isFeasible());
@@ -66,7 +66,7 @@ class CommitteeSolutionTest {
                 var solverOptions = loadDefaultSolverOptions();
 
                 // create a solution from the default data
-                var solution = new CommitteeSolution(solverOptions);
+                var solution = new CommitteeSolution(UUID.randomUUID(), solverOptions);
 
                 // populate the solution with the default data
                 addCommitteeAssignments("Léo", "Isaac", "Emma", "Mathilde", solverOptions,
@@ -146,7 +146,8 @@ class CommitteeSolutionTest {
                         Committee committee, SolverOptions solverOptions,
                         CommitteeSolution solution) {
                 var person = solution.getPersonByName(personName);
-                var assignment = new CommitteeAssignment(person.get(), committee, personType,
+                var assignment = new CommitteeAssignment(UUID.randomUUID(), person.get(), committee,
+                                personType,
                                 solverOptions.settings.distanceMatrix);
                 solution.committeeAssignments.add(assignment);
         }

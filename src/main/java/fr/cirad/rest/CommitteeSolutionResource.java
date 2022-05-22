@@ -69,7 +69,7 @@ public class CommitteeSolutionResource {
     }
 
     CommitteeSolution initSolution(SolverOptions options) {
-        var solution = new CommitteeSolution(options);
+        var solution = new CommitteeSolution(UUID.randomUUID(), options);
         solutions.put(solution.id, solution);
         return solution;
     }
