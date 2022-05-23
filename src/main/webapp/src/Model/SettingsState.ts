@@ -6,6 +6,7 @@ export interface SettingsState {
   nbExternalParticipants: [number, number];
   numberOfAssignmentsForAnExternal: [number, number];
   nbRotationsToReinspect: number;
+  nbInspectorsFollowingUp: number;
   travellingDistanceRange: [number, number];
   useAvailability: boolean;
   shuffleParticipants: boolean;

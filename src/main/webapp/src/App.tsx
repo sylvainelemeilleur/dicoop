@@ -117,7 +117,8 @@ function App() {
     numberOfAssignmentsForANonProfessional: [0, 5],
     nbExternalParticipants: [0, 0],
     numberOfAssignmentsForAnExternal: [0, 5],
-    nbRotationsToReinspect: 10,
+    nbRotationsToReinspect: 3,
+    nbInspectorsFollowingUp: 0,
     travellingDistanceRange: [0, 100],
     useAvailability: true,
     shuffleParticipants: false,
@@ -144,6 +145,7 @@ function App() {
         value: settingsState.numberOfAssignmentsForAnExternal,
       } as Range,
       nbRotationsToReinspect: settingsState.nbRotationsToReinspect,
+      nbInspectorsFollowingUp: settingsState.nbInspectorsFollowingUp,
       distanceMatrix,
       travellingDistanceRange: {
         value: settingsState.travellingDistanceRange,
@@ -173,6 +175,7 @@ function App() {
         settings?.numberOfAssignmentsForAnExternal
       ),
       nbRotationsToReinspect: settings?.nbRotationsToReinspect ?? 0,
+      nbInspectorsFollowingUp: settings?.nbInspectorsFollowingUp ?? 0,
       travellingDistanceRange: (settings?.travellingDistanceRange?.value as [
         number,
         number
@@ -220,22 +223,26 @@ function App() {
   };
 
   const getParticipantsWithHistory = () => {
-    const historyToTake = history.slice(
-      0,
-      settingsState.nbRotationsToReinspect
+    // We always want at least the last rotation to be able to check the follow up rule
+    const numberOfRotationsToTakeInAccount = Math.max(
+      settingsState.nbRotationsToReinspect,
+      1
     );
+    const historyToTake = history.slice(0, numberOfRotationsToTakeInAccount);
     participants.forEach((participant) => {
-      const hasAlreadyInspected = [] as string[];
+      const hasAlreadyInspected = [] as string[][];
       historyToTake.forEach((set) => {
+        const inspectionTurn = [] as string[];
         set.getCommittees().forEach((committee) => {
           if (
             committee.assignments
               .map((a) => a.assignedPerson?.name)
               .includes(participant.name)
           ) {
-            hasAlreadyInspected.push(committee.evaluatedPerson?.name ?? "");
+            inspectionTurn.push(committee.evaluatedPerson?.name ?? "");
           }
         });
+        hasAlreadyInspected.push(inspectionTurn);
       });
       participant.hasAlreadyInspected = hasAlreadyInspected;
     });

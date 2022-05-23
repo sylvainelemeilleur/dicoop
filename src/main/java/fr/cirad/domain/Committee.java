@@ -67,6 +67,25 @@ public class Committee implements Comparable<Committee> {
                         settings.nbExternalParticipants.getMin());
     }
 
+    public boolean inspectionRotationBroken(List<CommitteeAssignment> assignments) {
+        for (CommitteeAssignment assignment : assignments) {
+            if (assignment.assignedPerson != null
+                    && assignment.assignedPerson.hasAlreadyInspectedInThePast(evaluatedPerson)) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    public boolean inspectionFollowUpRespected(List<CommitteeAssignment> assignments) {
+        long nbFollowUp =
+                assignments.stream()
+                        .filter(a -> a.assignedPerson != null
+                                && a.assignedPerson.hasAlreadyInspectedLastTime(evaluatedPerson))
+                        .count();
+        return nbFollowUp == settings.nbInspectorsFollowingUp;
+    }
+
     @Override
     public String toString() {
         return "Committee for: " + this.evaluatedPerson + " (" + this.id + ")";

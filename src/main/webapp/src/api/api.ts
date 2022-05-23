@@ -288,10 +288,10 @@ export interface Person {
     vetoes?: Array<Person>;
     /**
      * 
-     * @type {Array<string>}
+     * @type {Array<Array<string>>}
      * @memberof Person
      */
-    hasAlreadyInspected?: Array<string>;
+    hasAlreadyInspected?: Array<Array<string>>;
     /**
      * 
      * @type {number}
@@ -304,12 +304,6 @@ export interface Person {
      * @memberof Person
      */
     numberOfAssignments?: number;
-    /**
-     * 
-     * @type {boolean}
-     * @memberof Person
-     */
-    professional?: boolean;
 }
 /**
  * 
@@ -397,6 +391,12 @@ export interface Settings {
      * @memberof Settings
      */
     nbRotationsToReinspect?: number;
+    /**
+     * 
+     * @type {number}
+     * @memberof Settings
+     */
+    nbInspectorsFollowingUp?: number;
     /**
      * 
      * @type {DistanceMatrix}

@@ -29,7 +29,8 @@ public class CommitteeSchedulingConstraintProvider implements ConstraintProvider
                                 nonReciprocity(constraintFactory),
                                 oneCommonLanguage(constraintFactory),
                                 minAssignmentsByCommittee(constraintFactory),
-                                inspectionRotation(constraintFactory), vetoes(constraintFactory),
+                                inspectionRotation(constraintFactory),
+                                inspectionFollowUp(constraintFactory), vetoes(constraintFactory),
                                 travelling(constraintFactory)
                 };
         }
@@ -176,11 +177,19 @@ public class CommitteeSchedulingConstraintProvider implements ConstraintProvider
         }
 
         private Constraint inspectionRotation(ConstraintFactory constraintFactory) {
-                return constraintFactory.forEach(CommitteeAssignment.class)
-                                .filter(ca -> ca.assignedPerson.hasAlreadyInspected.stream()
-                                                .anyMatch(name -> ca.committee.evaluatedPerson.name
-                                                                .equalsIgnoreCase(name)))
-                                .penalize("Inspector rotation", HardMediumSoftScore.ONE_HARD);
+                return getCommitteeAssignments(constraintFactory)
+                                .filter((committee, assignments) -> committee
+                                                .inspectionRotationBroken(assignments))
+                                .penalize("Inspector rotation not respected",
+                                                HardMediumSoftScore.ONE_HARD);
+        }
+
+        private Constraint inspectionFollowUp(ConstraintFactory constraintFactory) {
+                return getCommitteeAssignments(constraintFactory)
+                                .filter((committee, assignments) -> !committee
+                                                .inspectionFollowUpRespected(assignments))
+                                .penalize("Inspector follow up not respected",
+                                                HardMediumSoftScore.ONE_HARD);
         }
 
         private Constraint vetoes(ConstraintFactory constraintFactory) {

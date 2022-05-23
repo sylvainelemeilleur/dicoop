@@ -30,7 +30,7 @@ public class Person implements Comparable<Person> {
 
     public List<Person> vetoes = new ArrayList<>();
 
-    public List<String> hasAlreadyInspected = new ArrayList<>();
+    public List<List<String>> hasAlreadyInspected = new ArrayList<>();
 
     public Long maxNumberOfInspections;
 
@@ -114,8 +114,29 @@ public class Person implements Comparable<Person> {
         return numberOfAssignmentsRangeConstraint.contains(assignments.size());
     }
 
-    public boolean isProfessional() {
-        return personType == PersonType.PROFESSIONAL;
+    /**
+     * If the list of people I've already inspected is not empty and has more than one element, then
+     * for each element in the list, if the element contains the name of the person I'm evaluating,
+     * then return true
+     *
+     * @param evaluatedPerson The person that is being evaluated.
+     * @return A boolean value.
+     */
+    public boolean hasAlreadyInspectedInThePast(Person evaluatedPerson) {
+        if (hasAlreadyInspected != null && hasAlreadyInspected.size() > 1) {
+            for (int i = 1; i < hasAlreadyInspected.size(); i++) {
+                var current = hasAlreadyInspected.get(i);
+                if (current.contains(evaluatedPerson.name)) {
+                    return true;
+                }
+            }
+        }
+        return false;
+    }
+
+    public boolean hasAlreadyInspectedLastTime(Person evaluatedPerson) {
+        return (hasAlreadyInspected != null && !hasAlreadyInspected.isEmpty()
+                && hasAlreadyInspected.get(0).contains(evaluatedPerson.name));
     }
 
     @Override

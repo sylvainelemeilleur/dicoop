@@ -180,6 +180,9 @@ function parseSettings(sheetData: Array<any>): Settings {
       case Constants.SETTING_NUMBER_OF_ROTATIONS_TO_REINSPECT:
         settings.nbRotationsToReinspect = +rowData[1];
         break;
+      case Constants.SETTING_NUMBER_OF_INSPECTORS_FOLLOWING_UP:
+        settings.nbInspectorsFollowingUp = +rowData[1];
+        break;
       case Constants.SETTING_TRAVELLING_DISTANCE_RANGE:
         settings.travellingDistanceRange = rowToRange(rowData);
         break;
@@ -221,7 +224,7 @@ function parseParticipants(sheetData: Array<any>): Array<Person> {
       maxNumberOfInspections: parseNumber(
         rowData[Constants.PARTICIPANT_MAX_NUMBER_OF_INSPECTIONS]
       ),
-      hasAlreadyInspected: [] as Array<string>,
+      hasAlreadyInspected: [] as Array<Array<string>>,
     } as Person;
     participants.push(person);
   });

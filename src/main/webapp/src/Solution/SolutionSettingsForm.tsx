@@ -182,11 +182,31 @@ function SolutionSettingsForm({
             <br />
             <NumberInput
               value={settingsState.nbRotationsToReinspect}
+              min={0}
               required
               size="xs"
               style={{ width: "60px", display: "inline-block" }}
               onChange={(value) =>
                 setSettingsState({ nbRotationsToReinspect: value })
+              }
+            />
+          </InputWrapper>
+
+          <Space h="lg" />
+
+          <InputWrapper
+            id="nbInspectorsFollowingUp"
+            label={t("settings.nbInspectorsFollowingUp")}
+          >
+            <br />
+            <NumberInput
+              value={settingsState.nbInspectorsFollowingUp}
+              min={0}
+              required
+              size="xs"
+              style={{ width: "60px", display: "inline-block" }}
+              onChange={(value) =>
+                setSettingsState({ nbInspectorsFollowingUp: value })
               }
             />
           </InputWrapper>
@@ -200,6 +220,7 @@ function SolutionSettingsForm({
             <br />
             <NumberInput
               label="Min"
+              min={0}
               value={settingsState.travellingDistanceRange[0]}
               required
               size="xs"
@@ -215,6 +236,7 @@ function SolutionSettingsForm({
             />
             <NumberInput
               label="Max"
+              min={0}
               value={settingsState.travellingDistanceRange[1]}
               required
               size="xs"
