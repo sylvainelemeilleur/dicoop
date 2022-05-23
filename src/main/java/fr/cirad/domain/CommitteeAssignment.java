@@ -1,20 +1,21 @@
 package fr.cirad.domain;
 
 import java.util.Comparator;
-import java.util.List;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import org.optaplanner.core.api.domain.entity.PlanningEntity;
 import org.optaplanner.core.api.domain.lookup.PlanningId;
 import org.optaplanner.core.api.domain.variable.PlanningVariable;
+import fr.cirad.solver.CommitteeAssignmentDifficultyComparator;
+import fr.cirad.solver.PersonStrengthComparator;
 
-@PlanningEntity
+@PlanningEntity(difficultyComparatorClass = CommitteeAssignmentDifficultyComparator.class)
 public class CommitteeAssignment implements Comparable<CommitteeAssignment> {
 
     @PlanningId
     public Long id;
 
     @PlanningVariable(valueRangeProviderRefs = {"personRange"},
-            nullable = true)
+            nullable = true, strengthComparatorClass = PersonStrengthComparator.class)
     public Person assignedPerson;
 
     public Committee committee;
@@ -73,10 +74,12 @@ public class CommitteeAssignment implements Comparable<CommitteeAssignment> {
         int score = 0;
         if (assignedPerson.personType.equals(requiredPersonType))
             score += 1;
-        if (committee.atLeastOnePersonIsAvailable(List.of(this)))
+        if (committee.atLeastOnePersonIsAvailable(assignedPerson.assignments))
             score += 1;
-        if (committee.atLeastOnePersonHasTheRequiredSkills(List.of(this)))
+        if (committee.atLeastOnePersonHasTheRequiredSkills(assignedPerson.assignments))
             score += 1;
+        if (committee.metMinimumAssignments(assignedPerson.assignments))
+            score += 10;
         return score;
     }
 

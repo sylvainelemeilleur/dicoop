@@ -51,13 +51,6 @@ public class Committee implements Comparable<Committee> {
         return true;
     }
 
-    public boolean correctNumberOfProfessionals(List<CommitteeAssignment> assignments) {
-        int nbProfessionals = assignments.stream()
-                .filter(a -> a.assignedPerson != null && a.assignedPerson.isProfessional())
-                .mapToInt(a -> 1).sum();
-        return settings.nbProParticipants.contains(nbProfessionals);
-    }
-
     private boolean metMinimumAssignmentsByPersonType(List<CommitteeAssignment> assignments,
             PersonType personType, int minimum) {
         long numberOfPersonsOfThisType = assignments.stream()
