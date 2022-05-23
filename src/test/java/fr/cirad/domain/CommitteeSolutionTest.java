@@ -47,15 +47,32 @@ class CommitteeSolutionTest {
 
         // @Test
         void benchmark() throws IOException {
-                var solverOptions = loadDefaultSolverOptions();
-                var problem = new CommitteeSolution(UUID.randomUUID(), solverOptions);
-                PlannerBenchmark benchmark = benchmarkFactory.buildPlannerBenchmark(problem);
+                // problem 1
+                var solverOptions1 = loadDefaultSolverOptions();
+                var problem1 = new CommitteeSolution(UUID.randomUUID(), solverOptions1);
+
+                // problem 2
+                var solverOptions2 = loadDefaultSolverOptions();
+                solverOptions2.settings.numberOfAssignmentsForAProfessional = new Range(2, 2);
+                var problem2 = new CommitteeSolution(UUID.randomUUID(), solverOptions2);
+
+                // problem 3
+                var solverOptions3 = loadDefaultSolverOptions();
+                solverOptions3.settings.nbProParticipants = new Range(0, 5);
+                solverOptions3.settings.nbNonProParticipants = new Range(0, 5);
+                solverOptions3.participants.stream().filter(p -> p.needsEvaluation).limit(31)
+                                .forEach(p -> p.needsEvaluation = false);
+                var problem3 = new CommitteeSolution(UUID.randomUUID(), solverOptions3);
+
+                // benchmark
+                PlannerBenchmark benchmark = benchmarkFactory.buildPlannerBenchmark(problem1,
+                                problem2, problem3);
                 var path = benchmark.benchmark().toPath().toAbsolutePath().toString();
                 assertNotNull(path);
                 System.out.println("PATH: " + path);
         }
 
-        // @Test
+        @Test
         void solutionTest() throws IOException, InterruptedException, ExecutionException {
                 var solverOptions = loadDefaultSolverOptions();
                 var problem = new CommitteeSolution(UUID.randomUUID(), solverOptions);
