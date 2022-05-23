@@ -14,7 +14,7 @@ import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
 import org.jboss.logging.Logger;
 import org.optaplanner.core.api.score.ScoreManager;
-import org.optaplanner.core.api.score.buildin.hardsoft.HardSoftScore;
+import org.optaplanner.core.api.score.buildin.hardmediumsoft.HardMediumSoftScore;
 import org.optaplanner.core.api.solver.SolverManager;
 import org.optaplanner.core.api.solver.SolverStatus;
 import fr.cirad.domain.CommitteeSolution;
@@ -33,7 +33,7 @@ public class CommitteeSolutionResource {
     SolverManager<CommitteeSolution, UUID> solverManager;
 
     @Inject
-    ScoreManager<CommitteeSolution, HardSoftScore> scoreManager;
+    ScoreManager<CommitteeSolution, HardMediumSoftScore> scoreManager;
 
     @Inject
     Logger log;

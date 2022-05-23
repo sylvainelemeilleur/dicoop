@@ -5,6 +5,7 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
+import java.util.ArrayList;
 import java.util.UUID;
 import java.util.concurrent.ExecutionException;
 import javax.inject.Inject;
@@ -12,7 +13,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.Test;
 import org.optaplanner.benchmark.api.PlannerBenchmark;
 import org.optaplanner.benchmark.api.PlannerBenchmarkFactory;
-import org.optaplanner.core.api.score.buildin.hardsoft.HardSoftScore;
+import org.optaplanner.core.api.score.buildin.hardmediumsoft.HardMediumSoftScore;
 import org.optaplanner.core.api.solver.SolverManager;
 import org.optaplanner.test.api.score.stream.ConstraintVerifier;
 import fr.cirad.solver.CommitteeSchedulingConstraintProvider;
@@ -69,6 +70,9 @@ class CommitteeSolutionTest {
 
                 // create a solution from the default data
                 var solution = new CommitteeSolution(UUID.randomUUID(), solverOptions);
+
+                // reset the solution assignments
+                solution.committeeAssignments = new ArrayList<>();
 
                 // populate the solution with the default data
                 addCommitteeAssignments("Léo", "Isaac", "Emma", "Mathilde", solverOptions,
@@ -132,7 +136,7 @@ class CommitteeSolutionTest {
 
                 // test all the constraints
                 constraintProvider.verifyThat().given(solution.committeeAssignments.toArray())
-                                .scores(HardSoftScore.of(0, 0));
+                                .scores(HardMediumSoftScore.of(0, 0, 0));
         }
 
         private void addCommitteeAssignments(String evaluated, String p1, String p2, String p3,
@@ -148,6 +152,8 @@ class CommitteeSolutionTest {
                         Committee committee, SolverOptions solverOptions,
                         CommitteeSolution solution) {
                 var person = solution.getPersonByName(personName);
+                if (!person.isPresent())
+                        throw new IllegalArgumentException("Person " + personName + " not found");
                 var assignment = new CommitteeAssignment(committeeAssignmentId++, person.get(),
                                 committee,
                                 personType,

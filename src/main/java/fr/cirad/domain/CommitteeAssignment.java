@@ -90,7 +90,8 @@ public class CommitteeAssignment implements Comparable<CommitteeAssignment> {
 
     @Override
     public String toString() {
-        return " CommitteeAssignment: " + assignedPerson + " for " + committee + " (" + id + ")";
+        return " CommitteeAssignment: assigned person " + assignedPerson + " for " + committee
+                + " (" + id + ")";
     }
 
     @Override

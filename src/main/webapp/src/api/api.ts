@@ -66,6 +66,12 @@ export interface Committee {
 export interface CommitteeAssignment {
     /**
      * 
+     * @type {number}
+     * @memberof CommitteeAssignment
+     */
+    id?: number;
+    /**
+     * 
      * @type {Person}
      * @memberof CommitteeAssignment
      */
@@ -103,10 +109,10 @@ export interface CommitteeSolution {
     committeeAssignments?: Array<CommitteeAssignment>;
     /**
      * 
-     * @type {HardSoftScore}
+     * @type {HardMediumSoftScore}
      * @memberof CommitteeSolution
      */
-    score?: HardSoftScore;
+    score?: HardMediumSoftScore;
     /**
      * 
      * @type {string}
@@ -142,49 +148,55 @@ export interface DistanceMatrix {
 /**
  * 
  * @export
- * @interface HardSoftScore
+ * @interface HardMediumSoftScore
  */
-export interface HardSoftScore {
+export interface HardMediumSoftScore {
     /**
      * 
      * @type {boolean}
-     * @memberof HardSoftScore
+     * @memberof HardMediumSoftScore
      */
     zero?: boolean;
     /**
      * 
      * @type {number}
-     * @memberof HardSoftScore
+     * @memberof HardMediumSoftScore
      */
     initScore?: number;
     /**
      * 
      * @type {boolean}
-     * @memberof HardSoftScore
+     * @memberof HardMediumSoftScore
      */
     solutionInitialized?: boolean;
     /**
      * 
      * @type {string}
-     * @memberof HardSoftScore
+     * @memberof HardMediumSoftScore
      */
     initPrefix?: string;
     /**
      * 
      * @type {number}
-     * @memberof HardSoftScore
+     * @memberof HardMediumSoftScore
      */
     hardScore?: number;
     /**
      * 
      * @type {number}
-     * @memberof HardSoftScore
+     * @memberof HardMediumSoftScore
+     */
+    mediumScore?: number;
+    /**
+     * 
+     * @type {number}
+     * @memberof HardMediumSoftScore
      */
     softScore?: number;
     /**
      * 
      * @type {boolean}
-     * @memberof HardSoftScore
+     * @memberof HardMediumSoftScore
      */
     feasible?: boolean;
 }
@@ -288,16 +300,16 @@ export interface Person {
     maxNumberOfInspections?: number;
     /**
      * 
-     * @type {boolean}
-     * @memberof Person
-     */
-    internalNullPerson?: boolean;
-    /**
-     * 
      * @type {number}
      * @memberof Person
      */
     numberOfAssignments?: number;
+    /**
+     * 
+     * @type {boolean}
+     * @memberof Person
+     */
+    professional?: boolean;
 }
 /**
  * 
