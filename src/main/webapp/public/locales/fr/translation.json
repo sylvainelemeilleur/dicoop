@@ -44,6 +44,7 @@
         "score": {
             "initScore": "Score initial",
             "hardScore": "Score hard",
+            "mediumScore": "Score medium",
             "softScore": "Score soft",
             "feasible": "Faisable",
             "solutionInitialized": "Solution initialisée",
@@ -60,6 +61,7 @@
         "nbExternalParticipants": "Nombre de participants externes",
         "nbAssignmentsPerExternal": "Nombre d'affectations par participant externe",
         "nbRotations": "Nombre de rotations pour réinspecter un participant",
+        "nbInspectorsFollowingUp": "Nombre d'inspecteurs assurant le suivi",
         "travellingDistanceRange": "Distance de déplacement",
         "useAvailability": "Utiliser les disponibilités",
         "shuffleParticipants": "Mélanger les participants aléatoirement"

@@ -15,13 +15,18 @@ class PersonTest {
         var person3 = new Person("person3");
         var committee1 = new Committee(person1, settings);
         var committee2 = new Committee(person2, settings);
-        var assignment1 = new CommitteeAssignment(person2, committee1, PersonType.PROFESSIONAL,
+        Long committeeAssignmentId = 0l;
+        var assignment1 = new CommitteeAssignment(committeeAssignmentId++, person2, committee1,
+                        PersonType.PROFESSIONAL,
                 distanceMatrix);
-        var assignment2 = new CommitteeAssignment(person3, committee1, PersonType.PROFESSIONAL,
+        var assignment2 = new CommitteeAssignment(committeeAssignmentId++, person3, committee1,
+                        PersonType.PROFESSIONAL,
                 distanceMatrix);
-        var assignment3 = new CommitteeAssignment(person1, committee2, PersonType.PROFESSIONAL,
+        var assignment3 = new CommitteeAssignment(committeeAssignmentId++, person1, committee2,
+                        PersonType.PROFESSIONAL,
                 distanceMatrix);
-        var assignment4 = new CommitteeAssignment(person3, committee2, PersonType.PROFESSIONAL,
+        var assignment4 = new CommitteeAssignment(committeeAssignmentId++, person3, committee2,
+                        PersonType.PROFESSIONAL,
                 distanceMatrix);
         person1.assignments.add(assignment3);
         person2.assignments.add(assignment1);

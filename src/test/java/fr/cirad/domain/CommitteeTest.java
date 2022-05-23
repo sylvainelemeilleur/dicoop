@@ -21,9 +21,11 @@ class CommitteeTest {
         var person3 = new Person("person3");
         person3.personType = PersonType.PROFESSIONAL;
         var committee1 = new Committee(person1, settings);
-        var assignment1 = new CommitteeAssignment(person2, committee1, PersonType.PROFESSIONAL,
+        var assignment1 = new CommitteeAssignment(1l, person2, committee1,
+                PersonType.PROFESSIONAL,
                 distanceMatrix);
-        var assignment2 = new CommitteeAssignment(person3, committee1, PersonType.PROFESSIONAL,
+        var assignment2 = new CommitteeAssignment(2l, person3, committee1,
+                PersonType.PROFESSIONAL,
                 distanceMatrix);
         var assignments = List.of(assignment1, assignment2);
         // Test with min 2 Pros

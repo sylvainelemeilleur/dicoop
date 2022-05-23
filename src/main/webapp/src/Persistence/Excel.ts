@@ -84,6 +84,10 @@ export function excelExport(
       settings.nbRotationsToReinspect,
     ],
     [
+      Constants.SETTING_NUMBER_OF_INSPECTORS_FOLLOWING_UP,
+      settings.nbInspectorsFollowingUp,
+    ],
+    [
       Constants.SETTING_TRAVELLING_DISTANCE_RANGE,
       settings.travellingDistanceRange?.value?.[0],
       settings.travellingDistanceRange?.value?.[1],

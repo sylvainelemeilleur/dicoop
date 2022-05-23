@@ -5,12 +5,20 @@ import fr.cirad.domain.Person;
 
 public class PersonStrengthComparator implements Comparator<Person> {
 
+    private static final Comparator<Person> COMPARATOR =
+            Comparator.comparing(Person::getNumberOfAssignments);
+
     @Override
-    public int compare(Person p1, Person p2) {
-        if (p1 == null || p2 == null) {
-            return 0;
+    public int compare(Person a, Person b) {
+        if (a == null) {
+            if (b == null) {
+                return 0;
+            }
+            return -1;
+        } else if (b == null) {
+            return 1;
         }
-        return p1.getNumberOfAssignments() - p2.getNumberOfAssignments();
+        return COMPARATOR.compare(a, b);
     }
 
 }

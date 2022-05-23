@@ -11,6 +11,7 @@ public class Settings {
     public Range numberOfAssignmentsForAnExternal;
 
     public int nbRotationsToReinspect;
+    public int nbInspectorsFollowingUp;
 
     public DistanceMatrix distanceMatrix;
     public Range travellingDistanceRange;

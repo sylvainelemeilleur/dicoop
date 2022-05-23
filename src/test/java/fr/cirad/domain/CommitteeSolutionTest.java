@@ -5,6 +5,7 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
+import java.util.ArrayList;
 import java.util.UUID;
 import java.util.concurrent.ExecutionException;
 import javax.inject.Inject;
@@ -12,7 +13,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.Test;
 import org.optaplanner.benchmark.api.PlannerBenchmark;
 import org.optaplanner.benchmark.api.PlannerBenchmarkFactory;
-import org.optaplanner.core.api.score.buildin.hardsoft.HardSoftScore;
+import org.optaplanner.core.api.score.buildin.hardmediumsoft.HardMediumSoftScore;
 import org.optaplanner.core.api.solver.SolverManager;
 import org.optaplanner.test.api.score.stream.ConstraintVerifier;
 import fr.cirad.solver.CommitteeSchedulingConstraintProvider;
@@ -30,6 +31,8 @@ class CommitteeSolutionTest {
         @Inject
         PlannerBenchmarkFactory benchmarkFactory;
 
+        Long committeeAssignmentId = 0L;
+
         private String getResourceAsText(String filename) throws IOException {
                 var path = Paths.get("src/test/resources", filename);
                 return Files.readString(path);
@@ -44,9 +47,26 @@ class CommitteeSolutionTest {
 
         // @Test
         void benchmark() throws IOException {
-                var solverOptions = loadDefaultSolverOptions();
-                var problem = new CommitteeSolution(solverOptions);
-                PlannerBenchmark benchmark = benchmarkFactory.buildPlannerBenchmark(problem);
+                // problem 1
+                var solverOptions1 = loadDefaultSolverOptions();
+                var problem1 = new CommitteeSolution(UUID.randomUUID(), solverOptions1);
+
+                // problem 2
+                var solverOptions2 = loadDefaultSolverOptions();
+                solverOptions2.settings.numberOfAssignmentsForAProfessional = new Range(2, 2);
+                var problem2 = new CommitteeSolution(UUID.randomUUID(), solverOptions2);
+
+                // problem 3
+                var solverOptions3 = loadDefaultSolverOptions();
+                solverOptions3.settings.nbProParticipants = new Range(0, 5);
+                solverOptions3.settings.nbNonProParticipants = new Range(0, 5);
+                solverOptions3.participants.stream().filter(p -> p.needsEvaluation).limit(31)
+                                .forEach(p -> p.needsEvaluation = false);
+                var problem3 = new CommitteeSolution(UUID.randomUUID(), solverOptions3);
+
+                // benchmark
+                PlannerBenchmark benchmark = benchmarkFactory.buildPlannerBenchmark(problem1,
+                                problem2, problem3);
                 var path = benchmark.benchmark().toPath().toAbsolutePath().toString();
                 assertNotNull(path);
                 System.out.println("PATH: " + path);
@@ -55,7 +75,7 @@ class CommitteeSolutionTest {
         @Test
         void solutionTest() throws IOException, InterruptedException, ExecutionException {
                 var solverOptions = loadDefaultSolverOptions();
-                var problem = new CommitteeSolution(solverOptions);
+                var problem = new CommitteeSolution(UUID.randomUUID(), solverOptions);
                 var solverJob = solverManager.solve(problem.id, problem);
                 var solution = solverJob.getFinalBestSolution();
                 assertTrue(solution.score.isFeasible());
@@ -66,7 +86,10 @@ class CommitteeSolutionTest {
                 var solverOptions = loadDefaultSolverOptions();
 
                 // create a solution from the default data
-                var solution = new CommitteeSolution(solverOptions);
+                var solution = new CommitteeSolution(UUID.randomUUID(), solverOptions);
+
+                // reset the solution assignments
+                solution.committeeAssignments = new ArrayList<>();
 
                 // populate the solution with the default data
                 addCommitteeAssignments("Léo", "Isaac", "Emma", "Mathilde", solverOptions,
@@ -130,7 +153,7 @@ class CommitteeSolutionTest {
 
                 // test all the constraints
                 constraintProvider.verifyThat().given(solution.committeeAssignments.toArray())
-                                .scores(HardSoftScore.of(0, 0));
+                                .scores(HardMediumSoftScore.of(0, 0, 0));
         }
 
         private void addCommitteeAssignments(String evaluated, String p1, String p2, String p3,
@@ -146,7 +169,11 @@ class CommitteeSolutionTest {
                         Committee committee, SolverOptions solverOptions,
                         CommitteeSolution solution) {
                 var person = solution.getPersonByName(personName);
-                var assignment = new CommitteeAssignment(person.get(), committee, personType,
+                if (!person.isPresent())
+                        throw new IllegalArgumentException("Person " + personName + " not found");
+                var assignment = new CommitteeAssignment(committeeAssignmentId++, person.get(),
+                                committee,
+                                personType,
                                 solverOptions.settings.distanceMatrix);
                 solution.committeeAssignments.add(assignment);
         }

@@ -8,19 +8,22 @@ import java.util.UUID;
 import java.util.stream.Collectors;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.google.common.base.Strings;
+import org.optaplanner.core.api.domain.lookup.PlanningId;
 import org.optaplanner.core.api.domain.solution.PlanningEntityCollectionProperty;
 import org.optaplanner.core.api.domain.solution.PlanningScore;
 import org.optaplanner.core.api.domain.solution.PlanningSolution;
 import org.optaplanner.core.api.domain.solution.ProblemFactCollectionProperty;
 import org.optaplanner.core.api.domain.valuerange.ValueRangeProvider;
-import org.optaplanner.core.api.score.buildin.hardsoft.HardSoftScore;
+import org.optaplanner.core.api.score.buildin.hardmediumsoft.HardMediumSoftScore;
 import org.optaplanner.core.api.solver.SolverStatus;
 
 @PlanningSolution
 public class CommitteeSolution {
 
+    @PlanningId
     public UUID id;
 
+    @ProblemFactCollectionProperty
     @JsonIgnore
     public List<Committee> committees;
 
@@ -31,14 +34,13 @@ public class CommitteeSolution {
 
     @ProblemFactCollectionProperty
     @JsonIgnore
-    @ValueRangeProvider(id = "timeSlotRange")
     public List<TimeSlot> timeSlots;
 
     @PlanningEntityCollectionProperty
     public List<CommitteeAssignment> committeeAssignments;
 
     @PlanningScore
-    public HardSoftScore score = null;
+    public HardMediumSoftScore score = null;
 
     public String scoreExplanation = "";
 
@@ -47,11 +49,11 @@ public class CommitteeSolution {
     public SolverStatus solverStatus;
 
     public CommitteeSolution() {
-        // No-arg constructor required for OptaPlanner
+        // must have a no-args constructor so it can be constructed by OptaPlanner
     }
 
-    public CommitteeSolution(SolverOptions options) {
-        this.id = UUID.randomUUID();
+    public CommitteeSolution(UUID id, SolverOptions options) {
+        this.id = id;
         this.persons = options.participants;
 
         // set range option for each participant and also travelling distance constraint
@@ -68,28 +70,28 @@ public class CommitteeSolution {
         this.committees = this.persons.stream().filter(person -> person.needsEvaluation)
                 .map(person -> new Committee(person, options.settings))
                 .collect(Collectors.toList());
-        this.committeeAssignments = new ArrayList<>();
 
         // initialization of the Committees assignments needed (professionals, non-professionals and
         // externals)
+        this.committeeAssignments = new ArrayList<>();
+        Long committeeAssignmentId = 0L;
         for (var committee : this.committees) {
             for (int i = 1; i <= options.settings.nbProParticipants.getMax(); i++) {
-                this.committeeAssignments.add(new CommitteeAssignment(committee,
+                this.committeeAssignments.add(new CommitteeAssignment(committeeAssignmentId++,
+                        committee,
                         PersonType.PROFESSIONAL, options.settings.distanceMatrix));
             }
             for (int i = 1; i <= options.settings.nbNonProParticipants.getMax(); i++) {
-                this.committeeAssignments.add(new CommitteeAssignment(committee,
+                this.committeeAssignments.add(new CommitteeAssignment(committeeAssignmentId++,
+                        committee,
                         PersonType.NON_PROFESSIONAL, options.settings.distanceMatrix));
             }
             for (int i = 1; i <= options.settings.nbExternalParticipants.getMax(); i++) {
-                this.committeeAssignments.add(new CommitteeAssignment(committee,
+                this.committeeAssignments.add(new CommitteeAssignment(committeeAssignmentId++,
+                        committee,
                         PersonType.EXTERNAL, options.settings.distanceMatrix));
             }
         }
-
-        // Adding the null person to be able to occupy assignments without criteria to handle
-        // persons ranges
-        this.persons.add(Person.NULL_PERSON);
 
         // Optional shuffling of the participants
         if (Boolean.TRUE.equals(options.settings.shuffleParticipants)) {
