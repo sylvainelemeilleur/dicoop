@@ -2,7 +2,6 @@ package fr.cirad.domain;
 
 import java.util.Comparator;
 import java.util.List;
-import java.util.UUID;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import org.optaplanner.core.api.domain.entity.PlanningEntity;
 import org.optaplanner.core.api.domain.lookup.PlanningId;
@@ -12,7 +11,7 @@ import org.optaplanner.core.api.domain.variable.PlanningVariable;
 public class CommitteeAssignment implements Comparable<CommitteeAssignment> {
 
     @PlanningId
-    public UUID id;
+    public Long id;
 
     @PlanningVariable(valueRangeProviderRefs = {"personRange"},
             nullable = true)
@@ -32,7 +31,7 @@ public class CommitteeAssignment implements Comparable<CommitteeAssignment> {
         // must have a no-args constructor so it can be constructed by OptaPlanner
     }
 
-    public CommitteeAssignment(UUID id, Person assignedPerson, Committee committee,
+    public CommitteeAssignment(Long id, Person assignedPerson, Committee committee,
             PersonType requiredPersonType, DistanceMatrix distanceMatrix) {
         this.id = id;
         this.assignedPerson = assignedPerson;
@@ -41,7 +40,7 @@ public class CommitteeAssignment implements Comparable<CommitteeAssignment> {
         this.distanceMatrix = distanceMatrix;
     }
 
-    public CommitteeAssignment(UUID id, Committee committee, PersonType requiredPersonType,
+    public CommitteeAssignment(Long id, Committee committee, PersonType requiredPersonType,
             DistanceMatrix distanceMatrix) {
         this.id = id;
         this.committee = committee;

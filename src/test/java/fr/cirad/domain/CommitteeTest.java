@@ -3,7 +3,6 @@ package fr.cirad.domain;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import java.util.List;
-import java.util.UUID;
 import org.junit.jupiter.api.Test;
 
 class CommitteeTest {
@@ -21,11 +20,11 @@ class CommitteeTest {
         person2.personType = PersonType.PROFESSIONAL;
         var person3 = new Person("person3");
         person3.personType = PersonType.PROFESSIONAL;
-        var committee1 = new Committee(UUID.randomUUID(), person1, settings);
-        var assignment1 = new CommitteeAssignment(UUID.randomUUID(), person2, committee1,
+        var committee1 = new Committee(person1, settings);
+        var assignment1 = new CommitteeAssignment(1l, person2, committee1,
                 PersonType.PROFESSIONAL,
                 distanceMatrix);
-        var assignment2 = new CommitteeAssignment(UUID.randomUUID(), person3, committee1,
+        var assignment2 = new CommitteeAssignment(2l, person3, committee1,
                 PersonType.PROFESSIONAL,
                 distanceMatrix);
         var assignments = List.of(assignment1, assignment2);

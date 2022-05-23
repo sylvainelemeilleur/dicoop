@@ -14,7 +14,7 @@ import org.optaplanner.core.api.domain.solution.PlanningScore;
 import org.optaplanner.core.api.domain.solution.PlanningSolution;
 import org.optaplanner.core.api.domain.solution.ProblemFactCollectionProperty;
 import org.optaplanner.core.api.domain.valuerange.ValueRangeProvider;
-import org.optaplanner.core.api.score.buildin.hardsoft.HardSoftScore;
+import org.optaplanner.core.api.score.buildin.hardmediumsoft.HardMediumSoftScore;
 import org.optaplanner.core.api.solver.SolverStatus;
 
 @PlanningSolution
@@ -40,7 +40,7 @@ public class CommitteeSolution {
     public List<CommitteeAssignment> committeeAssignments;
 
     @PlanningScore
-    public HardSoftScore score = null;
+    public HardMediumSoftScore score = null;
 
     public String scoreExplanation = "";
 
@@ -68,23 +68,27 @@ public class CommitteeSolution {
 
         // Committees based on persons required skills
         this.committees = this.persons.stream().filter(person -> person.needsEvaluation)
-                .map(person -> new Committee(UUID.randomUUID(), person, options.settings))
+                .map(person -> new Committee(person, options.settings))
                 .collect(Collectors.toList());
 
         // initialization of the Committees assignments needed (professionals, non-professionals and
         // externals)
         this.committeeAssignments = new ArrayList<>();
+        Long committeeAssignmentId = 0L;
         for (var committee : this.committees) {
             for (int i = 1; i <= options.settings.nbProParticipants.getMax(); i++) {
-                this.committeeAssignments.add(new CommitteeAssignment(UUID.randomUUID(), committee,
+                this.committeeAssignments.add(new CommitteeAssignment(committeeAssignmentId++,
+                        committee,
                         PersonType.PROFESSIONAL, options.settings.distanceMatrix));
             }
             for (int i = 1; i <= options.settings.nbNonProParticipants.getMax(); i++) {
-                this.committeeAssignments.add(new CommitteeAssignment(UUID.randomUUID(), committee,
+                this.committeeAssignments.add(new CommitteeAssignment(committeeAssignmentId++,
+                        committee,
                         PersonType.NON_PROFESSIONAL, options.settings.distanceMatrix));
             }
             for (int i = 1; i <= options.settings.nbExternalParticipants.getMax(); i++) {
-                this.committeeAssignments.add(new CommitteeAssignment(UUID.randomUUID(), committee,
+                this.committeeAssignments.add(new CommitteeAssignment(committeeAssignmentId++,
+                        committee,
                         PersonType.EXTERNAL, options.settings.distanceMatrix));
             }
         }

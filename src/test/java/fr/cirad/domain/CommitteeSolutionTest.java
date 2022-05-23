@@ -30,6 +30,8 @@ class CommitteeSolutionTest {
         @Inject
         PlannerBenchmarkFactory benchmarkFactory;
 
+        Long committeeAssignmentId = 0L;
+
         private String getResourceAsText(String filename) throws IOException {
                 var path = Paths.get("src/test/resources", filename);
                 return Files.readString(path);
@@ -146,7 +148,8 @@ class CommitteeSolutionTest {
                         Committee committee, SolverOptions solverOptions,
                         CommitteeSolution solution) {
                 var person = solution.getPersonByName(personName);
-                var assignment = new CommitteeAssignment(UUID.randomUUID(), person.get(), committee,
+                var assignment = new CommitteeAssignment(committeeAssignmentId++, person.get(),
+                                committee,
                                 personType,
                                 solverOptions.settings.distanceMatrix);
                 solution.committeeAssignments.add(assignment);

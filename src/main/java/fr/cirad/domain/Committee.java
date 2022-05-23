@@ -3,13 +3,12 @@ package fr.cirad.domain;
 import java.time.Instant;
 import java.util.Comparator;
 import java.util.List;
-import java.util.UUID;
 import org.optaplanner.core.api.domain.lookup.PlanningId;
 
 public class Committee implements Comparable<Committee> {
 
     @PlanningId
-    public UUID id;
+    public String id;
 
     public Person evaluatedPerson;
 
@@ -22,8 +21,8 @@ public class Committee implements Comparable<Committee> {
     private static final Comparator<Committee> COMPARATOR =
             Comparator.comparing(c -> c.evaluatedPerson);
 
-    public Committee(UUID id, Person evaluatedPerson, Settings settings) {
-        this.id = id;
+    public Committee(Person evaluatedPerson, Settings settings) {
+        this.id = evaluatedPerson.name;
         this.evaluatedPerson = evaluatedPerson;
         this.settings = settings;
         this.useAvailability = settings.useAvailability;

@@ -44,6 +44,7 @@
         "score": {
             "initScore": "Initial score",
             "hardScore": "Hard score",
+            "mediumScore": "Medium score",
             "softScore": "Soft score",
             "feasible": "Feasible",
             "solutionInitialized": "Solution initialized",

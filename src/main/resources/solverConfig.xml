@@ -3,6 +3,6 @@
   <termination>
     <spentLimit>PT5M</spentLimit>
     <unimprovedSpentLimit>PT30S</unimprovedSpentLimit>
-    <bestScoreLimit>0hard/*soft</bestScoreLimit>
+    <bestScoreLimit>0hard/0medium/*soft</bestScoreLimit>
   </termination>
 </solver>
