@@ -72,7 +72,7 @@ class CommitteeSolutionTest {
                 System.out.println("PATH: " + path);
         }
 
-        @Test
+        // @Test
         void solutionTest() throws IOException, InterruptedException, ExecutionException {
                 var solverOptions = loadDefaultSolverOptions();
                 var problem = new CommitteeSolution(UUID.randomUUID(), solverOptions);
