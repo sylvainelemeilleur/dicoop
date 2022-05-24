@@ -49,6 +49,10 @@ public class CommitteeAssignment implements Comparable<CommitteeAssignment> {
         this.distanceMatrix = distanceMatrix;
     }
 
+    public long getId() {
+        return id;
+    }
+
     public Person getAssignedPerson() {
         return assignedPerson;
     }

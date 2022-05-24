@@ -60,9 +60,9 @@ function SolutionTable({ committees }: SolutionTableProps) {
             </td>
 
             <td role="cell" data-label="Timeslot">
-              {committee.findFirstTimeslotInCommon()}
+              {committee.findAllTimeslotsInCommon()}
             </td>
-            {assignmentsList(committee.assignments)}
+            {assignmentsList(committee.getAssignments())}
           </tr>
         ))}
       </tbody>

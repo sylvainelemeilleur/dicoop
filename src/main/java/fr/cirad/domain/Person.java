@@ -34,6 +34,12 @@ public class Person implements Comparable<Person> {
 
     public Long maxNumberOfInspections;
 
+    private Long maxNumberOfInspectionsCalc;
+
+    private Long minNumberOfInspectionsCalc;
+
+    public Settings settings;
+
     @InverseRelationShadowVariable(sourceVariableName = "assignedPerson")
     @JsonIgnore
     public List<CommitteeAssignment> assignments = new ArrayList<>();
@@ -50,34 +56,41 @@ public class Person implements Comparable<Person> {
         // must have a no-args constructor so it can be constructed by OptaPlanner
     }
 
-    public Person(String name) {
+    public Person(String name, Settings settings) {
         this.name = name;
+        this.settings = settings;
     }
 
-    public Person(String name, PersonType personType, List<Skill> skills, Location location,
-            List<Language> languages, List<TimeSlot> availability) {
-        this(name, personType, skills, location, languages, availability, List.of());
-    }
-
-    public Person(String name, PersonType personType, List<Skill> skills, Location location,
-            List<Language> languages, List<TimeSlot> availability,
-            List<Skill> requiredSkills) {
-        this.name = name;
-        this.personType = personType;
-        this.skills = skills;
-        this.location = location;
-        this.languages = languages;
-        this.availability = availability;
-        this.requiredSkills = requiredSkills;
+    /**
+     * This function must be called on each Person before running the solver. It will set the
+     * constraints on the number of assignments.
+     *
+     * @param settings The settings object that was passed to the plugin.
+     */
+    public void init(Settings settings) {
+        this.settings = settings;
+        this.maxNumberOfInspectionsCalc =
+                (long) settings.getNumberOfAssignmentsRange(this.personType).getMax();
+        // checks if maxNumberOfInspections is null
+        if (maxNumberOfInspections != null) {
+            this.maxNumberOfInspectionsCalc =
+                    Math.min(this.maxNumberOfInspectionsCalc, maxNumberOfInspections);
+        }
+        this.minNumberOfInspectionsCalc =
+                (long) settings.getNumberOfAssignmentsRange(this.personType).getMin();
     }
 
     // Checks if a person has more assignments than the maximum number of assignments
     public boolean hasMoreAssignmentsThanMaxNumberOfAssignments() {
-        // checks if maxNumberOfInspections is null
-        if (maxNumberOfInspections == null) {
-            return false;
-        }
-        return assignments.size() > maxNumberOfInspections;
+        return assignments.size() > maxNumberOfInspectionsCalc;
+    }
+
+    public boolean hasLessAssignmentsThanMinNumberOfAssignments() {
+        return assignments.size() < minNumberOfInspectionsCalc;
+    }
+
+    public List<TimeSlot> getAvailability() {
+        return availability;
     }
 
     public int getNumberOfAssignments() {
@@ -137,6 +150,17 @@ public class Person implements Comparable<Person> {
     public boolean hasAlreadyInspectedLastTime(Person evaluatedPerson) {
         return (hasAlreadyInspected != null && !hasAlreadyInspected.isEmpty()
                 && hasAlreadyInspected.get(0).contains(evaluatedPerson.name));
+    }
+
+    /**
+     * "If the sum of the distances of all assignments is not in the range of the travelling
+     * distance constraint, then the committee is not travelling in range."
+     *
+     * @return A boolean value.
+     */
+    public boolean isNotTravellingInRange() {
+        int distance = assignments.stream().mapToInt(CommitteeAssignment::getDistance).sum();
+        return !travellingDistanceRangeConstraint.contains(distance);
     }
 
     @Override

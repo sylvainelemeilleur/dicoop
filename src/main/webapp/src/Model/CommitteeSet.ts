@@ -36,7 +36,7 @@ export class CommitteeSet {
             set.committees[committeeId] ||
             new SolvedCommittee(committeeId, a.committee?.evaluatedPerson);
           if (a.assignedPerson?.name !== "INTERNAL_NULL_PERSON") {
-            set.committees[committeeId].assignments.push(a);
+            set.committees[committeeId].getAssignments().push(a);
           }
           return set;
         },

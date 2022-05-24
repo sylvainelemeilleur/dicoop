@@ -14,11 +14,11 @@ class CommitteeTest {
         settings.nbNonProParticipants = new Range(0, 0);
         settings.nbExternalParticipants = new Range(0, 0);
         var distanceMatrix = new DistanceMatrix();
-        var person1 = new Person("person1");
+        var person1 = new Person("person1", settings);
         person1.personType = PersonType.PROFESSIONAL;
-        var person2 = new Person("person2");
+        var person2 = new Person("person2", settings);
         person2.personType = PersonType.PROFESSIONAL;
-        var person3 = new Person("person3");
+        var person3 = new Person("person3", settings);
         person3.personType = PersonType.PROFESSIONAL;
         var committee1 = new Committee(person1, settings);
         var assignment1 = new CommitteeAssignment(1l, person2, committee1,

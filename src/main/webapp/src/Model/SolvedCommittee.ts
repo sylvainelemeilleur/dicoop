@@ -4,10 +4,10 @@ export class SolvedCommittee {
   constructor(
     public id: string,
     public evaluatedPerson?: Person,
-    public assignments: Array<CommitteeAssignment> = new Array<CommitteeAssignment>()
+    private _assignments: Array<CommitteeAssignment> = new Array<CommitteeAssignment>()
   ) {}
   findFirstTimeslotInCommon(): string {
-    const timeslots = this.assignments
+    const timeslots = this._assignments
       .flatMap((assignment) => assignment.assignedPerson?.availability)
       .map((t) => t?.name ?? "");
     for (const t of this.evaluatedPerson?.availability ?? []) {
@@ -16,5 +16,28 @@ export class SolvedCommittee {
       }
     }
     return "";
+  }
+  findAllTimeslotsInCommon(): string {
+    const result = new Array<string>();
+    for (const t of this.evaluatedPerson?.availability ?? []) {
+      if (t.name && this.isAvailableForAll(t.name)) {
+        result.push(t.name);
+      }
+    }
+    return result.join(", ");
+  }
+  isAvailableForAll(timeSlotName: string): boolean {
+    for (const assignment of this._assignments) {
+      if (
+        assignment.assignedPerson?.availability?.find(
+          (t) => t.name === timeSlotName
+        ) === undefined
+      )
+        return false;
+    }
+    return true;
+  }
+  getAssignments(): Array<CommitteeAssignment> {
+    return this._assignments;
   }
 }

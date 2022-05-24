@@ -235,7 +235,8 @@ function App() {
         const inspectionTurn = [] as string[];
         set.getCommittees().forEach((committee) => {
           if (
-            committee.assignments
+            committee
+              .getAssignments()
               .map((a) => a.assignedPerson?.name)
               .includes(participant.name)
           ) {

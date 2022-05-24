@@ -22,4 +22,15 @@ public class Settings {
     public Settings() {
         // Empty constructor needed by serialization
     }
+
+    public Range getNumberOfAssignmentsRange(PersonType personType) {
+        if (personType.equals(PersonType.PROFESSIONAL))
+            return numberOfAssignmentsForAProfessional;
+        else if (personType.equals(PersonType.NON_PROFESSIONAL))
+            return numberOfAssignmentsForANonProfessional;
+        else if (personType.equals(PersonType.EXTERNAL))
+            return numberOfAssignmentsForAnExternal;
+        else
+            return new Range(0, 5);
+    }
 }

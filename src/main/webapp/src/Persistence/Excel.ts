@@ -171,9 +171,11 @@ const exportCommittees = (
 ) => {
   committees.getCommittees().forEach((c: SolvedCommittee) => {
     const rowData = [c.evaluatedPerson?.name];
-    if (c.assignments.length) {
+    if (c.getAssignments().length) {
       rowData.push(c.findFirstTimeslotInCommon());
-      c.assignments.forEach((a: any) => rowData.push(a.assignedPerson.name));
+      c.getAssignments().forEach((a: any) =>
+        rowData.push(a.assignedPerson.name)
+      );
     }
     worksheetData.push(rowData);
   });

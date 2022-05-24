@@ -1,8 +1,8 @@
 package fr.cirad.solver;
 
-import static org.optaplanner.core.api.score.stream.ConstraintCollectors.sum;
 import static org.optaplanner.core.api.score.stream.ConstraintCollectors.toList;
 import static org.optaplanner.core.api.score.stream.Joiners.equal;
+import static org.optaplanner.core.api.score.stream.Joiners.lessThan;
 import java.util.List;
 import java.util.function.Function;
 import org.optaplanner.core.api.score.buildin.hardmediumsoft.HardMediumSoftScore;
@@ -22,8 +22,8 @@ public class CommitteeSchedulingConstraintProvider implements ConstraintProvider
                                 timeSlotConflict(constraintFactory),
                                 selfConflict(constraintFactory),
                                 committeeConflict(constraintFactory),
-                                committeeAssignmentsConflict(constraintFactory),
                                 maxNumberOfInspections(constraintFactory),
+                                minNumberOfInspections(constraintFactory),
                                 requiredPersonType(constraintFactory),
                                 requiredSkills(constraintFactory),
                                 nonReciprocity(constraintFactory),
@@ -74,9 +74,9 @@ public class CommitteeSchedulingConstraintProvider implements ConstraintProvider
                 return getCommitteeAssignments(constraintFactory)
                                 .filter((committee,
                                                 assignments) -> !committee
-                                                                .atLeastOnePersonIsAvailable(
+                                                                .allAssignedPersonsHaveAnAvailabilityInCommon(
                                                                                 assignments))
-                                .penalize("At least one person in a committee is available at the same time slot of the evaluated person",
+                                .penalize("All persons in a committee are available at the same time slot",
                                                 HardMediumSoftScore.ONE_HARD);
         }
 
@@ -95,29 +95,27 @@ public class CommitteeSchedulingConstraintProvider implements ConstraintProvider
         }
 
         private Constraint committeeConflict(ConstraintFactory constraintFactory) {
-                return constraintFactory.forEachUniquePair(CommitteeAssignment.class,
-
+                return constraintFactory.forEach(CommitteeAssignment.class).join(
+                                CommitteeAssignment.class,
+                                equal(CommitteeAssignment::getAssignedPerson),
                                 equal(CommitteeAssignment::getCommittee),
-                                equal(CommitteeAssignment::getAssignedPerson))
-                                .filter((assignment1,
-                                                assignment2) -> assignment1.assignedPerson != null)
+                                lessThan(CommitteeAssignment::getId))
                                 .penalize("A person cannot be assigned multiple times to the same committee",
                                                 HardMediumSoftScore.ofHard(100));
-        }
-
-        private Constraint committeeAssignmentsConflict(ConstraintFactory constraintFactory) {
-                return constraintFactory.forEach(Person.class)
-                                .filter(person -> person != null
-                                                && !person.numberOfAssignmentsRangeConstraint
-                                                .contains(person.assignments.size()))
-                                .penalize("Number of assignments per person",
-                                                HardMediumSoftScore.ONE_HARD);
         }
 
         private Constraint maxNumberOfInspections(ConstraintFactory constraintFactory) {
                 return constraintFactory.forEach(Person.class)
                                 .filter(Person::hasMoreAssignmentsThanMaxNumberOfAssignments)
-                                .penalize("Maximum number of inspection",
+                                .penalize("Maximum number of inspection per participant",
+                                                HardMediumSoftScore.ONE_HARD);
+        }
+
+
+        private Constraint minNumberOfInspections(ConstraintFactory constraintFactory) {
+                return constraintFactory.forEach(Person.class)
+                                .filter(Person::hasLessAssignmentsThanMinNumberOfAssignments)
+                                .penalize("Minimum number of inspection per participant",
                                                 HardMediumSoftScore.ONE_HARD);
         }
 
@@ -126,7 +124,7 @@ public class CommitteeSchedulingConstraintProvider implements ConstraintProvider
                                 .filter(committeeAssignment -> !committeeAssignment
                                                 .isRequiredPersonTypeCorrect())
                                 .penalize("Required person type to certificate",
-                                                HardMediumSoftScore.ONE_HARD);
+                                                HardMediumSoftScore.ofHard(100));
         }
 
         private Constraint requiredSkills(ConstraintFactory constraintFactory) {
@@ -189,7 +187,7 @@ public class CommitteeSchedulingConstraintProvider implements ConstraintProvider
                                 .filter((committee, assignments) -> !committee
                                                 .inspectionFollowUpRespected(assignments))
                                 .penalize("Inspector follow up not respected",
-                                                HardMediumSoftScore.ONE_HARD);
+                                                HardMediumSoftScore.ONE_MEDIUM);
         }
 
         private Constraint vetoes(ConstraintFactory constraintFactory) {
@@ -199,18 +197,8 @@ public class CommitteeSchedulingConstraintProvider implements ConstraintProvider
         }
 
         private Constraint travelling(ConstraintFactory constraintFactory) {
-                return constraintFactory.forEach(CommitteeAssignment.class)
-                                .groupBy(ca -> ca.assignedPerson,
-                                                sum(CommitteeAssignment::getDistance))
-                                .filter((person, distance) -> {
-                                        // if the assigned person does not have a location defined,
-                                        // return false
-                                        if (person.location == null) {
-                                                return false;
-                                        }
-                                        return !person.travellingDistanceRangeConstraint
-                                                        .contains(distance);
-                                })
+                return constraintFactory.forEach(Person.class)
+                                .filter(Person::isNotTravellingInRange)
                                 .penalize("Travelling distance range",
                                                 HardMediumSoftScore.ONE_HARD);
         }

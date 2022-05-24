@@ -3,6 +3,7 @@ package fr.cirad.domain;
 import java.time.Instant;
 import java.util.Comparator;
 import java.util.List;
+import java.util.stream.Collectors;
 import org.optaplanner.core.api.domain.lookup.PlanningId;
 
 public class Committee implements Comparable<Committee> {
@@ -26,6 +27,25 @@ public class Committee implements Comparable<Committee> {
         this.evaluatedPerson = evaluatedPerson;
         this.settings = settings;
         this.useAvailability = settings.useAvailability;
+    }
+
+    public boolean allAssignedPersonsHaveAnAvailabilityInCommon(
+            List<CommitteeAssignment> assignments) {
+        if (Boolean.TRUE.equals(useAvailability)) {
+            // copy of the evaluated person availability
+            List<TimeSlot> possibleTimeSlots =
+                    evaluatedPerson.availability.stream().collect(Collectors.toList());
+            for (CommitteeAssignment assignment : assignments) {
+                if (assignment.assignedPerson != null) {
+                    if (!assignment.assignedPerson.isAvailable(possibleTimeSlots)) {
+                        return false;
+                    } else {
+                        possibleTimeSlots.retainAll(assignment.assignedPerson.availability);
+                    }
+                }
+            }
+        }
+        return true;
     }
 
     public boolean atLeastOnePersonIsAvailable(List<CommitteeAssignment> assignments) {

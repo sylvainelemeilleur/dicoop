@@ -58,7 +58,7 @@ public class CommitteeSolution {
 
         // set range option for each participant and also travelling distance constraint
         this.persons.stream().forEach(p -> {
-            p.numberOfAssignmentsRangeConstraint = getNumberOfAssignmentsRange(p, options.settings);
+            p.init(options.settings);
             p.travellingDistanceRangeConstraint = options.settings.travellingDistanceRange;
         });
 
@@ -110,14 +110,4 @@ public class CommitteeSolution {
         return this.persons.stream().filter(person -> person.name.equals(personName)).findFirst();
     }
 
-    private Range getNumberOfAssignmentsRange(Person person, Settings settings) {
-        if (person.personType.equals(PersonType.PROFESSIONAL))
-            return settings.numberOfAssignmentsForAProfessional;
-        else if (person.personType.equals(PersonType.NON_PROFESSIONAL))
-            return settings.numberOfAssignmentsForANonProfessional;
-        else if (person.personType.equals(PersonType.EXTERNAL))
-            return settings.numberOfAssignmentsForAnExternal;
-        else
-            return new Range(0, 5);
-    }
 }

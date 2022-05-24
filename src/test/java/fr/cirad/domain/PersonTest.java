@@ -10,9 +10,9 @@ class PersonTest {
     void isEvaluatingAndReciprocityTest() {
             var settings = new Settings();
         var distanceMatrix = new DistanceMatrix();
-        var person1 = new Person("person1");
-        var person2 = new Person("person2");
-        var person3 = new Person("person3");
+        var person1 = new Person("person1", settings);
+        var person2 = new Person("person2", settings);
+        var person3 = new Person("person3", settings);
         var committee1 = new Committee(person1, settings);
         var committee2 = new Committee(person2, settings);
         Long committeeAssignmentId = 0l;
