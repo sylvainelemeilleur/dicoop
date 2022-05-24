@@ -74,7 +74,9 @@ public class Committee implements Comparable<Committee> {
     private boolean metMinimumAssignmentsByPersonType(List<CommitteeAssignment> assignments,
             PersonType personType, int minimum) {
         long numberOfPersonsOfThisType = assignments.stream()
-                .filter(a -> a.getAssignedPerson().personType.equals(personType)).count();
+                .filter(a -> a.getAssignedPerson() != null
+                        && a.getAssignedPerson().personType.equals(personType))
+                .count();
         return (numberOfPersonsOfThisType >= minimum);
     }
 

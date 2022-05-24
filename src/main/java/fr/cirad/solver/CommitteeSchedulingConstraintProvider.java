@@ -165,7 +165,7 @@ public class CommitteeSchedulingConstraintProvider implements ConstraintProvider
         }
 
         private Constraint minAssignmentsByCommittee(ConstraintFactory constraintFactory) {
-                return constraintFactory.forEach(CommitteeAssignment.class)
+                return constraintFactory.forEachIncludingNullVars(CommitteeAssignment.class)
                                 .groupBy(CommitteeAssignment::getCommittee, toList())
                                 .filter((committee,
                                                 assignments) -> !committee
@@ -187,7 +187,7 @@ public class CommitteeSchedulingConstraintProvider implements ConstraintProvider
                                 .filter((committee, assignments) -> !committee
                                                 .inspectionFollowUpRespected(assignments))
                                 .penalize("Inspector follow up not respected",
-                                                HardMediumSoftScore.ONE_MEDIUM);
+                                                HardMediumSoftScore.ONE_HARD);
         }
 
         private Constraint vetoes(ConstraintFactory constraintFactory) {
