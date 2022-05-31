@@ -63,7 +63,7 @@ public class CommitteeAssignment implements Comparable<CommitteeAssignment> {
 
     @JsonIgnore
     public Integer getDistance() {
-        if (assignedPerson == null) {
+        if (assignedPerson == null || distanceMatrix == null) {
             return 0;
         }
         return distanceMatrix.getDistance(assignedPerson.location.name,

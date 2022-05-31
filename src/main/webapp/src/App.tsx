@@ -250,6 +250,16 @@ function App() {
     return participants;
   };
 
+  const buildAxiosErrorMessage = (error: any): string => {
+    const details = error.response?.data?.details;
+    const message = error.message;
+    if (details) {
+      return message + ": " + details;
+    } else {
+      return message;
+    }
+  };
+
   const startSolving = () => {
     setIsSolving(true);
     const options = {
@@ -270,7 +280,10 @@ function App() {
       })
       .catch((error) => {
         setIsSolving(false);
-        showErrorMessage(t("solverStartingError"), error.message);
+        showErrorMessage(
+          t("solverStartingError"),
+          buildAxiosErrorMessage(error)
+        );
       });
   };
 
@@ -282,7 +295,10 @@ function App() {
       })
       .catch((error) => {
         setIsSolving(false);
-        showErrorMessage(t("solverStoppingError"), error.message);
+        showErrorMessage(
+          t("solverStoppingError"),
+          buildAxiosErrorMessage(error)
+        );
       });
   };
 
@@ -303,7 +319,10 @@ function App() {
       })
       .catch((error) => {
         setIsSolving(false);
-        showErrorMessage(t("solverRefreshingError"), error.message);
+        showErrorMessage(
+          t("solverRefreshingError"),
+          buildAxiosErrorMessage(error)
+        );
       });
   };
 

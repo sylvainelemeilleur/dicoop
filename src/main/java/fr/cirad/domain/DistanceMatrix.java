@@ -16,6 +16,9 @@ public class DistanceMatrix {
     }
 
     public Integer getDistance(String location1, String location2) {
+        if (locations == null || distances == null) {
+            return 0;
+        }
         int index1 = locations.indexOf(location1);
         int index2 = locations.indexOf(location2);
         if (index1 > -1 && index2 > -1) {

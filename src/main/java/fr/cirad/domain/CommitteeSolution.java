@@ -56,6 +56,11 @@ public class CommitteeSolution {
         this.id = id;
         this.persons = options.participants;
 
+        // verify that all persons have a unique id
+        if (persons.stream().map(p -> p.name).distinct().count() != persons.size()) {
+            throw new IllegalArgumentException("All persons must have a unique name");
+        }
+
         // set range option for each participant and also travelling distance constraint
         this.persons.stream().forEach(p -> {
             p.init(options.settings);
