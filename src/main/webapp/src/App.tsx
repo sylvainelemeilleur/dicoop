@@ -6,6 +6,8 @@ import {
   Group,
   Header,
   Navbar,
+  Radio,
+  RadioGroup,
   Space,
   Tab,
   Tabs,
@@ -44,6 +46,9 @@ import { excelExport, excelImport } from "./Persistence/Excel";
 import { ValidationResult } from "./Persistence/ExcelValidation";
 import SolutionSettingsForm from "./Solution/SolutionSettingsForm";
 import SolutionTable from "./Solution/SolutionTable";
+import { buildModel, buildSolution, ClingoResult } from "./Solver/clingo";
+
+declare var clingo: any;
 
 function App() {
   const debug = false;
@@ -63,6 +68,7 @@ function App() {
     locations: new Array<string>(),
     distances: new Array<Array<number>>(),
   } as DistanceMatrix);
+  const [solver, setSolver] = useState("optaplanner");
 
   const updateDistance = (i: number, j: number, value: number) => {
     if (distanceMatrix.distances) distanceMatrix.distances[i][j] = value;
@@ -266,25 +272,46 @@ function App() {
       settings: getSettings(),
       participants: getParticipantsWithHistory(),
     } as SolverOptions;
-    committeeSolutionResourceApi
-      .apiCommitteeSolutionSolvePost(options)
-      .then((resp) => {
-        const solutionId = resp.data.id ?? "ID_ERROR";
-        const initializedSolution = UNDEFINED_SOLUTION;
-        initializedSolution.id = solutionId;
-        initializedSolution.solverStatus = "INITIALIZING";
-        setCommitteeSolution(initializedSolution);
-        setTimeout(() => {
-          refreshSolution(solutionId);
-        }, 2000);
-      })
-      .catch((error) => {
-        setIsSolving(false);
-        showErrorMessage(
-          t("solverStartingError"),
-          buildAxiosErrorMessage(error)
-        );
-      });
+    if (solver === "clingo") {
+      // Init message
+      const initSolution = UNDEFINED_SOLUTION;
+      initSolution.solverStatus = "LAUNCHING_CLINGO";
+      setCommitteeSolution(initSolution);
+      // Building the model and running clingo
+      const model = buildModel(options);
+      console.log(model);
+      clingo
+        .run(model)
+        .then((result: any) => {
+          const parsedResult = result as ClingoResult;
+          console.log(JSON.stringify(parsedResult));
+          const clingoSolution = buildSolution(options, parsedResult);
+          setCommitteeSolution(clingoSolution);
+          setSolutionTabDisabled(false);
+          setActiveTabKey(3);
+        })
+        .finally(() => setIsSolving(false));
+    } else {
+      committeeSolutionResourceApi
+        .apiCommitteeSolutionSolvePost(options)
+        .then((resp) => {
+          const solutionId = resp.data.id ?? "ID_ERROR";
+          const initializedSolution = UNDEFINED_SOLUTION;
+          initializedSolution.id = solutionId;
+          initializedSolution.solverStatus = "INITIALIZING";
+          setCommitteeSolution(initializedSolution);
+          setTimeout(() => {
+            refreshSolution(solutionId);
+          }, 2000);
+        })
+        .catch((error) => {
+          setIsSolving(false);
+          showErrorMessage(
+            t("solverStartingError"),
+            buildAxiosErrorMessage(error)
+          );
+        });
+    }
   };
 
   const stopSolving = () => {
@@ -386,6 +413,18 @@ function App() {
                     </Button>
                   </Group>
                 )}
+              </div>
+              <div>
+                <RadioGroup
+                  value={solver}
+                  onChange={setSolver}
+                  label="Solver"
+                  spacing="xs"
+                  size="xs"
+                >
+                  <Radio value="optaplanner" label="OptaPlanner" />
+                  <Radio value="clingo" label="Clingo" />
+                </RadioGroup>
               </div>
               <Divider my="sm" />
               <div>
@@ -490,7 +529,6 @@ function App() {
       }
     </AppShell>
   );
-
 }
 
 export default App;

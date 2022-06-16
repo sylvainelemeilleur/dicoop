@@ -23,6 +23,14 @@
       Learn how to configure a non-root public URL by running `npm run build`.
     -->
   <title>DICOOP</title>
+  <script src="https://cdn.jsdelivr.net/npm/clingo-wasm@0.0.10"></script>
+  <script>
+    async function loadClingo() {
+      // optionally pass URL to WASM file:
+      await clingo.init("https://cdn.jsdelivr.net/npm/clingo-wasm@0.0.10/dist/clingo.wasm")
+    }
+    loadClingo();
+  </script>
 </head>
 
 <body>
