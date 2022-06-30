@@ -27,7 +27,7 @@ dependencies {
 }
 
 group 'fr.cirad'
-version '1.6.0'
+version '1.8.0'
 
 java {
     sourceCompatibility = JavaVersion.VERSION_11
@@ -44,7 +44,7 @@ compileTestJava {
 }
 
 frontend {
-    nodeVersion = '14.17.6'
+    nodeVersion = '18.4.0'
     packageJsonDirectory = file('./src/main/webapp')
     assembleScript = 'run prod'
 }

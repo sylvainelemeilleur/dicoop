@@ -11,7 +11,6 @@ import {
 } from "./clingo_constants";
 
 const certifyMatch = /certify\((.+),(.+)\)/;
-const scheduleMatch = /schedule\((.+),(.+)\)/;
 
 /**
  * It takes an array of objects with a name property and returns an object with the same objects, but
@@ -101,7 +100,7 @@ function shuffleArray(array) {
     randomIndex;
 
   // While there remain elements to shuffle.
-  while (currentIndex != 0) {
+  while (currentIndex !== 0) {
     // Pick a remaining element.
     randomIndex = Math.floor(Math.random() * currentIndex);
     currentIndex--;

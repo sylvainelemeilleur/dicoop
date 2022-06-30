@@ -353,7 +353,6 @@ function ParticipantsTable({
           )}
           <Space h="lg" />
           <NumberInput
-            type="number"
             label={t("participant.maxNumberOfInspections")}
             description={t("participant.maxNumberOfInspectionsDescription")}
             value={participantForm.values.maxNumberOfInspections}
