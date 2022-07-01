@@ -69,7 +69,6 @@ badData(MODULE, undefined(parameter, P, T)) :- declare(parameter, MODULE, P, T),
 badData(MODULE, typeError(SORT, PARAM, VALUE)) :- model(SORT, MODULE, PARAM, VALUE), not wellTyped(SORT, MODULE, PARAM, VALUE), active(MODULE).
 badData(MODULE, typeError(attribute, P, ATTR, VALUE)) :- model(attribute, MODULE, P, ATTR, VALUE), not wellTyped(attribute, MODULE, ATTR, VALUE), active(MODULE).
 
-
 %%% unknown module%%%
 
 declare(type, bool, true).
@@ -274,7 +273,7 @@ buggy(followUp, consecutiveFollowUps) :- maxFollowingUpDuration(T, M), model(par
 
 `;
 
-export const BASE_MODEL = `
+export const SKILLS_MODEL = `
 %%%%%%%%%%%%%%%%%%%
 %%%% skills.lp %%%%
 %%%%%%%%%%%%%%%%%%%
@@ -303,9 +302,9 @@ buggy(skills, wrongNumber(X, S)) :- requires(X, S, atLeast(LB)),
 buggy(skills, wrongNumber(X, S)) :- requires(X, S, atMost(UB)),
    not #count { Y : model(attribute, skills, Y, provides, S), certify(Y, X) } UB.
 
+`;
 
-
-
+export const COMMUNICATION_MODEL = `
 %%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%% communication.lp %%%%
 %%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -319,8 +318,9 @@ display(communication, workingLanguage(F, L)) :- workingLanguage(F, L).
 buggy(communication, noWorkingLanguage(F)) :- model(attribute, core, F, needsEvaluation, true), { workingLanguage(F, L) } 0.
 buggy(communication, reviewerCantSpeakWorkingLanguage(R, F, L)) :- certify(R, F), workingLanguage(F, L), not model(attribute, communication, R, speaks, L).
 
+`;
 
-
+export const COMMITTEE_MEETING_MODEL = `
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%% committee-meeting.lp %%%%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -362,9 +362,9 @@ buggy(committeeMeeting, wrongNumberOfReviewers(anyType, F, C)) :- model(paramete
 buggy(committeeMeeting, wrongSize) :- model(parameter, committeeMeeting, size, atLeast(LB)), chosenDate(D), not LB #count { P : schedule(P, D) }.
 buggy(committeeMeeting, wrongSize) :- model(parameter, committeeMeeting, size,  atMost(UB)), chosenDate(D), not #count { P : schedule(P, D) } UB.
 
+`;
 
-
-
+export const LOCATION_MODEL = `
 %%%%%%%%%%%%%%%%%%%%%
 %%%% location.lp %%%%
 %%%%%%%%%%%%%%%%%%%%%
@@ -385,7 +385,9 @@ travelingCost(X, T, C) :- model(attribute, core, X, party, T), C = #sum { D : di
 buggy(location, cost(X, C)) :- model(parameter, location, acceptableCost(T), atLeast(LB)), travelingCost(X, T, C), C < LB.
 buggy(location, cost(X, C)) :- model(parameter, location, acceptableCost(T),  atMost(UB)), travelingCost(X, T, C), UB < C.
 
+`;
 
+export const INTERFACE_LANGUAGE_MODEL = `
 %%%%%%%%%%%%%%%%%%%%
 %%%% english.lp %%%%
 %%%%%%%%%%%%%%%%%%%%
@@ -397,8 +399,6 @@ describe(enum, english, committeeMeeting, existingDate, "Dates", "What dates are
 
 describe(parameter, english, core, reviewsPerformed(firstParty), "Reviews by producers", "How many reviews to be performed by each producer?").
 describe(parameter, english, core, reviewsPerformed(secondParty), "Reviews by consumers", "How many reviews to be performed by each consumer?").
-
-
 
 %%%%%%%%%%%%%%%%%%%%%
 %%%% francais.lp %%%%
@@ -412,9 +412,9 @@ describe(module, francais, skills, "Compétences", "Contraintes de compétence")
 describe(enum, francais, location, region, "Adresse", "Où est localisé un membre ?").
 describe(enum, francais, communication, language, "Langue", "Quelles sont les langues de travail des membres ?").
 
+`;
 
-
-
+export const SPECIFIC_ACTIVE_MODEL = `
 %%%%%%%%%%%%%%%%%%%%%%%%%
 %%%% SPECIFIC/active.lp %%%%
 %%%%%%%%%%%%%%%%%%%%%%%%%
@@ -427,34 +427,9 @@ active(location).
 active(reciprocity).
 active(skills).
 
-%%%%%%%%%%%%%%%%%%%%%%%
-%%%% SPECIFIC/enum.lp %%%%
-%%%%%%%%%%%%%%%%%%%%%%%
+`;
 
-model(enum, committeeMeeting, existingDate, lundi).
-model(enum, committeeMeeting, existingDate, mardi).
-model(enum, committeeMeeting, existingDate, mercredi).
-model(enum, committeeMeeting, existingDate, jeudi).
-model(enum, committeeMeeting, existingDate, vendredi).
-model(enum, committeeMeeting, existingDate, samedi).
-model(enum, committeeMeeting, existingDate, dimanche).
-
-model(enum, communication, language, arabe).
-model(enum, communication, language, franais).
-
-model(enum, location, region, centre).
-model(enum, location, region, sud).
-model(enum, location, region, nord).
-model(enum, location, region, est).
-model(enum, location, region, ouest).
-
-model(enum, skills, global, inspection).
-model(enum, skills, global, culture).
-
-model(enum, skills, individual, aviculture).
-model(enum, skills, individual, apiculture).
-
-
+export const SPECIFIC_CONFIG_MODEL = `
 %%%%%%%%%%%%%%%%%%%%%%%%%
 %%%% SPECIFIC/config.lp %%%%
 %%%%%%%%%%%%%%%%%%%%%%%%%
@@ -508,7 +483,7 @@ show(skills).
 %%% comment out the following lines as needed when the corresponding constraints make the task impossible.
 %relax(core).
 %relax(committeeMeeting).
-relax(followUp).
+%relax(followUp).
 %relax(reciprocity).
 %relax(communication).
 %relax(location).

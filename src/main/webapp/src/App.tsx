@@ -315,18 +315,20 @@ function App() {
   };
 
   const stopSolving = () => {
-    committeeSolutionResourceApi
-      .apiCommitteeSolutionStopSolvingIdGet(committeeSolution.id)
-      .then(() => {
-        setIsSolving(false);
-      })
-      .catch((error) => {
-        setIsSolving(false);
-        showErrorMessage(
-          t("solverStoppingError"),
-          buildAxiosErrorMessage(error)
-        );
-      });
+    if (solver !== "clingo") {
+      committeeSolutionResourceApi
+        .apiCommitteeSolutionStopSolvingIdGet(committeeSolution.id)
+        .then(() => {
+          setIsSolving(false);
+        })
+        .catch((error) => {
+          setIsSolving(false);
+          showErrorMessage(
+            t("solverStoppingError"),
+            buildAxiosErrorMessage(error)
+          );
+        });
+    }
   };
 
   const refreshSolution = (id: string) => {

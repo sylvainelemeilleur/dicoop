@@ -3,11 +3,17 @@ import { CommitteeSet } from "src/Model/CommitteeSet";
 import { UNDEFINED_SOLUTION } from "src/Model/Defaults";
 import { Solution } from "src/Model/Solution";
 import {
-  BASE_MODEL,
+  COMMITTEE_MEETING_MODEL,
+  COMMUNICATION_MODEL,
   CORE_MODEL,
   FOLLOW_UP_MODEL,
+  INTERFACE_LANGUAGE_MODEL,
+  LOCATION_MODEL,
   MAIN_MODEL,
   RECIPROCITY_MODEL,
+  SKILLS_MODEL,
+  SPECIFIC_ACTIVE_MODEL,
+  SPECIFIC_CONFIG_MODEL,
 } from "./clingo_constants";
 
 const certifyMatch = /certify\((.+),(.+)\)/;
@@ -189,6 +195,55 @@ const PARTICIPANTS_MODEL = (options: SolverOptions): string => {
   return participantsModel;
 };
 
+const SPECIFIC_ENUM_MODEL = (options: SolverOptions): string => {
+  let model = `
+    %%%%%%%%%%%%%%%%%%%%%%%
+    %%%% SPECIFIC/enum.lp %%%%
+    %%%%%%%%%%%%%%%%%%%%%%%
+    model(enum, skills, global, inspection).
+    model(enum, skills, global, culture).
+    model(enum, skills, individual, aviculture).
+    model(enum, skills, individual, apiculture).
+  `;
+
+  if (options && options.participants) {
+    // timeslots
+    const timeSlots = options.participants
+      .flatMap((p) => p.availability)
+      .map((t) => t?.name)
+      .filter(
+        (value, index, namesArray) => namesArray.indexOf(value) === index
+      );
+    for (const timeslot of timeSlots) {
+      model += `model(enum, committeeMeeting, existingDate, ${sanitizeName(
+        timeslot
+      )}).`;
+    }
+    // languages
+    const languages = options.participants
+      .flatMap((p) => p.languages)
+      .map((t) => t?.name)
+      .filter(
+        (value, index, namesArray) => namesArray.indexOf(value) === index
+      );
+    for (const language of languages) {
+      model += `model(enum, communication, language, ${sanitizeName(
+        language
+      )}).`;
+    }
+    // locations
+    const locations = options.participants
+      .map((p) => p.location?.name)
+      .filter(
+        (value, index, namesArray) => namesArray.indexOf(value) === index
+      );
+    for (const location of locations) {
+      model += `model(enum, location, region, ${sanitizeName(location)}).`;
+    }
+  }
+  return model;
+};
+
 export const buildModel = (options: SolverOptions): string => {
   // Identifying the targets, at first it was years but now it starts from 0 to the last, so we have to check the history of the committees
   let historySize = 0;
@@ -204,7 +259,14 @@ export const buildModel = (options: SolverOptions): string => {
     CORE_MODEL +
     RECIPROCITY_MODEL +
     FOLLOW_UP_MODEL(followUpTo) +
-    BASE_MODEL +
+    SKILLS_MODEL +
+    COMMUNICATION_MODEL +
+    COMMITTEE_MEETING_MODEL +
+    LOCATION_MODEL +
+    INTERFACE_LANGUAGE_MODEL +
+    SPECIFIC_ACTIVE_MODEL +
+    SPECIFIC_ENUM_MODEL(options) +
+    SPECIFIC_CONFIG_MODEL +
     PARTICIPANTS_MODEL(options)
   );
 };
