@@ -11,10 +11,9 @@ import {
   Space,
   Tab,
   Tabs,
-  Textarea,
 } from "@mantine/core";
 import { useSetState } from "@mantine/hooks";
-import React, { useRef, useState } from "react";
+import { useRef, useState } from "react";
 import { Trans, useTranslation } from "react-i18next";
 import {
   CommitteeSolutionResourceApi,
@@ -48,7 +47,7 @@ import SolutionSettingsForm from "./Solution/SolutionSettingsForm";
 import SolutionTable from "./Solution/SolutionTable";
 import { buildModel, buildSolution, ClingoResult } from "./Solver/clingo";
 
-declare var clingo: any;
+declare const clingo: any;
 
 function App() {
   const debug = false;
@@ -450,13 +449,18 @@ function App() {
                       onClose={() => setShowMore(false)}
                       title={t("status.scoreExplanation")}
                       padding="xl"
-                      size="xl"
+                      size="75%"
                       position="right"
                     >
-                      <Textarea
-                        value={committeeSolution.scoreExplanation}
-                        autosize
-                      />
+                      <textarea
+                        style={{
+                          width: "100%",
+                          height: "92vh",
+                          display: "block",
+                        }}
+                      >
+                        {committeeSolution.scoreExplanation}
+                      </textarea>
                     </Drawer>
                     <Space h="md" />
                     <Group position="left">
