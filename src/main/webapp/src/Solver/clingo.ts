@@ -38,7 +38,7 @@ export const buildSolution = (
   options: SolverOptions,
   result: ClingoResult
 ): Solution => {
-  if (result.Result === "ERROR") {
+  if (result.Result === "ERROR" || result.Result === "UNSATISFIABLE") {
     const badSolution = UNDEFINED_SOLUTION;
     badSolution.solverStatus = result.Result;
     badSolution.scoreExplanation = result.Error;

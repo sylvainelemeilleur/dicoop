@@ -471,6 +471,17 @@ export const SPECIFIC_CONFIG_MODEL = (options: SolverOptions): string => {
 
   // Relax location
   const noRelaxLocation = options.settings?.useAvailability ? "%" : "";
+
+  // Travelling cost
+  const travellingDistanceRangeValue =
+    options.settings?.travellingDistanceRange?.value;
+  const minTravellingCost = travellingDistanceRangeValue
+    ? travellingDistanceRangeValue[0]
+    : 0;
+  const maxTravellingCost = travellingDistanceRangeValue
+    ? travellingDistanceRangeValue[1]
+    : 10000;
+
   return `
 %%%%%%%%%%%%%%%%%%%%%%%%%
 %%%% SPECIFIC/config.lp %%%%
@@ -508,8 +519,8 @@ specify(parameter, location, distance(centre, R), 1) :- model(enum, location, re
 specify(parameter, location, distance(R, centre), 1) :- model(enum, location, region, R), R != centre.
 specify(parameter, location, distance(R, S), 2) :- model(enum, location, region, R), model(enum, location, region, S), R != S, R != centre, S != centre. %%% the distance from any pair of distinct non-central regions R and S is 2.
 
-specify(parameter, location, acceptableCost(first), between(1, 2)).
-specify(parameter, location, acceptableCost(second), atMost(2)).
+specify(parameter, location, acceptableCost(first), between(${minTravellingCost}, ${maxTravellingCost})).
+specify(parameter, location, acceptableCost(second), atMost(${maxTravellingCost})).
 
 specify(parameter, skills, globalRequires(inspection), atLeast(1)).
 specify(parameter, skills, globalRequires(culture), atLeast(1)).
