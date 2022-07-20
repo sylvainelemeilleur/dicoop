@@ -470,7 +470,7 @@ export const SPECIFIC_CONFIG_MODEL = (options: SolverOptions): string => {
       : 5;
 
   // Relax location
-  const noRelaxLocation = options.settings?.useAvailability ? "" : "%";
+  const noRelaxLocation = options.settings?.useAvailability ? "%" : "";
   return `
 %%%%%%%%%%%%%%%%%%%%%%%%%
 %%%% SPECIFIC/config.lp %%%%
