@@ -266,7 +266,7 @@ export const buildModel = (options: SolverOptions): string => {
     INTERFACE_LANGUAGE_MODEL +
     SPECIFIC_ACTIVE_MODEL +
     SPECIFIC_ENUM_MODEL(options) +
-    SPECIFIC_CONFIG_MODEL +
+    SPECIFIC_CONFIG_MODEL(options) +
     PARTICIPANTS_MODEL(options)
   );
 };

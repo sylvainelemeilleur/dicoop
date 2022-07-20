@@ -458,9 +458,9 @@ function App() {
                           height: "92vh",
                           display: "block",
                         }}
-                      >
-                        {committeeSolution.scoreExplanation}
-                      </textarea>
+                        value={committeeSolution.scoreExplanation}
+                        readOnly
+                      />
                     </Drawer>
                     <Space h="md" />
                     <Group position="left">

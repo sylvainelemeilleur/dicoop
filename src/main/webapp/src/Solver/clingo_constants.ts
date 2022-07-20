@@ -1,3 +1,5 @@
+import { SolverOptions } from "src/api";
+
 export const MAIN_MODEL = (target: number): string => `
 %%%%%%%%%%%%%%%%%
 %%%% main.lp %%%%
@@ -429,15 +431,57 @@ active(skills).
 
 `;
 
-export const SPECIFIC_CONFIG_MODEL = `
+export const SPECIFIC_CONFIG_MODEL = (options: SolverOptions): string => {
+  // Pro settings
+  const nbProParticipantsValue = options.settings?.nbProParticipants?.value;
+  const minNbProParticipants = nbProParticipantsValue
+    ? nbProParticipantsValue[0]
+    : 0;
+  const maxNbProParticipants = nbProParticipantsValue
+    ? nbProParticipantsValue[1]
+    : 5;
+  const NbOfAssignmentsForAProfessional =
+    options.settings?.numberOfAssignmentsForAProfessional?.value;
+  const minNbOfAssignmentsForAProfessional = NbOfAssignmentsForAProfessional
+    ? NbOfAssignmentsForAProfessional[0]
+    : 0;
+  const maxNbOfAssignmentsForAProfessional = NbOfAssignmentsForAProfessional
+    ? NbOfAssignmentsForAProfessional[1]
+    : 5;
+
+  // NonPro settings
+  const nbNonProParticipantsValue =
+    options.settings?.nbNonProParticipants?.value;
+  const minNbNonProParticipants = nbNonProParticipantsValue
+    ? nbNonProParticipantsValue[0]
+    : 0;
+  const maxNbNonProParticipants = nbNonProParticipantsValue
+    ? nbNonProParticipantsValue[1]
+    : 5;
+  const NbOfAssignmentsForANonProfessional =
+    options.settings?.numberOfAssignmentsForANonProfessional?.value;
+  const minNbOfAssignmentsForANonProfessional =
+    NbOfAssignmentsForANonProfessional
+      ? NbOfAssignmentsForANonProfessional[0]
+      : 0;
+  const maxNbOfAssignmentsForANonProfessional =
+    NbOfAssignmentsForANonProfessional
+      ? NbOfAssignmentsForANonProfessional[1]
+      : 5;
+
+  // Relax location
+  const noRelaxLocation = options.settings?.useAvailability ? "" : "%";
+  return `
 %%%%%%%%%%%%%%%%%%%%%%%%%
 %%%% SPECIFIC/config.lp %%%%
 %%%%%%%%%%%%%%%%%%%%%%%%%
 
-specify(parameter, core, reviewsReceivedFrom(first), between(2, 2)).
-specify(parameter, core, reviewsReceivedFrom(second), between(1, 1)).
-specify(parameter, core, reviewsPerformed(first), between(0, 2)).
-specify(parameter, core, reviewsPerformed(second), between(1, 3)).
+specify(parameter, core, reviewsReceivedFrom(first), between(${minNbProParticipants}, ${maxNbProParticipants})).
+specify(parameter, core, reviewsPerformed(first), between(${minNbOfAssignmentsForAProfessional}, ${maxNbOfAssignmentsForAProfessional})).
+
+specify(parameter, core, reviewsReceivedFrom(second), between(${minNbNonProParticipants}, ${maxNbNonProParticipants})).
+specify(parameter, core, reviewsPerformed(second), between(${minNbOfAssignmentsForANonProfessional}, ${maxNbOfAssignmentsForANonProfessional})).
+
 specify(parameter, reciprocity, minLength, 2).
 
 specify(parameter, committeeMeeting, subjectPresent, true).
@@ -486,7 +530,7 @@ show(skills).
 %relax(followUp).
 %relax(reciprocity).
 %relax(communication).
-%relax(location).
+${noRelaxLocation}relax(location).
 %relax(skills).
 
 % Supposons que l'on veuille rajouter des contraintes pr�cises malgr� la relaxation.
@@ -497,3 +541,4 @@ show(skills).
 %:- buggy(location,cost(moussa,0)).
 
 `;
+};
