@@ -304,6 +304,8 @@ buggy(skills, wrongNumber(X, S)) :- requires(X, S, atLeast(LB)),
 buggy(skills, wrongNumber(X, S)) :- requires(X, S, atMost(UB)),
    not #count { Y : model(attribute, skills, Y, provides, S), certify(Y, X) } UB.
 
+display(skills, requires(F, S, Quantity)) :- requires(F, S, Quantity).
+
 `;
 
 export const COMMUNICATION_MODEL = `
