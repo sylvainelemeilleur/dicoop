@@ -12,13 +12,12 @@ import {
   Tab,
   Tabs,
 } from "@mantine/core";
-import { useSetState } from "@mantine/hooks";
+import { useLocalStorage, useSetState } from "@mantine/hooks";
 import { useRef, useState } from "react";
 import { Trans, useTranslation } from "react-i18next";
 import {
   CommitteeSolutionResourceApi,
   Configuration,
-  DistanceMatrix,
   Person,
   Range,
   Settings,
@@ -31,14 +30,16 @@ import { useErrorMessage } from "./ErrorMessage/ErrorMessageContext";
 import HeaderMenu from "./HeaderMenu/HeaderMenu";
 import HistoryTable from "./History/HistoryTable";
 import { ReactComponent as DicoopLogo } from "./images/logo.svg";
+import { CommitteeSet } from "./Model/CommitteeSet";
 import {
+  DEFAULT_SETTINGS_STATE,
+  NO_DISTANCES,
   NO_HISTORY,
   NO_PARTICIPANTS,
   UNDEFINED_SOLUTION,
 } from "./Model/Defaults";
 import { stringNotEmpty } from "./Model/ModelUtils";
 import { PersistenceData } from "./Model/PersistenceData";
-import { SettingsState } from "./Model/SettingsState";
 import { Solution } from "./Model/Solution";
 import ParticipantsTable from "./Participant/ParticipantsTable";
 import { excelExport, excelImport } from "./Persistence/Excel";
@@ -59,15 +60,29 @@ function App() {
 
   // Application state
   const [isSolving, setIsSolving] = useState(false);
-  const [participants, setParticipants] = useState(NO_PARTICIPANTS);
+  const [participants, setParticipants] = useLocalStorage({
+    key: "participants",
+    defaultValue: NO_PARTICIPANTS,
+  });
   const [committeeSolution, setCommitteeSolution] =
     useState(UNDEFINED_SOLUTION);
-  const [history, setHistory] = useState(NO_HISTORY);
-  const [distanceMatrix, setDistanceMatrix] = useState({
-    locations: new Array<string>(),
-    distances: new Array<Array<number>>(),
-  } as DistanceMatrix);
+  const [history, setHistory] = useLocalStorage<Array<CommitteeSet>>({
+    key: "history",
+    defaultValue: NO_HISTORY,
+    deserialize: CommitteeSet.deserialize,
+  });
+  const [distanceMatrix, setDistanceMatrix] = useLocalStorage({
+    key: "distances",
+    defaultValue: NO_DISTANCES,
+  });
   const [solver, setSolver] = useState("optaplanner");
+
+  const resetAll = () => {
+    setParticipants(NO_PARTICIPANTS);
+    setHistory(NO_HISTORY);
+    setDistanceMatrix(NO_DISTANCES);
+    setSettingsState(DEFAULT_SETTINGS_STATE);
+  };
 
   const updateDistance = (i: number, j: number, value: number) => {
     if (distanceMatrix.distances) distanceMatrix.distances[i][j] = value;
@@ -115,19 +130,7 @@ function App() {
   const [solutionTabDisabled, setSolutionTabDisabled] = useState(true);
 
   // Settings state
-  const [settingsState, setSettingsState] = useSetState({
-    nbProParticipants: [2, 2],
-    numberOfAssignmentsForAProfessional: [0, 5],
-    nbNonProParticipants: [1, 1],
-    numberOfAssignmentsForANonProfessional: [0, 5],
-    nbExternalParticipants: [0, 0],
-    numberOfAssignmentsForAnExternal: [0, 5],
-    nbRotationsToReinspect: 3,
-    nbInspectorsFollowingUp: 0,
-    travellingDistanceRange: [0, 100],
-    useAvailability: true,
-    shuffleParticipants: false,
-  } as SettingsState);
+  const [settingsState, setSettingsState] = useSetState(DEFAULT_SETTINGS_STATE);
 
   const getSettings = () =>
     ({
@@ -411,6 +414,9 @@ function App() {
                     <Button onClick={dataExport}>{t("controls.export")}</Button>
                     <Button onClick={startSolving}>
                       {t("controls.solve")}
+                    </Button>
+                    <Button type="button" color="red" onClick={resetAll}>
+                      {t("controls.reset")}
                     </Button>
                   </Group>
                 )}

@@ -4,7 +4,7 @@ export class SolvedCommittee {
   constructor(
     public id: string,
     public evaluatedPerson?: Person,
-    private _assignments: Array<CommitteeAssignment> = new Array<CommitteeAssignment>()
+    public _assignments: Array<CommitteeAssignment> = new Array<CommitteeAssignment>()
   ) {}
   findFirstTimeslotInCommon(): string {
     const timeslots = this._assignments

@@ -23,7 +23,8 @@
         "import": "Import",
         "export": "Export",
         "solve": "Solve",
-        "stop": "Stop"
+        "stop": "Stop",
+        "reset": "Reset"
     },
     "tabs": {
         "participants": "Participants",
