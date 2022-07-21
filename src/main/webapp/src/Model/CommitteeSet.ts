@@ -1,6 +1,5 @@
 import { CommitteeAssignment, CommitteeSolution } from "src/api";
 import { v4 as uuid } from "uuid";
-import { NO_HISTORY } from "./Defaults";
 import { SolvedCommittee } from "./SolvedCommittee";
 
 interface SolvedCommitteeDictionary {
