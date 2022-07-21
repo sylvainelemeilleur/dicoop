@@ -1,5 +1,6 @@
 import { CommitteeAssignment, CommitteeSolution } from "src/api";
 import { v4 as uuid } from "uuid";
+import { NO_HISTORY } from "./Defaults";
 import { SolvedCommittee } from "./SolvedCommittee";
 
 interface SolvedCommitteeDictionary {
@@ -48,29 +49,33 @@ export class CommitteeSet {
   }
 
   static deserialize(localStorageValue: string): Array<CommitteeSet> {
-    const historyStorageValue = JSON.parse(
-      localStorageValue
-    ) as Array<CommitteeSet>;
-    let loaded = new Array<CommitteeSet>();
-    for (const cs of historyStorageValue) {
-      const set = new CommitteeSet();
-      set.date = cs.date;
-      set.id = cs.id;
-      set.size = cs.size;
-      for (const sca of Object.values(
-        cs.committees
-      ) as Array<SolvedCommittee>) {
-        const solvedCommittee = new SolvedCommittee(
-          sca.id,
-          sca.evaluatedPerson
-        );
-        for (const sc of sca._assignments) {
-          solvedCommittee.getAssignments().push(sc);
+    try {
+      const historyStorageValue = JSON.parse(
+        localStorageValue
+      ) as Array<CommitteeSet>;
+      let loaded = new Array<CommitteeSet>();
+      for (const cs of historyStorageValue) {
+        const set = new CommitteeSet();
+        set.date = cs.date;
+        set.id = cs.id;
+        set.size = cs.size;
+        for (const sca of Object.values(
+          cs.committees
+        ) as Array<SolvedCommittee>) {
+          const solvedCommittee = new SolvedCommittee(
+            sca.id,
+            sca.evaluatedPerson
+          );
+          for (const sc of sca._assignments) {
+            solvedCommittee.getAssignments().push(sc);
+          }
+          set.add(solvedCommittee);
         }
-        set.add(solvedCommittee);
+        loaded.push(set);
       }
-      loaded.push(set);
+      return loaded;
+    } catch (e) {
+      return [];
     }
-    return loaded;
   }
 }

@@ -13,7 +13,7 @@ import {
   Tabs,
 } from "@mantine/core";
 import { useLocalStorage, useSetState } from "@mantine/hooks";
-import { useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { Trans, useTranslation } from "react-i18next";
 import {
   CommitteeSolutionResourceApi,
@@ -130,7 +130,17 @@ function App() {
   const [solutionTabDisabled, setSolutionTabDisabled] = useState(true);
 
   // Settings state
-  const [settingsState, setSettingsState] = useSetState(DEFAULT_SETTINGS_STATE);
+  const [settingsLocal, setSettingsLocal] = useLocalStorage({
+    key: "settings",
+    defaultValue: DEFAULT_SETTINGS_STATE,
+  });
+  const [settingsState, setSettingsState] = useSetState(settingsLocal);
+
+  // We are using useSetState to be able to partially set a setting value
+  // But we need to do extra work to save the state in the local storage
+  useEffect(() => {
+    setSettingsLocal(settingsState);
+  }, [settingsState, setSettingsLocal]);
 
   const getSettings = () =>
     ({
