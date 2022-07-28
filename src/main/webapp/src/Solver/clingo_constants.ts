@@ -286,12 +286,7 @@ declare(enum, skills, individual).
 declare(attribute, skills, provides, global).
 declare(attribute, skills, provides, individual).
 declare(attribute, skills, requires, individual).
-declare(parameter, skills, globalRequires(E), range) :- model(enum, skills, global, E).
 declare(parameter, skills, individualRequires(E), range) :- model(enum, skills, individual, E).
-
-requires(F, S, Quantity) :-
-   model(parameter, skills, globalRequires(S), Quantity),
-   model(attribute, core, F, needsEvaluation, true).
 
 requires(F, S, Quantity) :-
    model(parameter, skills, individualRequires(S), Quantity),
@@ -523,11 +518,6 @@ specify(parameter, location, distance(R, S), 2) :- model(enum, location, region,
 
 specify(parameter, location, acceptableCost(first), between(${minTravellingCost}, ${maxTravellingCost})).
 specify(parameter, location, acceptableCost(second), atMost(${maxTravellingCost})).
-
-specify(parameter, skills, globalRequires(inspection), atLeast(1)).
-specify(parameter, skills, globalRequires(culture), atLeast(1)).
-specify(parameter, skills, individualRequires(apiculture), atLeast(1)).
-specify(parameter, skills, individualRequires(aviculture), atLeast(1)).
 
 %%%% Comment out to avoid showing this information %%%%
 show(core).  % Print terms of the form "certify(PX, PY)" indicating that the computed solution suggest "PX" should certify "PY".

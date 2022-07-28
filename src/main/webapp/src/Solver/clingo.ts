@@ -3,6 +3,13 @@ import { CommitteeSet } from "src/Model/CommitteeSet";
 import { UNDEFINED_SOLUTION } from "src/Model/Defaults";
 import { Solution } from "src/Model/Solution";
 import {
+  getSanitizedAvailabilities,
+  getSanitizedLanguages,
+  getSanitizedLocations,
+  getSanitizedSkills,
+  sanitizeName,
+} from "src/Participant/ParticipantsTools";
+import {
   COMMITTEE_MEETING_MODEL,
   COMMUNICATION_MODEL,
   CORE_MODEL,
@@ -97,10 +104,6 @@ export interface ClingoResult {
   Warnings: string[];
 }
 
-const sanitizeName = (name: string | undefined): string => {
-  return name ? name.replace(/[^a-zA-Z0-9]/g, "").toLowerCase() : "";
-};
-
 function shuffleArray(array) {
   let currentIndex = array.length,
     randomIndex;
@@ -164,6 +167,13 @@ const PARTICIPANTS_MODEL = (options: SolverOptions): string => {
             )}).`;
           }
         }
+        if (person.requiredSkills) {
+          for (const skill of person.requiredSkills) {
+            participantsModel += `attribute(skills, ${name}, requires, ${sanitizeName(
+              skill.name
+            )}).`;
+          }
+        }
         if (person.languages) {
           for (const language of person.languages) {
             participantsModel += `attribute(communication, ${name}, speaks, ${sanitizeName(
@@ -200,43 +210,36 @@ const SPECIFIC_ENUM_MODEL = (options: SolverOptions): string => {
     %%%%%%%%%%%%%%%%%%%%%%%
     %%%% SPECIFIC/enum.lp %%%%
     %%%%%%%%%%%%%%%%%%%%%%%
-    model(enum, skills, global, inspection).
-    model(enum, skills, global, culture).
-    model(enum, skills, individual, aviculture).
-    model(enum, skills, individual, apiculture).
+
   `;
 
   if (options && options.participants) {
+    // skills
+    const skills = getSanitizedSkills(options.participants);
+    for (const skill of skills) {
+      model += `model(enum, skills, individual, ${skill}).`;
+      // also add here the skill specific config
+      model += `specify(parameter, skills, individualRequires(${skill}), atLeast(1)).`;
+    }
+
     // timeslots
-    const timeSlots = options.participants
-      .flatMap((p) => p.availability)
-      .map((t) => t?.name)
-      .filter(
-        (value, index, namesArray) => namesArray.indexOf(value) === index
-      );
+    const timeSlots = getSanitizedAvailabilities(options.participants);
     for (const timeslot of timeSlots) {
       model += `model(enum, committeeMeeting, existingDate, ${sanitizeName(
         timeslot
       )}).`;
     }
+
     // languages
-    const languages = options.participants
-      .flatMap((p) => p.languages)
-      .map((t) => t?.name)
-      .filter(
-        (value, index, namesArray) => namesArray.indexOf(value) === index
-      );
+    const languages = getSanitizedLanguages(options.participants);
     for (const language of languages) {
       model += `model(enum, communication, language, ${sanitizeName(
         language
       )}).`;
     }
+
     // locations
-    const locations = options.participants
-      .map((p) => p.location?.name)
-      .filter(
-        (value, index, namesArray) => namesArray.indexOf(value) === index
-      );
+    const locations = getSanitizedLocations(options.participants);
     for (const location of locations) {
       model += `model(enum, location, region, ${sanitizeName(location)}).`;
     }

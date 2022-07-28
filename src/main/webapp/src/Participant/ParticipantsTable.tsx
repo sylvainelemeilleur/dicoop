@@ -19,6 +19,11 @@ import { useTranslation } from "react-i18next";
 import { DistanceMatrix, Person } from "src/api";
 import { NamedEntity } from "src/Model/NamedEntity";
 import "./ParticipantsTable.css";
+import {
+  getSortedAvailabilitiesFromParticipants,
+  getSortedLanguagesFromParticipants,
+  getSortedSkillsFromParticipants,
+} from "./ParticipantsTools";
 
 type ParticipantsTableProps = {
   participants: Array<Person>;
@@ -70,16 +75,6 @@ function ParticipantsTable({
   const [availabilities, setAvailabilities] = useState<Array<string>>([]);
   const [vetoes, setVetoes] = useState<Array<string>>([]);
 
-  const getValuesInParticipants = (f: (p: Person) => Array<NamedEntity>) =>
-    Array.from(
-      new Set(
-        participants
-          .flatMap(f)
-          .map((l) => l?.name ?? "")
-          .filter((l) => l && l.length > 0)
-      )
-    ).sort();
-
   const createParticipant = () => {
     editParticipant({} as Person);
   };
@@ -97,25 +92,11 @@ function ParticipantsTable({
     );
     setLocations(Array.from(locationsFromParticipantsAndDistances).sort());
     // initialize the skills with the existing ones in participants
-    setSkills(
-      getValuesInParticipants(
-        (p: Person) =>
-          [
-            ...(p.skills ?? []),
-            ...(p.requiredSkills ?? []),
-          ] as Array<NamedEntity>
-      )
-    );
+    setSkills(getSortedSkillsFromParticipants(participants));
     // initialize the languages with the existing ones in participants
-    setLanguages(
-      getValuesInParticipants((p: Person) => p.languages as Array<NamedEntity>)
-    );
+    setLanguages(getSortedLanguagesFromParticipants(participants));
     // initialize the availability with the existing ones in participants
-    setAvailabilities(
-      getValuesInParticipants(
-        (p: Person) => p.availability as Array<NamedEntity>
-      )
-    );
+    setAvailabilities(getSortedAvailabilitiesFromParticipants(participants));
     // initialize the vetoes with the existing names in participants
     setVetoes(
       Array.from(
