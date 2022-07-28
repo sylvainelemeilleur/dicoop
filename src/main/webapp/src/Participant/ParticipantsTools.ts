@@ -11,7 +11,12 @@ const getAvailability = (p: Person) => p.availability as Array<NamedEntity>;
 const getLocation = (p: Person) => p.location as Array<NamedEntity>;
 
 export const sanitizeName = (name: string | undefined): string => {
-  return name ? name.replace(/[^a-zA-Z0-9]/g, "").toLowerCase() : "";
+  return name
+    ? name
+        .replace(/[^a-zA-Z0-9]/g, "")
+        .toLowerCase()
+        .trim()
+    : "";
 };
 
 const getSortedValuesFromParticipants = (

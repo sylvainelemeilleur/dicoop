@@ -182,9 +182,9 @@ const PARTICIPANTS_MODEL = (options: SolverOptions): string => {
           }
         }
         if (person.location) {
-          participantsModel += `attribute(location, ${name}, basedIn, ${sanitizeName(
-            person.location.name
-          )}).`;
+          const locationName = sanitizeName(person.location.name);
+          if (locationName && locationName !== "")
+            participantsModel += `attribute(location, ${name}, basedIn, ${locationName}).`;
         }
         if (person.hasAlreadyInspected) {
           for (let i = 0; i < person.hasAlreadyInspected.length; i++) {
@@ -225,23 +225,19 @@ const SPECIFIC_ENUM_MODEL = (options: SolverOptions): string => {
     // timeslots
     const timeSlots = getSanitizedAvailabilities(options.participants);
     for (const timeslot of timeSlots) {
-      model += `model(enum, committeeMeeting, existingDate, ${sanitizeName(
-        timeslot
-      )}).`;
+      model += `model(enum, committeeMeeting, existingDate, ${timeslot}).`;
     }
 
     // languages
     const languages = getSanitizedLanguages(options.participants);
     for (const language of languages) {
-      model += `model(enum, communication, language, ${sanitizeName(
-        language
-      )}).`;
+      model += `model(enum, communication, language, ${language}).`;
     }
 
     // locations
     const locations = getSanitizedLocations(options.participants);
     for (const location of locations) {
-      model += `model(enum, location, region, ${sanitizeName(location)}).`;
+      model += `model(enum, location, region, ${location}).`;
     }
   }
   return model;
