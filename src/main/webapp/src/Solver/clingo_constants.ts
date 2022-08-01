@@ -469,6 +469,13 @@ export const SPECIFIC_CONFIG_MODEL = (options: SolverOptions): string => {
   // Relax location
   const noRelaxLocation = options.settings?.useAvailability ? "%" : "";
 
+  // Nb reviewers to be present
+  const nbReviewersPresent = 2;
+
+  // Follow Up and Rotation settings
+  const nbRequiredFollowUps = options.settings?.nbInspectorsFollowingUp ?? 0;
+  const maxConsecutiveFollowUps = options.settings?.nbRotationsToReinspect;
+
   // Travelling cost
   const travellingDistanceRangeValue =
     options.settings?.travellingDistanceRange?.value;
@@ -495,7 +502,7 @@ specify(parameter, reciprocity, minLength, 2).
 specify(parameter, committeeMeeting, subjectPresent, true).
 specify(parameter, committeeMeeting, reviewersPresent(first), any).
 specify(parameter, committeeMeeting, reviewersPresent(second), any).
-specify(parameter, committeeMeeting, reviewersPresent(anyType), atLeast(2)).
+specify(parameter, committeeMeeting, reviewersPresent(anyType), atLeast(${nbReviewersPresent})).
 specify(parameter, committeeMeeting, attendance(first), between(1, 2)).
 specify(parameter, committeeMeeting, attendance(second), atMost(1)).
 specify(parameter, committeeMeeting, size, between(6, 10)).
@@ -507,9 +514,9 @@ specify(parameter, committeeMeeting, size, between(6, 10)).
 %model(input, committeeMeeting, impossibleDate, fri).
 %model(input, committeeMeeting, impossibleDate, april).
 
-specify(parameter, followUp, required, between(1, 1)). %% exactly one person should already have been a reviewer last year
+specify(parameter, followUp, required, between(${nbRequiredFollowUps}, ${nbRequiredFollowUps})). %% exactly one person should already have been a reviewer last year
 specify(parameter, followUp, provided, atMost(1)). %% each reviewer performs no more than a single follow up.
-specify(parameter, followUp, maxConsecutive, 1). %% no reviewer will be following up the same farm two years in a row.
+specify(parameter, followUp, maxConsecutive, ${maxConsecutiveFollowUps}). %% no reviewer will be following up the same farm two years in a row.
 
 specify(parameter, location, distance(R, R), 0) :- model(enum, location, region, R).  %%% the distance from any region R to itself is 0.
 specify(parameter, location, distance(centre, R), 1) :- model(enum, location, region, R), R != centre. %%% the distance from any non-central region to the centre is 1.

@@ -27,7 +27,7 @@ dependencies {
 }
 
 group 'fr.cirad'
-version '1.8.0'
+version '1.9.0'
 
 java {
     sourceCompatibility = JavaVersion.VERSION_11
