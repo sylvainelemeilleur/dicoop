@@ -32,11 +32,7 @@ export const UNDEFINED_SOLUTION = new Solution(
   ""
 );
 
-export const NO_PARTICIPANTS = new Array<Person>();
-
-export const NO_HISTORY = new Array<CommitteeSet>();
-
 export const NO_DISTANCES = {
-  locations: new Array<string>(),
-  distances: new Array<Array<number>>(),
+  locations: [],
+  distances: [],
 } as DistanceMatrix;

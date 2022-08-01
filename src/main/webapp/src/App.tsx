@@ -34,8 +34,6 @@ import { CommitteeSet } from "./Model/CommitteeSet";
 import {
   DEFAULT_SETTINGS_STATE,
   NO_DISTANCES,
-  NO_HISTORY,
-  NO_PARTICIPANTS,
   UNDEFINED_SOLUTION,
 } from "./Model/Defaults";
 import { stringNotEmpty } from "./Model/ModelUtils";
@@ -62,13 +60,13 @@ function App() {
   const [isSolving, setIsSolving] = useState(false);
   const [participants, setParticipants] = useLocalStorage({
     key: "participants",
-    defaultValue: NO_PARTICIPANTS,
+    defaultValue: [] as Array<Person>,
   });
   const [committeeSolution, setCommitteeSolution] =
     useState(UNDEFINED_SOLUTION);
   const [history, setHistory] = useLocalStorage<Array<CommitteeSet>>({
     key: "history",
-    defaultValue: NO_HISTORY,
+    defaultValue: [] as Array<CommitteeSet>,
     deserialize: CommitteeSet.deserialize,
   });
   const [distanceMatrix, setDistanceMatrix] = useLocalStorage({
@@ -78,8 +76,8 @@ function App() {
   const [solver, setSolver] = useState("optaplanner");
 
   const resetAll = () => {
-    setParticipants(NO_PARTICIPANTS);
-    setHistory(NO_HISTORY);
+    setParticipants([]);
+    setHistory([]);
     setDistanceMatrix(NO_DISTANCES);
     setSettingsState(DEFAULT_SETTINGS_STATE);
   };
