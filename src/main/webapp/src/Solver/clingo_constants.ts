@@ -1,4 +1,5 @@
 import { SolverOptions } from "src/api";
+import { sanitizeName } from "src/Participant/ParticipantsTools";
 
 export const MAIN_MODEL = (target: number): string => `
 %%%%%%%%%%%%%%%%%
@@ -20,8 +21,6 @@ declare(module, MODULE, MODULE) :- declare(module, MODULE).
 
 describe(module, LANGUAGE, MODULE, MODULE, TITLE, MESSAGE) :- describe(module, LANGUAGE, MODULE, TITLE, MESSAGE).
 described(SORT, LANGUAGE, MODULE, NAME) :- describe(SORT, LANGUAGE, MODULE, NAME, TITLE, MESSAGE).
-toBeDescribed(SORT, LANGUAGE, MODULE, NAME) :- declare(SORT, MODULE, NAME), interface(LANGUAGE), not described(SORT, LANGUAGE, MODULE, NAME).
-toBeDescribed(SORT, LANGUAGE, MODULE, NAME) :- declare(SORT, MODULE, NAME, TYPE), interface(LANGUAGE), not described(SORT, LANGUAGE, MODULE, NAME).
 description(SORT, LANGUAGE, MODULE, NAME, NAME, "No description yet") :- toBeDescribed(SORT, LANGUAGE, MODULE, NAME).
 description(SORT, LANGUAGE, MODULE, NAME, TITLE, MESSAGE) :- describe(SORT, LANGUAGE, MODULE, NAME, TITLE, MESSAGE).
 
@@ -386,33 +385,6 @@ buggy(location, cost(X, C)) :- model(parameter, location, acceptableCost(T),  at
 
 `;
 
-export const INTERFACE_LANGUAGE_MODEL = `
-%%%%%%%%%%%%%%%%%%%%
-%%%% english.lp %%%%
-%%%%%%%%%%%%%%%%%%%%
-
-interface(english).
-
-describe(enum, english, location, region, "Location", "Where does a stakeholder live?").
-describe(enum, english, committeeMeeting, existingDate, "Dates", "What dates are conceivable for the committee meeting?").
-
-describe(parameter, english, core, reviewsPerformed(firstParty), "Reviews by producers", "How many reviews to be performed by each producer?").
-describe(parameter, english, core, reviewsPerformed(secondParty), "Reviews by consumers", "How many reviews to be performed by each consumer?").
-
-%%%%%%%%%%%%%%%%%%%%%
-%%%% francais.lp %%%%
-%%%%%%%%%%%%%%%%%%%%%
-
-interface(francais).
-
-describe(module, francais, core, "Noyau", "Contraintes de base").
-describe(module, francais, skills, "Compétences", "Contraintes de compétence").
-
-describe(enum, francais, location, region, "Adresse", "Où est localisé un membre ?").
-describe(enum, francais, communication, language, "Langue", "Quelles sont les langues de travail des membres ?").
-
-`;
-
 export const SPECIFIC_ACTIVE_MODEL = `
 %%%%%%%%%%%%%%%%%%%%%%%%%
 %%%% SPECIFIC/active.lp %%%%
@@ -469,6 +441,27 @@ export const SPECIFIC_CONFIG_MODEL = (options: SolverOptions): string => {
   // Relax location
   const noRelaxLocation = options.settings?.useAvailability ? "%" : "";
 
+  // Location matrix
+  let locationRules = ``;
+  if (
+    options.settings?.distanceMatrix?.distances &&
+    options.settings?.distanceMatrix?.locations
+  ) {
+    const distances = options.settings?.distanceMatrix?.distances;
+    const locations = options.settings?.distanceMatrix?.locations;
+    let lineNb = 0;
+    for (const line of distances) {
+      let colNb = 0;
+      for (const col of line) {
+        locationRules += `specify(parameter, location, distance(${sanitizeName(
+          locations[lineNb]
+        )}, ${sanitizeName(locations[colNb])}), ${col}).`;
+        colNb++;
+      }
+      lineNb++;
+    }
+  }
+
   // Nb reviewers to be present
   const nbReviewersPresent = 2;
 
@@ -518,13 +511,10 @@ specify(parameter, followUp, required, between(${nbRequiredFollowUps}, ${nbRequi
 specify(parameter, followUp, provided, atMost(1)). %% each reviewer performs no more than a single follow up.
 specify(parameter, followUp, maxConsecutive, ${maxConsecutiveFollowUps}). %% no reviewer will be following up the same farm two years in a row.
 
-specify(parameter, location, distance(R, R), 0) :- model(enum, location, region, R).  %%% the distance from any region R to itself is 0.
-specify(parameter, location, distance(centre, R), 1) :- model(enum, location, region, R), R != centre. %%% the distance from any non-central region to the centre is 1.
-specify(parameter, location, distance(R, centre), 1) :- model(enum, location, region, R), R != centre.
-specify(parameter, location, distance(R, S), 2) :- model(enum, location, region, R), model(enum, location, region, S), R != S, R != centre, S != centre. %%% the distance from any pair of distinct non-central regions R and S is 2.
+${locationRules}
 
 specify(parameter, location, acceptableCost(first), between(${minTravellingCost}, ${maxTravellingCost})).
-specify(parameter, location, acceptableCost(second), atMost(${maxTravellingCost})).
+specify(parameter, location, acceptableCost(second), between(${minTravellingCost}, ${maxTravellingCost})).
 
 %%%% Comment out to avoid showing this information %%%%
 show(core).  % Print terms of the form "certify(PX, PY)" indicating that the computed solution suggest "PX" should certify "PY".
