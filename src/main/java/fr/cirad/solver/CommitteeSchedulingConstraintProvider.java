@@ -31,14 +31,14 @@ public class CommitteeSchedulingConstraintProvider implements ConstraintProvider
                                 minAssignmentsByCommittee(constraintFactory),
                                 inspectionRotation(constraintFactory),
                                 inspectionFollowUp(constraintFactory), vetoes(constraintFactory),
-                                travelling(constraintFactory)
-                };
+                                travelling(constraintFactory)};
         }
 
         private Constraint minimizeEmptySlots(ConstraintFactory constraintFactory) {
                 return constraintFactory.forEachIncludingNullVars(CommitteeAssignment.class)
                                 .filter(a -> a.assignedPerson == null)
-                                .penalize("minimize empty slots", HardMediumSoftScore.ONE_SOFT);
+                                .penalize(HardMediumSoftScore.ONE_SOFT)
+                                .asConstraint("minimize empty slots");
         }
 
         /**
@@ -72,12 +72,11 @@ public class CommitteeSchedulingConstraintProvider implements ConstraintProvider
          */
         private Constraint timeSlotConflict(ConstraintFactory constraintFactory) {
                 return getCommitteeAssignments(constraintFactory)
-                                .filter((committee,
-                                                assignments) -> !committee
-                                                                .allAssignedPersonsHaveAnAvailabilityInCommon(
-                                                                                assignments))
-                                .penalize("All persons in a committee are available at the same time slot",
-                                                HardMediumSoftScore.ONE_HARD);
+                                .filter((committee, assignments) -> !committee
+                                                .allAssignedPersonsHaveAnAvailabilityInCommon(
+                                                                assignments))
+                                .penalize(HardMediumSoftScore.ONE_HARD)
+                                .asConstraint("All persons in a committee are available at the same time slot");
         }
 
         /**
@@ -90,41 +89,41 @@ public class CommitteeSchedulingConstraintProvider implements ConstraintProvider
                 return constraintFactory.forEach(CommitteeAssignment.class).filter(
                                 committeeAssignment -> committeeAssignment.assignedPerson.equals(
                                                 committeeAssignment.committee.evaluatedPerson))
-                                .penalize("A person cannot be assigned to its self committee",
-                                                HardMediumSoftScore.ofHard(100));
+                                .penalize(HardMediumSoftScore.ofHard(100))
+                                .asConstraint("A person cannot be assigned to its self committee");
         }
 
         private Constraint committeeConflict(ConstraintFactory constraintFactory) {
-                return constraintFactory.forEach(CommitteeAssignment.class).join(
-                                CommitteeAssignment.class,
-                                equal(CommitteeAssignment::getAssignedPerson),
-                                equal(CommitteeAssignment::getCommittee),
-                                lessThan(CommitteeAssignment::getId))
-                                .penalize("A person cannot be assigned multiple times to the same committee",
-                                                HardMediumSoftScore.ofHard(100));
+                return constraintFactory.forEach(CommitteeAssignment.class)
+                                .join(CommitteeAssignment.class,
+                                                equal(CommitteeAssignment::getAssignedPerson),
+                                                equal(CommitteeAssignment::getCommittee),
+                                                lessThan(CommitteeAssignment::getId))
+                                .penalize(HardMediumSoftScore.ofHard(100))
+                                .asConstraint("A person cannot be assigned multiple times to the same committee");
         }
 
         private Constraint maxNumberOfInspections(ConstraintFactory constraintFactory) {
                 return constraintFactory.forEach(Person.class)
                                 .filter(Person::hasMoreAssignmentsThanMaxNumberOfAssignments)
-                                .penalize("Maximum number of inspection per participant",
-                                                HardMediumSoftScore.ONE_HARD);
+                                .penalize(HardMediumSoftScore.ONE_HARD)
+                                .asConstraint("Maximum number of inspection per participant");
         }
 
 
         private Constraint minNumberOfInspections(ConstraintFactory constraintFactory) {
                 return constraintFactory.forEach(Person.class)
                                 .filter(Person::hasLessAssignmentsThanMinNumberOfAssignments)
-                                .penalize("Minimum number of inspection per participant",
-                                                HardMediumSoftScore.ONE_HARD);
+                                .penalize(HardMediumSoftScore.ONE_HARD)
+                                .asConstraint("Minimum number of inspection per participant");
         }
 
         private Constraint requiredPersonType(ConstraintFactory constraintFactory) {
                 return constraintFactory.forEach(CommitteeAssignment.class)
                                 .filter(committeeAssignment -> !committeeAssignment
                                                 .isRequiredPersonTypeCorrect())
-                                .penalize("Required person type to certificate",
-                                                HardMediumSoftScore.ofHard(100));
+                                .penalize(HardMediumSoftScore.ofHard(100))
+                                .asConstraint("Required person type to certificate");
         }
 
         private Constraint requiredSkills(ConstraintFactory constraintFactory) {
@@ -132,8 +131,8 @@ public class CommitteeSchedulingConstraintProvider implements ConstraintProvider
                                 .groupBy(CommitteeAssignment::getCommittee, toList())
                                 .filter((committee, assignments) -> !committee
                                                 .atLeastOnePersonHasTheRequiredSkills(assignments))
-                                .penalize("At least one person in a committee has the required skills",
-                                                HardMediumSoftScore.ONE_HARD);
+                                .penalize(HardMediumSoftScore.ONE_HARD)
+                                .asConstraint("At least one person in a committee has the required skills");
         }
 
         private Constraint nonReciprocity(ConstraintFactory constraintFactory) {
@@ -142,7 +141,8 @@ public class CommitteeSchedulingConstraintProvider implements ConstraintProvider
                                                 equal(ca -> ca.committee.evaluatedPerson, p -> p))
                                 .filter((ca, evaluatedPerson) -> evaluatedPerson
                                                 .isEvaluating(ca.assignedPerson))
-                                .penalize("Non-reciprocity", HardMediumSoftScore.ONE_HARD);
+                                .penalize(HardMediumSoftScore.ONE_HARD)
+                                .asConstraint("Non-reciprocity");
         }
 
         private Constraint oneCommonLanguage(ConstraintFactory constraintFactory) {
@@ -161,7 +161,8 @@ public class CommitteeSchedulingConstraintProvider implements ConstraintProvider
                                                         return false;
                                         }
                                         return true;
-                                }).penalize("One common language", HardMediumSoftScore.ONE_HARD);
+                                }).penalize(HardMediumSoftScore.ONE_HARD)
+                                .asConstraint("One common language");
         }
 
         private Constraint minAssignmentsByCommittee(ConstraintFactory constraintFactory) {
@@ -170,37 +171,37 @@ public class CommitteeSchedulingConstraintProvider implements ConstraintProvider
                                 .filter((committee,
                                                 assignments) -> !committee
                                                                 .metMinimumAssignments(assignments))
-                                .penalize("Minimum number of assignments per committee not met",
-                                                HardMediumSoftScore.ONE_MEDIUM);
+                                .penalize(HardMediumSoftScore.ONE_MEDIUM)
+                                .asConstraint("Minimum number of assignments per committee not met");
         }
 
         private Constraint inspectionRotation(ConstraintFactory constraintFactory) {
                 return getCommitteeAssignments(constraintFactory)
                                 .filter((committee, assignments) -> committee
                                                 .inspectionRotationBroken(assignments))
-                                .penalize("Inspector rotation not respected",
-                                                HardMediumSoftScore.ONE_HARD);
+                                .penalize(HardMediumSoftScore.ONE_HARD)
+                                .asConstraint("Inspector rotation not respected");
         }
 
         private Constraint inspectionFollowUp(ConstraintFactory constraintFactory) {
                 return getCommitteeAssignments(constraintFactory)
                                 .filter((committee, assignments) -> !committee
                                                 .inspectionFollowUpRespected(assignments))
-                                .penalize("Inspector follow up not respected",
-                                                HardMediumSoftScore.ONE_HARD);
+                                .penalize(HardMediumSoftScore.ONE_HARD)
+                                .asConstraint("Inspector follow up not respected");
         }
 
         private Constraint vetoes(ConstraintFactory constraintFactory) {
                 return constraintFactory.forEach(CommitteeAssignment.class).filter(
                                 ca -> ca.assignedPerson.isVetoed(ca.committee.evaluatedPerson))
-                                .penalize("Veto", HardMediumSoftScore.ONE_HARD);
+                                .penalize(HardMediumSoftScore.ONE_HARD).asConstraint("Veto");
         }
 
         private Constraint travelling(ConstraintFactory constraintFactory) {
                 return constraintFactory.forEach(Person.class)
                                 .filter(Person::isNotTravellingInRange)
-                                .penalize("Travelling distance range",
-                                                HardMediumSoftScore.ONE_HARD);
+                                .penalize(HardMediumSoftScore.ONE_HARD)
+                                .asConstraint("Travelling distance range");
         }
 
 }

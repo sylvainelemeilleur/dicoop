@@ -26,6 +26,11 @@ dependencies {
     testImplementation 'org.optaplanner:optaplanner-quarkus-benchmark'
 }
 
+configurations.implementation {
+    exclude group: 'org.optaplanner', module: 'optaplanner-constraint-drl'
+    exclude group: 'org.optaplanner', module: 'optaplanner-constraint-streams-drools'
+}
+
 group 'fr.cirad'
 version '1.9.0'
 
