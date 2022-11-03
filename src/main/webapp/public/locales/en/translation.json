@@ -16,7 +16,7 @@
         "aboutText2": "Ideal solutions to these problems can be extremely slow, but approximations are fast and often good enough for real-world purposes.",
         "aboutText3": "This application was conceived in the framework of a collaboration between different researchers: Sylvaine Lemeilleur and Nicolas Paget (CIRAD, Montpellier, France), Abdallah Saffidine and Cecilia Xifei Ni (Computer Science and Engineering, University of New South Wales, Sydney, Australia) and Nathanaël Barrot (Kyushu University, Japan), as well as the computer development realized by Fabrice Dominguez (fgd-dev).",
         "aboutText4": "It follows various requests from civil society organizations in Morocco and France and has received support from the French Development Agency under the project \"Institutional Innovations for Organic Agriculture in Africa\", coordinated by Afronet and in which CIRAD is a partner.",
-        "aboutText5": "Elle a donné lieu à une première communication scientifique: Barrot, N., Lemeilleur, S., Paget, N., Saffidine, A., (2020). Peer Reviewing in Participatory Guarantee Systems: Modelisation and Algorithmic Aspects. Presented at the Nineteenth International Conference on Autonomous Agents and Multi-Agent Systems, Auckland, New Zealand.",
+        "aboutText5": "It led to a first scientific communication: Barrot, N., Lemeilleur, S., Paget, N., Saffidine, A., (2020). Peer Reviewing in Participatory Guarantee Systems: Modelisation and Algorithmic Aspects. Presented at the Nineteenth International Conference on Autonomous Agents and Multi-Agent Systems, Auckland, New Zealand.",
         "aboutText6": "The source code of this application is available on GitHub."
     },
     "controls": {
