@@ -3,10 +3,10 @@ package fr.cirad.domain;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import org.optaplanner.core.api.domain.entity.PlanningEntity;
 import org.optaplanner.core.api.domain.lookup.PlanningId;
 import org.optaplanner.core.api.domain.variable.InverseRelationShadowVariable;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 
 @PlanningEntity
 public class Person implements Comparable<Person> {
@@ -19,8 +19,6 @@ public class Person implements Comparable<Person> {
     public List<Skill> skills = new ArrayList<>();
 
     public Location location;
-
-    public List<Language> languages = new ArrayList<>();
 
     public List<TimeSlot> availability = new ArrayList<>();
 
@@ -95,11 +93,6 @@ public class Person implements Comparable<Person> {
 
     public int getNumberOfAssignments() {
         return assignments.size();
-    }
-
-    // Checks if the person has the language
-    public boolean hasLanguage(Language language) {
-        return languages.contains(language);
     }
 
     // Checks if the person has one of the skills

@@ -212,7 +212,6 @@ function parseParticipants(sheetData: Array<any>): Array<Person> {
         name: (rowData[Constants.PARTICIPANT_LOCATION] ?? "").trim(),
       } as Location,
       skills: parseNamedList(rowData[Constants.PARTICIPANT_SKILLS]),
-      languages: parseNamedList(rowData[Constants.PARTICIPANT_LANGUAGES]),
       availability: parseNamedList(rowData[Constants.PARTICIPANT_AVAILABILITY]),
       requiredSkills: parseNamedList(
         rowData[Constants.PARTICIPANT_REQUIRED_SKILLS]

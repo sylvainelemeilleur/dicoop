@@ -19,11 +19,6 @@ targetYear(Y) :- Y=target.
 
 declare(module, MODULE, MODULE) :- declare(module, MODULE).
 
-describe(module, LANGUAGE, MODULE, MODULE, TITLE, MESSAGE) :- describe(module, LANGUAGE, MODULE, TITLE, MESSAGE).
-described(SORT, LANGUAGE, MODULE, NAME) :- describe(SORT, LANGUAGE, MODULE, NAME, TITLE, MESSAGE).
-description(SORT, LANGUAGE, MODULE, NAME, NAME, "No description yet") :- toBeDescribed(SORT, LANGUAGE, MODULE, NAME).
-description(SORT, LANGUAGE, MODULE, NAME, TITLE, MESSAGE) :- describe(SORT, LANGUAGE, MODULE, NAME, TITLE, MESSAGE).
-
 badData(MODULE, unknownModuleRelaxed) :- relax(MODULE), not declare(module, MODULE).
 badData(MODULE, unknownModuleShown) :- show(MODULE), not declare(module, MODULE).
 
@@ -166,8 +161,6 @@ bad(option, OPTION, VALUE) :- option(OPTION, VALUE), not goodOption(OPTION, VALU
 #show A : display(MODULE, A), show(MODULE), option("mode", normal), not hasBadData.
 #show buggy(MODULE, MESSAGE) : buggy(MODULE, MESSAGE), active(MODULE), option("mode", normal), not hasBadData.
 #show badData(MODULE, MESSAGE) : badData(MODULE, MESSAGE), active(MODULE), option("mode", normal).
-#show description(SORT, LANGUAGE, MODULE, NAME, TITLE, MESSAGE) : description(SORT, LANGUAGE, MODULE, NAME, TITLE, MESSAGE), relevant(SORT), option("descriptions", all).
-#show toBeDescribed(SORT, LANGUAGE, MODULE, NAME) : toBeDescribed(SORT, LANGUAGE, MODULE, NAME), relevant(SORT), option("descriptions", missing).
 
 %%
 % 1 %activatetick(MODULE, TITLE, DESCR, DBOOL). -> ticked(MODULE, BOOL).
@@ -302,22 +295,6 @@ display(skills, requires(F, S, Quantity)) :- requires(F, S, Quantity).
 
 `;
 
-export const COMMUNICATION_MODEL = `
-%%%%%%%%%%%%%%%%%%%%%%%%%%
-%%%% communication.lp %%%%
-%%%%%%%%%%%%%%%%%%%%%%%%%%
-
-declare(module, communication).
-declare(enum, communication, language).
-declare(attribute, communication, speaks, language).
-display(communication, workingLanguage(F, L)) :- workingLanguage(F, L).
-
-{ workingLanguage(F, L) : model(attribute, communication, F, speaks, L) } 1 :- model(attribute, core, F, needsEvaluation, true).
-buggy(communication, noWorkingLanguage(F)) :- model(attribute, core, F, needsEvaluation, true), { workingLanguage(F, L) } 0.
-buggy(communication, reviewerCantSpeakWorkingLanguage(R, F, L)) :- certify(R, F), workingLanguage(F, L), not model(attribute, communication, R, speaks, L).
-
-`;
-
 export const COMMITTEE_MEETING_MODEL = `
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%% committee-meeting.lp %%%%
@@ -391,7 +368,6 @@ export const SPECIFIC_ACTIVE_MODEL = `
 %%%%%%%%%%%%%%%%%%%%%%%%%
 
 active(committeeMeeting).
-active(communication).
 active(core).
 active(followUp).
 active(location).
@@ -520,7 +496,6 @@ specify(parameter, location, acceptableCost(second), between(${minTravellingCost
 show(core).  % Print terms of the form "certify(PX, PY)" indicating that the computed solution suggest "PX" should certify "PY".
 show(committeeMeeting).
 show(followUp).
-show(communication).
 %show(location).
 show(skills).
 
@@ -529,7 +504,6 @@ show(skills).
 %relax(committeeMeeting).
 %relax(followUp).
 %relax(reciprocity).
-%relax(communication).
 ${noRelaxLocation}relax(location).
 %relax(skills).
 

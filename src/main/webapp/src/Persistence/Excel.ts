@@ -116,7 +116,6 @@ export function excelExport(
       sanitizeString(p.personType?.name),
       sanitizeString(p.location?.name),
       sanitizeNamedArray(p.skills),
-      sanitizeNamedArray(p.languages),
       sanitizeNamedArray(p.availability),
       sanitizeNamedArray(p.requiredSkills),
       p.needsEvaluation ? "true" : "false",

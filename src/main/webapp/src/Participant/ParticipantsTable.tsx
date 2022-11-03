@@ -21,7 +21,6 @@ import { NamedEntity } from "src/Model/NamedEntity";
 import "./ParticipantsTable.css";
 import {
   getSortedAvailabilitiesFromParticipants,
-  getSortedLanguagesFromParticipants,
   getSortedSkillsFromParticipants,
 } from "./ParticipantsTools";
 
@@ -58,7 +57,6 @@ function ParticipantsTable({
       type: "professional",
       location: "",
       skills: [] as Array<string>,
-      languages: [] as Array<string>,
       availability: [] as Array<string>,
       requiredSkills: [] as Array<string>,
       vetoes: [] as Array<string>,
@@ -71,7 +69,6 @@ function ParticipantsTable({
   });
   const [locations, setLocations] = useState<Array<string>>([]);
   const [skills, setSkills] = useState<Array<string>>([]);
-  const [languages, setLanguages] = useState<Array<string>>([]);
   const [availabilities, setAvailabilities] = useState<Array<string>>([]);
   const [vetoes, setVetoes] = useState<Array<string>>([]);
 
@@ -93,8 +90,6 @@ function ParticipantsTable({
     setLocations(Array.from(locationsFromParticipantsAndDistances).sort());
     // initialize the skills with the existing ones in participants
     setSkills(getSortedSkillsFromParticipants(participants));
-    // initialize the languages with the existing ones in participants
-    setLanguages(getSortedLanguagesFromParticipants(participants));
     // initialize the availability with the existing ones in participants
     setAvailabilities(getSortedAvailabilitiesFromParticipants(participants));
     // initialize the vetoes with the existing names in participants
@@ -123,10 +118,6 @@ function ParticipantsTable({
     participantForm.setFieldValue(
       "skills",
       participant?.skills?.map((s) => s.name ?? "") ?? []
-    );
-    participantForm.setFieldValue(
-      "languages",
-      participant?.languages?.map((s) => s.name ?? "") ?? []
     );
     participantForm.setFieldValue(
       "availability",
@@ -170,7 +161,6 @@ function ParticipantsTable({
               personType: { name: values.type },
               location: { name: values.location },
               skills: values.skills.map((s) => ({ name: s })),
-              languages: values.languages.map((s) => ({ name: s })),
               availability: values.availability.map((s) => ({ name: s })),
               requiredSkills: values.requiredSkills.map((s) => ({
                 name: s,
@@ -238,23 +228,6 @@ function ParticipantsTable({
             value={participantForm.values.skills}
             onChange={(values) =>
               participantForm.setFieldValue("skills", values)
-            }
-            styles={multiSelectStyles}
-          />
-          <Space h="lg" />
-          <MultiSelect
-            label={t("participant.languages")}
-            data={languages}
-            placeholder={t("participant.languagesPlaceholder")}
-            searchable
-            creatable
-            clearable
-            clearButtonLabel={t("participant.clearButtonLabel")}
-            getCreateLabel={(query) => `+ Create ${query}`}
-            onCreate={(query) => setLanguages((current) => [...current, query])}
-            value={participantForm.values.languages}
-            onChange={(values) =>
-              participantForm.setFieldValue("languages", values)
             }
             styles={multiSelectStyles}
           />
@@ -391,9 +364,6 @@ function ParticipantsTable({
               {t("participant.skills")}
             </th>
             <th role="columnheader" scope="col">
-              {t("participant.languages")}
-            </th>
-            <th role="columnheader" scope="col">
               {t("participant.availability")}
             </th>
             <th role="columnheader" scope="col">
@@ -432,9 +402,6 @@ function ParticipantsTable({
               </td>
               <td role="cell" data-label="Skills">
                 {badgeList(person.skills as Array<NamedEntity>)}
-              </td>
-              <td role="cell" data-label="Languages">
-                {badgeList(person.languages as Array<NamedEntity>)}
               </td>
               <td role="cell" data-label="Availability">
                 {badgeList(person.availability as Array<NamedEntity>)}

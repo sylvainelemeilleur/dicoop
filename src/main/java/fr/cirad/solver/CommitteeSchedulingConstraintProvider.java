@@ -27,7 +27,6 @@ public class CommitteeSchedulingConstraintProvider implements ConstraintProvider
                                 requiredPersonType(constraintFactory),
                                 requiredSkills(constraintFactory),
                                 nonReciprocity(constraintFactory),
-                                oneCommonLanguage(constraintFactory),
                                 minAssignmentsByCommittee(constraintFactory),
                                 inspectionRotation(constraintFactory),
                                 inspectionFollowUp(constraintFactory), vetoes(constraintFactory),
@@ -143,26 +142,6 @@ public class CommitteeSchedulingConstraintProvider implements ConstraintProvider
                                                 .isEvaluating(ca.assignedPerson))
                                 .penalize(HardMediumSoftScore.ONE_HARD)
                                 .asConstraint("Non-reciprocity");
-        }
-
-        private Constraint oneCommonLanguage(ConstraintFactory constraintFactory) {
-                return constraintFactory.forEach(CommitteeAssignment.class)
-                                .groupBy(ca -> ca.committee, toList())
-                                .filter((committee, assignments) -> {
-                                        // if the language of the assigned person is undefined,
-                                        // return false
-                                        if (committee.evaluatedPerson.languages.isEmpty()) {
-                                                return false;
-                                        }
-                                        for (var lang : committee.evaluatedPerson.languages) {
-                                                if (assignments.stream()
-                                                                .anyMatch(a -> a.assignedPerson
-                                                                                .hasLanguage(lang)))
-                                                        return false;
-                                        }
-                                        return true;
-                                }).penalize(HardMediumSoftScore.ONE_HARD)
-                                .asConstraint("One common language");
         }
 
         private Constraint minAssignmentsByCommittee(ConstraintFactory constraintFactory) {

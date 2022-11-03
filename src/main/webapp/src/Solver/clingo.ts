@@ -4,14 +4,12 @@ import { UNDEFINED_SOLUTION } from "src/Model/Defaults";
 import { Solution } from "src/Model/Solution";
 import {
   getSanitizedAvailabilities,
-  getSanitizedLanguages,
   getSanitizedLocations,
   getSanitizedSkills,
   sanitizeName,
 } from "src/Participant/ParticipantsTools";
 import {
   COMMITTEE_MEETING_MODEL,
-  COMMUNICATION_MODEL,
   CORE_MODEL,
   FOLLOW_UP_MODEL,
   LOCATION_MODEL,
@@ -173,13 +171,6 @@ const PARTICIPANTS_MODEL = (options: SolverOptions): string => {
             )}).`;
           }
         }
-        if (person.languages) {
-          for (const language of person.languages) {
-            participantsModel += `attribute(communication, ${name}, speaks, ${sanitizeName(
-              language.name
-            )}).`;
-          }
-        }
         if (person.location) {
           const locationName = sanitizeName(person.location.name);
           if (locationName && locationName !== "")
@@ -227,12 +218,6 @@ const SPECIFIC_ENUM_MODEL = (options: SolverOptions): string => {
       model += `model(enum, committeeMeeting, existingDate, ${timeslot}).`;
     }
 
-    // languages
-    const languages = getSanitizedLanguages(options.participants);
-    for (const language of languages) {
-      model += `model(enum, communication, language, ${language}).`;
-    }
-
     // locations
     const locations = getSanitizedLocations(options.participants);
     for (const location of locations) {
@@ -258,7 +243,6 @@ export const buildModel = (options: SolverOptions): string => {
     RECIPROCITY_MODEL +
     FOLLOW_UP_MODEL(followUpTo) +
     SKILLS_MODEL +
-    COMMUNICATION_MODEL +
     COMMITTEE_MEETING_MODEL +
     LOCATION_MODEL +
     SPECIFIC_ACTIVE_MODEL +

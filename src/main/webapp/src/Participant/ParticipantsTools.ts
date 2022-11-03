@@ -4,8 +4,6 @@ import { NamedEntity } from "src/Model/NamedEntity";
 const getSkills = (p: Person) =>
   [...(p.skills ?? []), ...(p.requiredSkills ?? [])] as Array<NamedEntity>;
 
-const getLanguages = (p: Person) => p.languages as Array<NamedEntity>;
-
 const getAvailability = (p: Person) => p.availability as Array<NamedEntity>;
 
 const getLocation = (p: Person) => p.location as Array<NamedEntity>;
@@ -35,10 +33,6 @@ const getSortedValuesFromParticipants = (
 export const getSortedSkillsFromParticipants = (participants: Array<Person>) =>
   getSortedValuesFromParticipants(participants, getSkills);
 
-export const getSortedLanguagesFromParticipants = (
-  participants: Array<Person>
-) => getSortedValuesFromParticipants(participants, getLanguages);
-
 export const getSortedAvailabilitiesFromParticipants = (
   participants: Array<Person>
 ) => getSortedValuesFromParticipants(participants, getAvailability);
@@ -61,9 +55,6 @@ export const getSanitizedSkills = (participants: Array<Person>) =>
 
 export const getSanitizedAvailabilities = (participants: Array<Person>) =>
   getSanitizedValuesFromParticipants(participants, getAvailability);
-
-export const getSanitizedLanguages = (participants: Array<Person>) =>
-  getSanitizedValuesFromParticipants(participants, getLanguages);
 
 export const getSanitizedLocations = (participants: Array<Person>) =>
   getSanitizedValuesFromParticipants(participants, getLocation);
