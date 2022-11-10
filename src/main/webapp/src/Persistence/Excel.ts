@@ -93,6 +93,11 @@ export function excelExport(
       settings.travellingDistanceRange?.value?.[1],
     ],
     [
+      Constants.SETTING_COMMITTEE_MEETING_SIZE,
+      settings.committeeMeetingSize?.value?.[0],
+      settings.committeeMeetingSize?.value?.[1],
+    ],
+    [
       Constants.SETTING_USE_AVAILABILITY,
       settings.useAvailability ? "true" : "false",
     ],

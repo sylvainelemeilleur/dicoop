@@ -20,6 +20,7 @@ export const DEFAULT_SETTINGS_STATE = {
   nbRotationsToReinspect: 3,
   nbInspectorsFollowingUp: 0,
   travellingDistanceRange: [0, 100],
+  committeeMeetingSize: [0, 10],
   useAvailability: true,
   shuffleParticipants: false,
 } as SettingsState;

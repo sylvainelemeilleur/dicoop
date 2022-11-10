@@ -68,6 +68,7 @@
         "nbRotations": "Nombre de rotations pour réinspecter un participant",
         "nbInspectorsFollowingUp": "Nombre d'inspecteurs assurant le suivi",
         "travellingDistanceRange": "Distance de déplacement",
+        "committeeMeetingSize": "Taille des comités lors des évaluations",
         "useAvailability": "Utiliser les disponibilités",
         "shuffleParticipants": "Mélanger les participants aléatoirement"
     },

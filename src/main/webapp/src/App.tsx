@@ -38,6 +38,7 @@ import {
 } from "./Model/Defaults";
 import { stringNotEmpty } from "./Model/ModelUtils";
 import { PersistenceData } from "./Model/PersistenceData";
+import { SettingsState } from "./Model/SettingsState";
 import { Solution } from "./Model/Solution";
 import ParticipantsTable from "./Participant/ParticipantsTable";
 import { excelExport, excelImport } from "./Persistence/Excel";
@@ -131,6 +132,14 @@ function App() {
   const [settingsLocal, setSettingsLocal] = useLocalStorage({
     key: "settings",
     defaultValue: DEFAULT_SETTINGS_STATE,
+    deserialize: (localStorageValue: string): SettingsState => {
+      const state = JSON.parse(localStorageValue) as SettingsState;
+      // We need to check some values if local state is already defined with missing new ones
+      if (!state.committeeMeetingSize) {
+        state.committeeMeetingSize = [0, 10];
+      }
+      return state;
+    },
   });
   const [settingsState, setSettingsState] = useSetState(settingsLocal);
 
@@ -166,6 +175,9 @@ function App() {
       travellingDistanceRange: {
         value: settingsState.travellingDistanceRange,
       } as Range,
+      committeeMeetingSize: {
+        value: settingsState.committeeMeetingSize,
+      } as Range,
       useAvailability: settingsState.useAvailability,
       shuffleParticipants: settingsState.shuffleParticipants,
     } as Settings);
@@ -193,6 +205,10 @@ function App() {
       nbRotationsToReinspect: settings?.nbRotationsToReinspect ?? 0,
       nbInspectorsFollowingUp: settings?.nbInspectorsFollowingUp ?? 0,
       travellingDistanceRange: (settings?.travellingDistanceRange?.value as [
+        number,
+        number
+      ]) ?? [0, 0],
+      committeeMeetingSize: (settings?.committeeMeetingSize?.value as [
         number,
         number
       ]) ?? [0, 0],

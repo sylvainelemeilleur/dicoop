@@ -8,6 +8,7 @@ export interface SettingsState {
   nbRotationsToReinspect: number;
   nbInspectorsFollowingUp: number;
   travellingDistanceRange: [number, number];
+  committeeMeetingSize: [number, number];
   useAvailability: boolean;
   shuffleParticipants: boolean;
 }

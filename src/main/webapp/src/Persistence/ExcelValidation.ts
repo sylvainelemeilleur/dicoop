@@ -19,6 +19,7 @@ export const Constants = {
   SETTING_NUMBER_OF_INSPECTORS_FOLLOWING_UP:
     "Number of inspectors following up",
   SETTING_TRAVELLING_DISTANCE_RANGE: "Travelling distance range",
+  SETTING_COMMITTEE_MEETING_SIZE: "Committee meeting size",
   SETTING_USE_AVAILABILITY: "Use availability",
   SETTINGS_SHUFFLE_PARTICIPANTS: "Shuffle participants",
 

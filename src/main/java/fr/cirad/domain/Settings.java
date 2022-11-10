@@ -19,6 +19,8 @@ public class Settings {
     public Boolean useAvailability;
     public Boolean shuffleParticipants;
 
+    public Range committeeMeetingSize;
+
     public Settings() {
         // Empty constructor needed by serialization
     }

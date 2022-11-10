@@ -68,6 +68,7 @@
         "nbRotations": "Number of rotations to re-inspect a participant",
         "nbInspectorsFollowingUp": "Number of inspectors following up",
         "travellingDistanceRange": "Travelling distance range",
+        "committeeMeetingSize": "Committee meeting size",
         "useAvailability": "Use availability",
         "shuffleParticipants": "Randomly shuffle participants"
     },

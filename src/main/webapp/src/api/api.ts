@@ -426,6 +426,12 @@ export interface Settings {
      * @memberof Settings
      */
     shuffleParticipants?: boolean;
+    /**
+     * 
+     * @type {Range}
+     * @memberof Settings
+     */
+    committeeMeetingSize?: Range;
 }
 /**
  * 

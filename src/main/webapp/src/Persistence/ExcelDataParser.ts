@@ -186,6 +186,9 @@ function parseSettings(sheetData: Array<any>): Settings {
       case Constants.SETTING_TRAVELLING_DISTANCE_RANGE:
         settings.travellingDistanceRange = rowToRange(rowData);
         break;
+      case Constants.SETTING_COMMITTEE_MEETING_SIZE:
+        settings.committeeMeetingSize = rowToRange(rowData);
+        break;
       case Constants.SETTING_USE_AVAILABILITY:
         settings.useAvailability = rowData[1] === "true";
         break;

@@ -455,6 +455,15 @@ export const SPECIFIC_CONFIG_MODEL = (options: SolverOptions): string => {
     ? travellingDistanceRangeValue[1]
     : 10000;
 
+  // Committee meeting size
+  const committeeMeetingSizeRangeValue =
+    options.settings?.committeeMeetingSize?.value;
+  const minCommitteeMeetingSize = committeeMeetingSizeRangeValue
+    ? committeeMeetingSizeRangeValue[0]
+    : 0;
+  const maxCommitteeMeetingSize = committeeMeetingSizeRangeValue
+    ? committeeMeetingSizeRangeValue[1]
+    : 10000;
   return `
 %%%%%%%%%%%%%%%%%%%%%%%%%
 %%%% SPECIFIC/config.lp %%%%
@@ -474,7 +483,7 @@ specify(parameter, committeeMeeting, reviewersPresent(second), any).
 specify(parameter, committeeMeeting, reviewersPresent(anyType), atLeast(${nbReviewersPresent})).
 specify(parameter, committeeMeeting, attendance(first), between(1, 2)).
 specify(parameter, committeeMeeting, attendance(second), atMost(1)).
-specify(parameter, committeeMeeting, size, between(6, 10)).
+specify(parameter, committeeMeeting, size, between(${minCommitteeMeetingSize}, ${maxCommitteeMeetingSize})).
 
 %model(input, committeeMeeting, impossibleDate, wed).
 %model(input, committeeMeeting, impossibleDate, mon).

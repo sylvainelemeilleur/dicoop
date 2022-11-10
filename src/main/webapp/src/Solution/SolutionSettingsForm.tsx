@@ -258,6 +258,51 @@ function SolutionSettingsForm({
 
           <Space h="lg" />
 
+          <InputWrapper
+            id="committeeMeetingSize"
+            label={t("settings.committeeMeetingSize")}
+          >
+            <br />
+            <NumberInput
+              label="Min"
+              min={0}
+              value={settingsState.committeeMeetingSize[0]}
+              required
+              size="xs"
+              style={{ width: "60px", display: "inline-block" }}
+              onChange={(value) =>
+                setSettingsState({
+                  committeeMeetingSize: [
+                    value ?? 0,
+                    settingsState.committeeMeetingSize[1],
+                  ],
+                })
+              }
+            />
+            <NumberInput
+              label="Max"
+              min={0}
+              value={settingsState.committeeMeetingSize[1]}
+              required
+              size="xs"
+              style={{
+                width: "60px",
+                display: "inline-block",
+                marginLeft: "10px",
+              }}
+              onChange={(value) =>
+                setSettingsState({
+                  committeeMeetingSize: [
+                    settingsState.committeeMeetingSize[0],
+                    value ?? 0,
+                  ],
+                })
+              }
+            />
+          </InputWrapper>
+
+          <Space h="lg" />
+
           <Checkbox
             label={t("settings.useAvailability")}
             checked={settingsState.useAvailability}
