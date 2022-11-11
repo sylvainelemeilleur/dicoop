@@ -105,6 +105,11 @@ public class Person implements Comparable<Person> {
         return this.assignments.stream().anyMatch(a -> a.committee.evaluatedPerson.equals(other));
     }
 
+    // Checks if a person is available for a given time slot
+    public boolean isAvailable(TimeSlot t) {
+        return availability.contains(t);
+    }
+
     // Checks if a person is available at given time slots
     public boolean isAvailable(List<TimeSlot> timeSlots) {
         return timeSlots.stream().anyMatch(t -> availability.contains(t));

@@ -60,7 +60,7 @@ function SolutionTable({ committees }: SolutionTableProps) {
             </td>
 
             <td role="cell" data-label="Timeslot">
-              {committee.findAllTimeslotsInCommon()}
+              {committee.findNTimeslotsInCommon(2)}
             </td>
             {assignmentsList(committee.getAssignments())}
           </tr>

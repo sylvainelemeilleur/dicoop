@@ -48,6 +48,25 @@ public class Committee implements Comparable<Committee> {
         return true;
     }
 
+    public boolean atLeastNPersonsPresentAtCommitteeMeeting(List<CommitteeAssignment> assignments,
+            long nbOfPresentPersons) {
+        if (Boolean.TRUE.equals(useAvailability)) {
+            // copy of the evaluated person availability
+            List<TimeSlot> possibleTimeSlots =
+                    evaluatedPerson.availability.stream().collect(Collectors.toList());
+            // checks the number of available persons for each possible timeSlot
+            for (TimeSlot candidate : possibleTimeSlots) {
+                var availablePersonsCount = assignments.stream().filter(
+                        a -> a.assignedPerson != null && a.assignedPerson.isAvailable(candidate))
+                        .count();
+                if (availablePersonsCount >= nbOfPresentPersons)
+                    return true;
+            }
+            return false;
+        }
+        return true;
+    }
+
     public boolean atLeastOnePersonIsAvailable(List<CommitteeAssignment> assignments) {
         if (Boolean.FALSE.equals(useAvailability)) {
             return true;
@@ -73,10 +92,9 @@ public class Committee implements Comparable<Committee> {
 
     private boolean metMinimumAssignmentsByPersonType(List<CommitteeAssignment> assignments,
             PersonType personType, int minimum) {
-        long numberOfPersonsOfThisType = assignments.stream()
-                .filter(a -> a.getAssignedPerson() != null
-                        && a.getAssignedPerson().personType.equals(personType))
-                .count();
+        long numberOfPersonsOfThisType =
+                assignments.stream().filter(a -> a.getAssignedPerson() != null
+                        && a.getAssignedPerson().personType.equals(personType)).count();
         return (numberOfPersonsOfThisType >= minimum);
     }
 

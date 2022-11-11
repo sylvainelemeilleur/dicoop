@@ -63,17 +63,16 @@ public class CommitteeSchedulingConstraintProvider implements ConstraintProvider
 
         /**
          * For each committee, group the committee assignments by committee, and filter out the
-         * committees where at least one person is available at the same time slot of the evaluated
+         * committees where at least N persons are available at the same time slot of the evaluated
          * person
          *
          * @param constraintFactory ConstraintFactory
          * @return A Constraint object.
          */
         private Constraint timeSlotConflict(ConstraintFactory constraintFactory) {
-                return getCommitteeAssignments(constraintFactory)
-                                .filter((committee, assignments) -> !committee
-                                                .allAssignedPersonsHaveAnAvailabilityInCommon(
-                                                                assignments))
+                return getCommitteeAssignments(constraintFactory).filter((committee,
+                                assignments) -> !committee.atLeastNPersonsPresentAtCommitteeMeeting(
+                                                assignments, 2))
                                 .penalize(HardMediumSoftScore.ONE_HARD)
                                 .asConstraint("All persons in a committee are available at the same time slot");
         }
