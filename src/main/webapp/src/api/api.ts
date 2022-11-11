@@ -78,6 +78,12 @@ export interface CommitteeAssignment {
     assignedPerson?: Person;
     /**
      * 
+     * @type {TimeSlot}
+     * @memberof CommitteeAssignment
+     */
+    timeSlot?: TimeSlot;
+    /**
+     * 
      * @type {Committee}
      * @memberof CommitteeAssignment
      */

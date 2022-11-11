@@ -18,6 +18,9 @@ public class CommitteeAssignment implements Comparable<CommitteeAssignment> {
             nullable = true, strengthComparatorClass = PersonStrengthComparator.class)
     public Person assignedPerson;
 
+    @PlanningVariable(valueRangeProviderRefs = {"timeSlotRange"})
+    public TimeSlot timeSlot;
+
     public Committee committee;
 
     public PersonType requiredPersonType;

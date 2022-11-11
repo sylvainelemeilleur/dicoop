@@ -34,6 +34,7 @@ public class CommitteeSolution {
 
     @ProblemFactCollectionProperty
     @JsonIgnore
+    @ValueRangeProvider(id = "timeSlotRange")
     public List<TimeSlot> timeSlots;
 
     @PlanningEntityCollectionProperty
