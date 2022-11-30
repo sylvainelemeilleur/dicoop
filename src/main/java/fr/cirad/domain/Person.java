@@ -3,15 +3,10 @@ package fr.cirad.domain;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
-import org.optaplanner.core.api.domain.entity.PlanningEntity;
-import org.optaplanner.core.api.domain.lookup.PlanningId;
-import org.optaplanner.core.api.domain.variable.InverseRelationShadowVariable;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
-@PlanningEntity
 public class Person implements Comparable<Person> {
 
-    @PlanningId
     public String name;
 
     public PersonType personType;
@@ -30,17 +25,7 @@ public class Person implements Comparable<Person> {
 
     public List<List<String>> hasAlreadyInspected = new ArrayList<>();
 
-    public Long maxNumberOfInspections;
-
-    private Long maxNumberOfInspectionsCalc;
-
-    private Long minNumberOfInspectionsCalc;
-
     public Settings settings;
-
-    @InverseRelationShadowVariable(sourceVariableName = "assignedPerson")
-    @JsonIgnore
-    public List<CommitteeAssignment> assignments = new ArrayList<>();
 
     @JsonIgnore
     public Range numberOfAssignmentsRangeConstraint = new Range(0, 5);
@@ -67,32 +52,6 @@ public class Person implements Comparable<Person> {
      */
     public void init(Settings settings) {
         this.settings = settings;
-        this.maxNumberOfInspectionsCalc =
-                (long) settings.getNumberOfAssignmentsRange(this.personType).getMax();
-        // checks if maxNumberOfInspections is null
-        if (maxNumberOfInspections != null) {
-            this.maxNumberOfInspectionsCalc =
-                    Math.min(this.maxNumberOfInspectionsCalc, maxNumberOfInspections);
-        }
-        this.minNumberOfInspectionsCalc =
-                (long) settings.getNumberOfAssignmentsRange(this.personType).getMin();
-    }
-
-    // Checks if a person has more assignments than the maximum number of assignments
-    public boolean hasMoreAssignmentsThanMaxNumberOfAssignments() {
-        return assignments.size() > maxNumberOfInspectionsCalc;
-    }
-
-    public boolean hasLessAssignmentsThanMinNumberOfAssignments() {
-        return assignments.size() < minNumberOfInspectionsCalc;
-    }
-
-    public List<TimeSlot> getAvailability() {
-        return availability;
-    }
-
-    public int getNumberOfAssignments() {
-        return assignments.size();
     }
 
     // Checks if the person has one of the skills
@@ -100,29 +59,14 @@ public class Person implements Comparable<Person> {
         return this.skills.contains(skill);
     }
 
-    // Checks if a person is evaluated by this person
-    public boolean isEvaluating(Person other) {
-        return this.assignments.stream().anyMatch(a -> a.committee.evaluatedPerson.equals(other));
-    }
-
     // Checks if a person is available for a given time slot
     public boolean isAvailable(TimeSlot t) {
         return availability.contains(t);
     }
 
-    // Checks if a person is available at given time slots
-    public boolean isAvailable(List<TimeSlot> timeSlots) {
-        return timeSlots.stream().anyMatch(t -> availability.contains(t));
-    }
-
     // Checks if two persons are on veto each other
     public boolean isVetoed(Person other) {
         return vetoes.contains(other) || other.vetoes.contains(this);
-    }
-
-    // Checks if the number of assignments is in the range
-    public boolean assignmentsAreInRange() {
-        return numberOfAssignmentsRangeConstraint.contains(assignments.size());
     }
 
     /**
@@ -156,8 +100,7 @@ public class Person implements Comparable<Person> {
      *
      * @return A boolean value.
      */
-    public boolean isNotTravellingInRange() {
-        int distance = assignments.stream().mapToInt(CommitteeAssignment::getDistance).sum();
+    public boolean isNotTravellingInRange(int distance) {
         return !travellingDistanceRangeConstraint.contains(distance);
     }
 

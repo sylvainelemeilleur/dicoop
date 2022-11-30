@@ -21,18 +21,16 @@ class CommitteeTest {
         var person3 = new Person("person3", settings);
         person3.personType = PersonType.PROFESSIONAL;
         var committee1 = new Committee(person1, settings);
-        var assignment1 = new CommitteeAssignment(1l, person2, committee1,
-                PersonType.PROFESSIONAL,
-                distanceMatrix);
-        var assignment2 = new CommitteeAssignment(2l, person3, committee1,
-                PersonType.PROFESSIONAL,
-                distanceMatrix);
-        var assignments = List.of(assignment1, assignment2);
+        var assignment1 = new CommitteeAssignment(1l, person2, distanceMatrix);
+        assignment1.committee = committee1;
+        var assignment2 = new CommitteeAssignment(2l, person3, distanceMatrix);
+        assignment2.committee = committee1;
+        committee1.assignments = List.of(assignment1, assignment2);
         // Test with min 2 Pros
-        assertTrue(committee1.metMinimumAssignments(assignments));
+        assertTrue(committee1.hasCorrectNumberOfMinNonProfessionalPersons());
         // Test with min 1 NonPro
         settings.nbNonProParticipants = new Range(1, 1);
-        assertFalse(committee1.metMinimumAssignments(assignments));
+        assertFalse(committee1.hasCorrectNumberOfMinNonProfessionalPersons());
     }
 
 }

@@ -5,25 +5,17 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import org.optaplanner.core.api.domain.entity.PlanningEntity;
 import org.optaplanner.core.api.domain.lookup.PlanningId;
 import org.optaplanner.core.api.domain.variable.PlanningVariable;
-import fr.cirad.solver.CommitteeAssignmentDifficultyComparator;
-import fr.cirad.solver.PersonStrengthComparator;
 
-@PlanningEntity(difficultyComparatorClass = CommitteeAssignmentDifficultyComparator.class)
+@PlanningEntity
 public class CommitteeAssignment implements Comparable<CommitteeAssignment> {
 
     @PlanningId
     public Long id;
 
-    @PlanningVariable(valueRangeProviderRefs = {"personRange"},
-            nullable = true, strengthComparatorClass = PersonStrengthComparator.class)
     public Person assignedPerson;
 
-    @PlanningVariable(valueRangeProviderRefs = {"timeSlotRange"})
-    public TimeSlot timeSlot;
-
+    @PlanningVariable(valueRangeProviderRefs = {"committeeRange"}, nullable = true)
     public Committee committee;
-
-    public PersonType requiredPersonType;
 
     @JsonIgnore
     public DistanceMatrix distanceMatrix;
@@ -35,20 +27,9 @@ public class CommitteeAssignment implements Comparable<CommitteeAssignment> {
         // must have a no-args constructor so it can be constructed by OptaPlanner
     }
 
-    public CommitteeAssignment(Long id, Person assignedPerson, Committee committee,
-            PersonType requiredPersonType, DistanceMatrix distanceMatrix) {
+    public CommitteeAssignment(Long id, Person assignedPerson, DistanceMatrix distanceMatrix) {
         this.id = id;
         this.assignedPerson = assignedPerson;
-        this.committee = committee;
-        this.requiredPersonType = requiredPersonType;
-        this.distanceMatrix = distanceMatrix;
-    }
-
-    public CommitteeAssignment(Long id, Committee committee, PersonType requiredPersonType,
-            DistanceMatrix distanceMatrix) {
-        this.id = id;
-        this.committee = committee;
-        this.requiredPersonType = requiredPersonType;
         this.distanceMatrix = distanceMatrix;
     }
 
@@ -71,31 +52,6 @@ public class CommitteeAssignment implements Comparable<CommitteeAssignment> {
         }
         return distanceMatrix.getDistance(assignedPerson.location.name,
                 committee.evaluatedPerson.location.name);
-    }
-
-    @JsonIgnore
-    public int getCorrectnessScore() {
-        if (assignedPerson == null) {
-            return 0;
-        }
-        int score = 0;
-        if (assignedPerson.personType.equals(requiredPersonType))
-            score += 1;
-        if (committee.atLeastOnePersonIsAvailable(assignedPerson.assignments))
-            score += 1;
-        if (committee.atLeastOnePersonHasTheRequiredSkills(assignedPerson.assignments))
-            score += 1;
-        if (committee.metMinimumAssignments(assignedPerson.assignments))
-            score += 10;
-        return score;
-    }
-
-    @JsonIgnore
-    public boolean isRequiredPersonTypeCorrect() {
-        if (assignedPerson == null) {
-            return true;
-        }
-        return assignedPerson.personType.equals(requiredPersonType);
     }
 
     @Override

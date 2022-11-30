@@ -1,11 +1,17 @@
 package fr.cirad.domain;
 
 import java.time.Instant;
+import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
 import java.util.stream.Collectors;
+import org.optaplanner.core.api.domain.entity.PlanningEntity;
 import org.optaplanner.core.api.domain.lookup.PlanningId;
+import org.optaplanner.core.api.domain.variable.InverseRelationShadowVariable;
+import org.optaplanner.core.api.domain.variable.PlanningVariable;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 
+@PlanningEntity
 public class Committee implements Comparable<Committee> {
 
     @PlanningId
@@ -19,8 +25,19 @@ public class Committee implements Comparable<Committee> {
 
     private Settings settings;
 
+    @PlanningVariable(valueRangeProviderRefs = {"timeSlotRange"})
+    public TimeSlot timeSlot;
+
+    @InverseRelationShadowVariable(sourceVariableName = "committee")
+    @JsonIgnore
+    public List<CommitteeAssignment> assignments = new ArrayList<>();
+
     private static final Comparator<Committee> COMPARATOR =
             Comparator.comparing(c -> c.evaluatedPerson);
+
+    public Committee() {
+
+    }
 
     public Committee(Person evaluatedPerson, Settings settings) {
         this.id = evaluatedPerson.name;
@@ -29,85 +46,57 @@ public class Committee implements Comparable<Committee> {
         this.useAvailability = settings.useAvailability;
     }
 
-    public boolean allAssignedPersonsHaveAnAvailabilityInCommon(
-            List<CommitteeAssignment> assignments) {
-        if (Boolean.TRUE.equals(useAvailability)) {
-            // copy of the evaluated person availability
-            List<TimeSlot> possibleTimeSlots =
-                    evaluatedPerson.availability.stream().collect(Collectors.toList());
-            for (CommitteeAssignment assignment : assignments) {
-                if (assignment.assignedPerson != null) {
-                    if (!assignment.assignedPerson.isAvailable(possibleTimeSlots)) {
-                        return false;
-                    } else {
-                        possibleTimeSlots.retainAll(assignment.assignedPerson.availability);
-                    }
-                }
-            }
-        }
-        return true;
+    public boolean duplicatedEvaluator() {
+        var set = assignments.stream().map(a -> a.assignedPerson).collect(Collectors.toSet());
+        return assignments.size() > set.size();
     }
 
-    public boolean atLeastNPersonsPresentAtCommitteeMeeting(List<CommitteeAssignment> assignments,
-            long nbOfPresentPersons) {
-        if (Boolean.TRUE.equals(useAvailability)) {
-            // copy of the evaluated person availability
-            List<TimeSlot> possibleTimeSlots =
-                    evaluatedPerson.availability.stream().collect(Collectors.toList());
-            // checks the number of available persons for each possible timeSlot
-            for (TimeSlot candidate : possibleTimeSlots) {
-                var availablePersonsCount = assignments.stream().filter(
-                        a -> a.assignedPerson != null && a.assignedPerson.isAvailable(candidate))
-                        .count();
-                if (availablePersonsCount >= nbOfPresentPersons)
-                    return true;
-            }
+    private int numberOf(PersonType personType) {
+        return (int) assignments.stream().map(a -> a.assignedPerson.personType)
+                .filter(t -> t.equals(personType)).count();
+    }
+
+    public boolean hasCorrectNumberOfMaxProfessionalPersons() {
+        return numberOf(PersonType.PROFESSIONAL) <= settings.nbProParticipants.getMax();
+    }
+
+    public boolean hasCorrectNumberOfMinProfessionalPersons() {
+        return numberOf(PersonType.PROFESSIONAL) >= settings.nbProParticipants.getMin();
+    }
+
+    public boolean hasCorrectNumberOfMaxNonProfessionalPersons() {
+        return numberOf(PersonType.NON_PROFESSIONAL) <= settings.nbNonProParticipants.getMax();
+    }
+
+    public boolean hasCorrectNumberOfMinNonProfessionalPersons() {
+        return numberOf(PersonType.NON_PROFESSIONAL) >= settings.nbNonProParticipants.getMin();
+    }
+
+    public boolean notEnoughAvailableEvaluators() {
+        if (Boolean.FALSE.equals(useAvailability))
             return false;
-        }
-        return true;
+        long nbAvailable =
+                assignments.stream().filter(ca -> ca.assignedPerson.isAvailable(timeSlot)).count();
+        return nbAvailable < 2;
     }
 
-    public boolean atLeastOnePersonIsAvailable(List<CommitteeAssignment> assignments) {
-        if (Boolean.FALSE.equals(useAvailability)) {
-            return true;
-        }
-        for (CommitteeAssignment assignment : assignments) {
-            if (assignment.assignedPerson != null
-                    && assignment.assignedPerson.isAvailable(evaluatedPerson.availability)) {
+    public boolean evaluatedNotAvailable() {
+        if (Boolean.FALSE.equals(useAvailability))
+            return false;
+        return !evaluatedPerson.isAvailable(timeSlot);
+    }
+
+    public boolean requiredSkillsNotSatisfied() {
+        for (Skill s : evaluatedPerson.requiredSkills) {
+            if (assignments.stream().map(CommitteeAssignment::getAssignedPerson)
+                    .noneMatch(p -> p.hasSkill(s))) {
                 return true;
             }
         }
         return false;
     }
 
-    public boolean atLeastOnePersonHasTheRequiredSkills(List<CommitteeAssignment> assignments) {
-        for (Skill skill : evaluatedPerson.requiredSkills) {
-            if (assignments.stream().map(CommitteeAssignment::getAssignedPerson)
-                    .noneMatch(p -> p.hasSkill(skill))) {
-                return false;
-            }
-        }
-        return true;
-    }
-
-    private boolean metMinimumAssignmentsByPersonType(List<CommitteeAssignment> assignments,
-            PersonType personType, int minimum) {
-        long numberOfPersonsOfThisType =
-                assignments.stream().filter(a -> a.getAssignedPerson() != null
-                        && a.getAssignedPerson().personType.equals(personType)).count();
-        return (numberOfPersonsOfThisType >= minimum);
-    }
-
-    public boolean metMinimumAssignments(List<CommitteeAssignment> assignments) {
-        return metMinimumAssignmentsByPersonType(assignments, PersonType.PROFESSIONAL,
-                settings.nbProParticipants.getMin())
-                && metMinimumAssignmentsByPersonType(assignments, PersonType.NON_PROFESSIONAL,
-                        settings.nbNonProParticipants.getMin())
-                && metMinimumAssignmentsByPersonType(assignments, PersonType.EXTERNAL,
-                        settings.nbExternalParticipants.getMin());
-    }
-
-    public boolean inspectionRotationBroken(List<CommitteeAssignment> assignments) {
+    public boolean inspectionRotationBroken() {
         for (CommitteeAssignment assignment : assignments) {
             if (assignment.assignedPerson != null
                     && assignment.assignedPerson.hasAlreadyInspectedInThePast(evaluatedPerson)) {
@@ -117,13 +106,13 @@ public class Committee implements Comparable<Committee> {
         return false;
     }
 
-    public boolean inspectionFollowUpRespected(List<CommitteeAssignment> assignments) {
+    public boolean inspectionFollowUpNotRespected() {
         long nbFollowUp =
                 assignments.stream()
                         .filter(a -> a.assignedPerson != null
                                 && a.assignedPerson.hasAlreadyInspectedLastTime(evaluatedPerson))
                         .count();
-        return nbFollowUp == settings.nbInspectorsFollowingUp;
+        return nbFollowUp != settings.nbInspectorsFollowingUp;
     }
 
     @Override

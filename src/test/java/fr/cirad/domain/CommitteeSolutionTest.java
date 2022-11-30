@@ -171,11 +171,11 @@ class CommitteeSolutionTest {
                 var person = solution.getPersonByName(personName);
                 if (!person.isPresent())
                         throw new IllegalArgumentException("Person " + personName + " not found");
-                var assignment = new CommitteeAssignment(committeeAssignmentId++, person.get(),
-                                committee,
-                                personType,
-                                solverOptions.settings.distanceMatrix);
-                solution.committeeAssignments.add(assignment);
+                /*
+                 * var assignment = new CommitteeAssignment(committeeAssignmentId++, person.get(),
+                 * committee, personType, solverOptions.settings.distanceMatrix);
+                 * solution.committeeAssignments.add(assignment);
+                 */
         }
 
 }
