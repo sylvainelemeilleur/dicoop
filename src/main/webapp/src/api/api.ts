@@ -275,6 +275,12 @@ export interface Person {
     hasAlreadyInspected?: Array<Array<string>>;
     /**
      * 
+     * @type {number}
+     * @memberof Person
+     */
+    maxNumberOfInspections?: number;
+    /**
+     * 
      * @type {Settings}
      * @memberof Person
      */

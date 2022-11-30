@@ -1,6 +1,7 @@
 package fr.cirad.solver;
 
 import static org.optaplanner.core.api.score.stream.ConstraintCollectors.sum;
+import static org.optaplanner.core.api.score.stream.ConstraintCollectors.count;
 import static org.optaplanner.core.api.score.stream.Joiners.equal;
 import org.optaplanner.core.api.score.buildin.hardmediumsoft.HardMediumSoftScore;
 import org.optaplanner.core.api.score.stream.Constraint;
@@ -25,7 +26,8 @@ public class CommitteeSchedulingConstraintProvider implements ConstraintProvider
                                 nonReciprocity(constraintFactory),
                                 inspectionRotation(constraintFactory),
                                 inspectionFollowUp(constraintFactory), vetoes(constraintFactory),
-                                travelling(constraintFactory)};
+                                travelling(constraintFactory),
+                                maxNumberOfInspections(constraintFactory)};
         }
 
         private Constraint selfConflict(ConstraintFactory constraintFactory) {
@@ -128,6 +130,16 @@ public class CommitteeSchedulingConstraintProvider implements ConstraintProvider
                                                 .isNotTravellingInRange(distance))
                                 .penalize(HardMediumSoftScore.ONE_HARD)
                                 .asConstraint("Travelling distance range");
+        }
+
+        private Constraint maxNumberOfInspections(ConstraintFactory constraintFactory) {
+                return constraintFactory.forEach(CommitteeAssignment.class)
+                                .filter(ca -> ca.committee != null
+                                                && ca.assignedPerson.maxNumberOfInspections != null)
+                                .groupBy(ca -> ca.assignedPerson, count())
+                                .filter((person, nb) -> person.maxNumberOfInspections > nb)
+                                .penalize(HardMediumSoftScore.ONE_HARD)
+                                .asConstraint("Max number of inspections");
         }
 
 }

@@ -25,6 +25,8 @@ public class Person implements Comparable<Person> {
 
     public List<List<String>> hasAlreadyInspected = new ArrayList<>();
 
+    public Long maxNumberOfInspections;
+
     public Settings settings;
 
     @JsonIgnore

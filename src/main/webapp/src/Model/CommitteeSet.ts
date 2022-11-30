@@ -31,16 +31,18 @@ export class CommitteeSet {
     assignments: Array<CommitteeAssignment> | undefined
   ): CommitteeSet {
     return (
-      assignments?.reduce((set: CommitteeSet, a: CommitteeAssignment) => {
-        const committeeId = a.committee?.id ?? uuid();
-        set.committees[committeeId] =
-          set.committees[committeeId] ||
-          new SolvedCommittee(committeeId, a.committee?.evaluatedPerson);
-        if (a.assignedPerson?.name !== "INTERNAL_NULL_PERSON") {
-          set.committees[committeeId].getAssignments().push(a);
-        }
-        return set;
-      }, new CommitteeSet()) ?? new CommitteeSet()
+      assignments
+        ?.filter((a) => a.committee)
+        .reduce((set: CommitteeSet, a: CommitteeAssignment) => {
+          const committeeId = a.committee?.id ?? uuid();
+          set.committees[committeeId] =
+            set.committees[committeeId] ||
+            new SolvedCommittee(committeeId, a.committee?.evaluatedPerson);
+          if (a.assignedPerson?.name !== "INTERNAL_NULL_PERSON") {
+            set.committees[committeeId].getAssignments().push(a);
+          }
+          return set;
+        }, new CommitteeSet()) ?? new CommitteeSet()
     );
   }
   static fromCommitteeSolution(solution: CommitteeSolution): CommitteeSet {
