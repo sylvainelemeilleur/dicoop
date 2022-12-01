@@ -1,4 +1,10 @@
-import { Committee, CommitteeAssignment, Person, SolverOptions } from "src/api";
+import {
+  Committee,
+  CommitteeAssignment,
+  Person,
+  SolverOptions,
+  TimeSlot,
+} from "src/api";
 import { CommitteeSet } from "src/Model/CommitteeSet";
 import { UNDEFINED_SOLUTION } from "src/Model/Defaults";
 import { Solution } from "src/Model/Solution";
@@ -21,6 +27,7 @@ import {
 } from "./clingo_constants";
 
 const certifyMatch = /certify\((.+),(.+)\)/;
+const scheduleMatch = /schedule\((.+),(.+)\)/;
 
 /**
  * It takes an array of objects with a name property and returns an object with the same objects, but
@@ -53,6 +60,17 @@ export const buildSolution = (
   // Indexing the participants by sanitized name
   const participants = indexParticipantsBySanitizedName(options);
 
+  // Parsing the schedules
+  const schedules = new Map<string, string>();
+  values
+    .filter((item) => item.startsWith("schedule"))
+    .forEach((item) => {
+      const names = item.match(scheduleMatch);
+      const evaluatedPersonName = names ? names[1] : "";
+      const timeSlotName = names ? names[2] : "";
+      schedules.set(evaluatedPersonName, timeSlotName);
+    });
+
   // Creating the assignments
   const assignments: Array<CommitteeAssignment> = values
     .filter((item) => item.startsWith("certify"))
@@ -65,6 +83,7 @@ export const buildSolution = (
       const committee = {
         id: evaluatedPersonName,
         evaluatedPerson,
+        timeSlot: { name: schedules.get(evaluatedPersonName) } as TimeSlot,
       } as Committee;
       return { assignedPerson, committee } as CommitteeAssignment;
     });

@@ -37,7 +37,7 @@ export class CommitteeSet {
           const committeeId = a.committee?.id ?? uuid();
           set.committees[committeeId] =
             set.committees[committeeId] ||
-            new SolvedCommittee(committeeId, a.committee?.evaluatedPerson);
+            new SolvedCommittee(committeeId, a.committee?.evaluatedPerson, a.committee?.timeSlot);
           if (a.assignedPerson?.name !== "INTERNAL_NULL_PERSON") {
             set.committees[committeeId].getAssignments().push(a);
           }
@@ -65,7 +65,8 @@ export class CommitteeSet {
         ) as Array<SolvedCommittee>) {
           const solvedCommittee = new SolvedCommittee(
             sca.id,
-            sca.evaluatedPerson
+            sca.evaluatedPerson,
+            sca.timeSlot
           );
           for (const sc of sca._assignments) {
             solvedCommittee.getAssignments().push(sc);

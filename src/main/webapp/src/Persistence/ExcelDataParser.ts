@@ -126,8 +126,12 @@ function parseSolution(sheetData: Array<any>): CommitteeSet {
         const evaluatedPerson = {
           name: rowData[0],
         } as Person;
-        const solvedCommittee = new SolvedCommittee(uuid(), evaluatedPerson);
         const timeSlot = { name: rowData[1] } as TimeSlot;
+        const solvedCommittee = new SolvedCommittee(
+          uuid(),
+          evaluatedPerson,
+          timeSlot
+        );
         const committee = {
           id: uuid(),
           createdDate: ``,
@@ -136,8 +140,8 @@ function parseSolution(sheetData: Array<any>): CommitteeSet {
         for (let i = 2; i < rowData.length; i++) {
           const assignedPerson = { name: rowData[i] } as Person;
           solvedCommittee.getAssignments().push({
+            id: i,
             assignedPerson,
-            timeSlot,
             committee,
           } as CommitteeAssignment);
         }

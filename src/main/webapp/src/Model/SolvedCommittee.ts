@@ -1,9 +1,10 @@
-import { CommitteeAssignment, Person } from "src/api";
+import { CommitteeAssignment, Person, TimeSlot } from "src/api";
 
 export class SolvedCommittee {
   constructor(
     public id: string,
     public evaluatedPerson?: Person,
+    public timeSlot?: TimeSlot,
     public _assignments: Array<CommitteeAssignment> = new Array<CommitteeAssignment>()
   ) {}
   findFirstTimeslotInCommon(): string {
@@ -17,15 +18,6 @@ export class SolvedCommittee {
     }
     return "";
   }
-  findAllTimeslotsInCommon(): string {
-    const result = new Array<string>();
-    for (const t of this.evaluatedPerson?.availability ?? []) {
-      if (t.name && this.isAvailableForAll(t.name)) {
-        result.push(t.name);
-      }
-    }
-    return result.join(", ");
-  }
   findNTimeslotsInCommon(n: number): string {
     const result = new Array<string>();
     for (const t of this.evaluatedPerson?.availability ?? []) {
@@ -33,7 +25,10 @@ export class SolvedCommittee {
         result.push(t.name);
       }
     }
-    return result.join(", ");
+    let timeSlotValue: string = this.timeSlot?.name ?? "";
+    if (result && result.length)
+      timeSlotValue += " (" + result.join(", ") + ")";
+    return timeSlotValue;
   }
   countAvailable(timeSlotName: string): number {
     let count = 0;

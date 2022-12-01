@@ -176,7 +176,7 @@ const exportCommittees = (
   committees.getCommittees().forEach((c: SolvedCommittee) => {
     const rowData = [c.evaluatedPerson?.name];
     if (c.getAssignments().length) {
-      rowData.push(c.findFirstTimeslotInCommon());
+      rowData.push(c.timeSlot?.name);
       c.getAssignments().forEach((a: any) =>
         rowData.push(a.assignedPerson.name)
       );
