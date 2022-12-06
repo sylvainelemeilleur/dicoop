@@ -93,7 +93,7 @@ public class CommitteeSolution {
         if (Boolean.TRUE.equals(options.settings.shuffleParticipants)) {
             // No need to use strong randomness, as the shuffling is only done once
             // Devskim: ignore DS148264
-            Collections.shuffle(this.persons);
+            Collections.shuffle(this.committeeAssignments);
         }
     }
 

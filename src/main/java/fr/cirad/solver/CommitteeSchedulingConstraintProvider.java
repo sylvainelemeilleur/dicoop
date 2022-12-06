@@ -38,56 +38,56 @@ public class CommitteeSchedulingConstraintProvider implements ConstraintProvider
         }
 
         private Constraint duplicatedEvaluator(ConstraintFactory constraintFactory) {
-                return constraintFactory.forEach(Committee.class)
+                return constraintFactory.forEachIncludingNullVars(Committee.class)
                                 .filter(Committee::duplicatedEvaluator)
                                 .penalize(HardMediumSoftScore.ofHard(1_000_000))
                                 .asConstraint("A person cannot be assigned multiple times to the same committee");
         }
 
         private Constraint maxProfessionalEvaluators(ConstraintFactory constraintFactory) {
-                return constraintFactory.forEach(Committee.class)
+                return constraintFactory.forEachIncludingNullVars(Committee.class)
                                 .filter(c -> !c.hasCorrectNumberOfMaxProfessionalPersons())
                                 .penalize(HardMediumSoftScore.ofHard(1_000))
                                 .asConstraint("Max number of professional");
         }
 
         private Constraint minProfessionalEvaluators(ConstraintFactory constraintFactory) {
-                return constraintFactory.forEach(Committee.class)
+                return constraintFactory.forEachIncludingNullVars(Committee.class)
                                 .filter(c -> !c.hasCorrectNumberOfMinProfessionalPersons())
                                 .penalize(HardMediumSoftScore.ofHard(100))
                                 .asConstraint("Min number of professional");
         }
 
         private Constraint maxNonProfessionalEvaluators(ConstraintFactory constraintFactory) {
-                return constraintFactory.forEach(Committee.class)
+                return constraintFactory.forEachIncludingNullVars(Committee.class)
                                 .filter(c -> !c.hasCorrectNumberOfMaxNonProfessionalPersons())
                                 .penalize(HardMediumSoftScore.ofHard(1_000))
                                 .asConstraint("Max number of non professional");
         }
 
         private Constraint minNonProfessionalEvaluators(ConstraintFactory constraintFactory) {
-                return constraintFactory.forEach(Committee.class)
+                return constraintFactory.forEachIncludingNullVars(Committee.class)
                                 .filter(c -> !c.hasCorrectNumberOfMinNonProfessionalPersons())
                                 .penalize(HardMediumSoftScore.ofHard(100))
                                 .asConstraint("Min number of non professional");
         }
 
         private Constraint evaluatorsAvailability(ConstraintFactory constraintFactory) {
-                return constraintFactory.forEach(Committee.class)
+                return constraintFactory.forEachIncludingNullVars(Committee.class)
                                 .filter(Committee::notEnoughAvailableEvaluators)
                                 .penalize(HardMediumSoftScore.ofHard(2))
                                 .asConstraint("Not enough available evaluators for the meeting");
         }
 
         private Constraint evaluatedAvailable(ConstraintFactory constraintFactory) {
-                return constraintFactory.forEach(Committee.class)
+                return constraintFactory.forEachIncludingNullVars(Committee.class)
                                 .filter(Committee::evaluatedNotAvailable)
                                 .penalize(HardMediumSoftScore.ofHard(2))
                                 .asConstraint("Evaluated must be available for the meeting");
         }
 
         private Constraint requiredSkills(ConstraintFactory constraintFactory) {
-                return constraintFactory.forEach(Committee.class)
+                return constraintFactory.forEachIncludingNullVars(Committee.class)
                                 .filter(Committee::requiredSkillsNotSatisfied)
                                 .penalize(HardMediumSoftScore.ofHard(2))
                                 .asConstraint("Required skills");
@@ -103,14 +103,14 @@ public class CommitteeSchedulingConstraintProvider implements ConstraintProvider
         }
 
         private Constraint inspectionRotation(ConstraintFactory constraintFactory) {
-                return constraintFactory.forEach(Committee.class)
+                return constraintFactory.forEachIncludingNullVars(Committee.class)
                                 .filter(Committee::inspectionRotationBroken)
                                 .penalize(HardMediumSoftScore.ONE_HARD)
                                 .asConstraint("Inspector rotation not respected");
         }
 
         private Constraint inspectionFollowUp(ConstraintFactory constraintFactory) {
-                return constraintFactory.forEach(Committee.class)
+                return constraintFactory.forEachIncludingNullVars(Committee.class)
                                 .filter(Committee::inspectionFollowUpNotRespected)
                                 .penalize(HardMediumSoftScore.ONE_HARD)
                                 .asConstraint("Inspector follow up not respected");

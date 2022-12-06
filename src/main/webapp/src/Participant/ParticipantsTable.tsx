@@ -129,7 +129,7 @@ function ParticipantsTable({
     );
     participantForm.setFieldValue(
       "needsEvaluation",
-      participant?.needsEvaluation ?? false
+      participant?.needsEvaluation ?? true
     );
     participantForm.setFieldValue(
       "maxNumberOfInspections",

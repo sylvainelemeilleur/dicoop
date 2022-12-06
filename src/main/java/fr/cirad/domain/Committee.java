@@ -25,7 +25,7 @@ public class Committee implements Comparable<Committee> {
 
     private Settings settings;
 
-    @PlanningVariable(valueRangeProviderRefs = {"timeSlotRange"})
+    @PlanningVariable(valueRangeProviderRefs = {"timeSlotRange"}, nullable = true)
     public TimeSlot timeSlot;
 
     @InverseRelationShadowVariable(sourceVariableName = "committee")
