@@ -133,6 +133,7 @@ function App() {
     key: "settings",
     defaultValue: DEFAULT_SETTINGS_STATE,
     deserialize: (localStorageValue: string): SettingsState => {
+      if(!localStorageValue) return DEFAULT_SETTINGS_STATE;
       const state = JSON.parse(localStorageValue) as SettingsState;
       // We need to check some values if local state is already defined with missing new ones
       if (!state.committeeMeetingSize) {
